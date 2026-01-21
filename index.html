@@ -3,119 +3,120 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Beats Pro | Khagesh ai-nexa</title>
+    <title>Nexa Beats Fixed | Khagesh ai-nexa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #05070a; --neon: #22d3ee; }
+        :root { --bg: #020617; --neon: #22d3ee; }
         body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 40px; }
-        .disk { border: 4px solid var(--neon); box-shadow: 0 0 20px rgba(34, 211, 238, 0.2); transition: 1s; }
-        .playing .disk { animation: rotate 4s linear infinite; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        #yt-player { display: none; } /* Hidden Player */
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.05); border-radius: 40px; }
+        .disk-spin { animation: spin 5s linear infinite; animation-play-state: paused; }
+        .playing .disk-spin { animation-play-state: running; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        #player-container { position: absolute; top: -1000px; left: -1000px; } /* Total Hidden */
     </style>
 </head>
 <body class="p-6 max-w-md mx-auto pb-32">
 
-    <div id="yt-player"></div>
-
-    <div class="flex justify-between items-center mb-10">
-        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 italic font-black text-cyan-400">N</div>
-        <div class="text-[10px] font-bold tracking-[3px] opacity-30 uppercase">Nexa Beats v4.0</div>
-        <button onclick="window.location.href='tel:8882737014'" class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"><i class="fas fa-phone-alt"></i></button>
+    <div id="player-container">
+        <div id="yt-player"></div>
     </div>
 
-    <div class="glass-card p-8 mb-8 text-center">
-        <div id="diskWrap" class="w-40 h-40 mx-auto rounded-full overflow-hidden disk mb-8">
-            <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=400" id="coverArt" class="w-full h-full object-cover">
+    <div class="flex justify-between items-center mb-8">
+        <div class="bg-cyan-500/20 text-cyan-400 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-cyan-500/30">Nexa AI</div>
+        <button onclick="window.location.href='tel:8882737014'" class="text-cyan-400 text-lg"><i class="fas fa-phone-alt"></i></button>
+    </div>
+
+    <div id="playerUI" class="glass-card p-10 mb-8 text-center border-t-2 border-cyan-500/30">
+        <div class="w-44 h-44 mx-auto rounded-full overflow-hidden mb-8 border-8 border-white/5 shadow-2xl disk-spin">
+            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400" id="art" class="w-full h-full object-cover">
         </div>
         
-        <h2 id="title" class="text-2xl font-black italic tracking-tight mb-1">Ready to Play</h2>
-        <p id="artist" class="text-[9px] font-bold opacity-30 uppercase tracking-[4px] mb-8">Select a Nexa Mood</p>
+        <h2 id="title" class="text-2xl font-black italic tracking-tighter mb-1">Nexa Beats</h2>
+        <p id="artist" class="text-[9px] font-bold opacity-30 uppercase tracking-[4px] mb-8 italic">Ready to Stream</p>
 
         <div class="flex justify-center items-center gap-10">
-            <button onclick="prev()" class="opacity-30 hover:opacity-100"><i class="fas fa-backward text-xl"></i></button>
-            <button onclick="togglePlay()" id="masterBtn" class="w-20 h-20 bg-cyan-500 text-black rounded-full flex items-center justify-center shadow-xl shadow-cyan-500/30">
-                <i class="fas fa-play text-2xl ml-1" id="ctrlIcon"></i>
+            <button onclick="prev()" class="opacity-20 hover:opacity-100"><i class="fas fa-backward"></i></button>
+            <button onclick="togglePlay()" id="playBtn" class="w-20 h-20 bg-cyan-500 text-black rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/40 active:scale-90 transition-all">
+                <i class="fas fa-play text-2xl ml-1" id="icon"></i>
             </button>
-            <button onclick="next()" class="opacity-30 hover:opacity-100"><i class="fas fa-forward text-xl"></i></button>
+            <button onclick="next()" class="opacity-20 hover:opacity-100"><i class="fas fa-forward"></i></button>
         </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
-        <button onclick="playNow(0)" class="glass-card p-4 text-left border-l-4 border-cyan-500">
-            <p class="text-[8px] font-black opacity-30 mb-1">CHILL</p>
-            <p class="text-xs font-bold italic">Lofi Hip Hop</p>
+        <button onclick="playSong(0)" class="glass-card p-5 text-left active:scale-95 transition-all">
+            <i class="fas fa-moon text-cyan-400 mb-2"></i>
+            <p class="text-[8px] font-black opacity-30">MOOD 01</p>
+            <p class="text-xs font-bold italic">Lofi Chill</p>
         </button>
-        <button onclick="playNow(1)" class="glass-card p-4 text-left border-l-4 border-rose-500">
-            <p class="text-[8px] font-black opacity-30 mb-1">POWER</p>
-            <p class="text-xs font-bold italic">Gym Beast</p>
+        <button onclick="playSong(1)" class="glass-card p-5 text-left active:scale-95 transition-all">
+            <i class="fas fa-fire text-orange-500 mb-2"></i>
+            <p class="text-[8px] font-black opacity-30">MOOD 02</p>
+            <p class="text-xs font-bold italic">Gym Energy</p>
         </button>
-        <button onclick="playNow(2)" class="glass-card p-4 text-left border-l-4 border-amber-500">
-            <p class="text-[8px] font-black opacity-30 mb-1">FOCUS</p>
-            <p class="text-xs font-bold italic">Deep Study</p>
+        <button onclick="playSong(2)" class="glass-card p-5 text-left active:scale-95 transition-all">
+            <i class="fas fa-brain text-purple-500 mb-2"></i>
+            <p class="text-[8px] font-black opacity-30">MOOD 03</p>
+            <p class="text-xs font-bold italic">Focus Mode</p>
         </button>
-        <button onclick="playNow(3)" class="glass-card p-4 text-left border-l-4 border-emerald-500">
-            <p class="text-[8px] font-black opacity-30 mb-1">RELAX</p>
+        <button onclick="playSong(3)" class="glass-card p-5 text-left active:scale-95 transition-all">
+            <i class="fas fa-cloud-showers-heavy text-blue-500 mb-2"></i>
+            <p class="text-[8px] font-black opacity-30">MOOD 04</p>
             <p class="text-xs font-bold italic">Nature Rain</p>
         </button>
     </div>
 
-    <footer class="mt-12 text-center">
-        <p class="text-[10px] font-black italic text-cyan-500">Khagesh ai-nexa</p>
-        <p class="text-[8px] opacity-20 uppercase font-bold tracking-[4px]">Ecosystem Member 12/12</p>
+    <footer class="mt-12 text-center opacity-30">
+        <p class="text-xs font-black italic">Khagesh ai-nexa</p>
     </footer>
 
     <script src="https://www.youtube.com/iframe_api"></script>
     <script>
         let player;
-        const songs = [
-            { id: 'jfKfPfyJRdk', title: 'Lofi Hip Hop', artist: 'Nexa Chill', art: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400' },
-            { id: '5qap5aO4i9A', title: 'Gym Beast', artist: 'Nexa Power', art: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400' },
-            { id: 'lP26UCnoH9s', title: 'Deep Study', artist: 'Nexa Focus', art: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400' },
-            { id: '6S8p0Cq-6-g', title: 'Nature Rain', artist: 'Nexa Relax', art: 'https://images.unsplash.com/photo-1511289080722-699d949c0f93?w=400' }
+        const playlist = [
+            { id: 'jfKfPfyJRdk', title: 'Lofi Chill', artist: 'Nexa Relax', art: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400' },
+            { id: 'S19X67dvK3U', title: 'Gym Energy', artist: 'Nexa Power', art: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400' },
+            { id: '5qap5aO4i9A', title: 'Focus Mode', artist: 'Nexa Study', art: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400' },
+            { id: 'mPZkdNFkNps', title: 'Nature Rain', artist: 'Nexa Sleep', art: 'https://images.unsplash.com/photo-1511289080722-699d949c0f93?w=400' }
         ];
-        let currentIdx = 0;
+        let cur = 0;
 
         function onYouTubeIframeAPIReady() {
             player = new YT.Player('yt-player', {
-                height: '0', width: '0',
-                videoId: songs[0].id,
-                events: { 'onStateChange': onPlayerStateChange }
+                height: '0', width: '0', videoId: playlist[0].id,
+                events: { 'onStateChange': onStateChange }
             });
         }
 
-        function playNow(idx) {
-            currentIdx = idx;
-            const s = songs[idx];
-            document.getElementById('title').innerText = s.title;
-            document.getElementById('artist').innerText = s.artist;
-            document.getElementById('coverArt').src = s.art;
-            player.loadVideoById(s.id);
+        function playSong(i) {
+            cur = i;
+            document.getElementById('title').innerText = playlist[i].title;
+            document.getElementById('artist').innerText = playlist[i].artist;
+            document.getElementById('art').src = playlist[i].art;
+            player.loadVideoById(playlist[i].id);
             player.playVideo();
         }
 
         function togglePlay() {
-            const state = player.getPlayerState();
-            if (state === 1) { player.pauseVideo(); }
-            else { player.playVideo(); }
+            if(player.getPlayerState() === 1) player.pauseVideo();
+            else player.playVideo();
         }
 
-        function onPlayerStateChange(event) {
-            const icon = document.getElementById('ctrlIcon');
-            const wrap = document.getElementById('diskWrap');
-            if (event.data === YT.PlayerState.PLAYING) {
-                icon.className = "fas fa-pause text-2xl";
-                wrap.classList.add('playing');
+        function onStateChange(e) {
+            const btn = document.getElementById('icon');
+            const ui = document.getElementById('playerUI');
+            if(e.data === 1) {
+                btn.className = "fas fa-pause text-2xl";
+                ui.classList.add('playing');
             } else {
-                icon.className = "fas fa-play text-2xl ml-1";
-                wrap.classList.remove('playing');
+                btn.className = "fas fa-play text-2xl ml-1";
+                ui.classList.remove('playing');
             }
         }
 
-        function next() { currentIdx = (currentIdx + 1) % songs.length; playNow(currentIdx); }
-        function prev() { currentIdx = (currentIdx - 1 + songs.length) % songs.length; playNow(currentIdx); }
+        function next() { cur = (cur + 1) % playlist.length; playSong(cur); }
+        function prev() { cur = (cur - 1 + playlist.length) % playlist.length; playSong(cur); }
     </script>
 </body>
 </html>
