@@ -3,139 +3,108 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Pay Pro | Khagesh ai-nexa</title>
+    <title>Nexa Beats | Khagesh ai-nexa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
     <style>
-        :root { --pay-bg: #0b1120; --accent: #3b82f6; }
-        .light-mode { --pay-bg: #f8fafc; --accent: #2563eb; }
-        body { background: var(--pay-bg); color: white; font-family: 'Inter', sans-serif; transition: 0.3s; overflow-x: hidden; }
+        :root { --main-bg: #050505; --neon: #ff0055; }
+        .light-mode { --main-bg: #fdfdfd; --neon: #6366f1; }
+        body { background: var(--main-bg); color: white; font-family: 'Outfit', sans-serif; transition: 0.5s; overflow-x: hidden; }
         .light-mode { color: #1e293b; }
-        .pay-card { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); }
-        .light-mode .pay-card { background: white; border-color: #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
-        .action-btn { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
-        .light-mode .action-btn { background: #eff6ff; color: #2563eb; }
-        .glass-nav { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); }
+        .music-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 40px; }
+        .light-mode .music-card { background: white; border-color: #eee; box-shadow: 0 20px 50px rgba(0,0,0,0.05); }
+        .neon-text { text-shadow: 0 0 15px var(--neon); color: var(--neon); }
+        .visualizer-bar { animation: bounce 1s ease-in-out infinite; }
+        @keyframes bounce { 0%, 100% { height: 10px; } 50% { height: 30px; } }
+        .no-scrollbar::-webkit-scrollbar { display: none; }
     </style>
 </head>
 <body class="p-4 max-w-md mx-auto pb-32">
 
-    <div class="flex justify-between items-center mb-6 pt-4">
-        <div class="flex items-center gap-2">
-            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center font-black shadow-lg">N</div>
-            <div>
-                <p class="text-[9px] opacity-40 font-bold uppercase tracking-widest">Verified Merchant</p>
-                <p class="text-xs font-black italic text-blue-500">Khagesh ai-nexa</p>
-            </div>
-        </div>
-        <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-800/50 flex items-center justify-center border border-white/5"><i class="fas fa-adjust"></i></button>
+    <div class="flex justify-between items-center mb-10 pt-4">
+        <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10"><i class="fas fa-layer-group text-xs"></i></button>
+        <div id="clock" class="text-[10px] font-black tracking-[4px] opacity-40">00:00:00</div>
+        <button onclick="window.location.href='tel:8882737014'" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 text-rose-500"><i class="fas fa-phone-alt"></i></button>
     </div>
 
-    <div class="pay-card p-8 mb-8 text-center relative overflow-hidden">
-        <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
-        <p class="text-[9px] font-black opacity-40 uppercase tracking-[4px] mb-2 italic">Available Balance</p>
-        <h2 class="text-5xl font-black italic tracking-tighter">₹ <span id="balance">0</span></h2>
-        <div class="flex justify-center gap-4 mt-6">
-            <button onclick="addMoney()" class="action-btn px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border border-blue-500/20 shadow-lg">+ Add Funds</button>
+    <div class="music-card p-8 mb-8 text-center relative">
+        <div class="w-48 h-48 mx-auto rounded-[50px] overflow-hidden shadow-2xl mb-8 border-4 border-white/5 rotate-3 hover:rotate-0 transition-all duration-500">
+            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=500&auto=format&fit=crop" alt="Cover" class="w-full h-full object-cover">
+        </div>
+        
+        <h2 class="text-3xl font-black italic tracking-tighter mb-1">Nexa <span class="neon-text">Beats</span></h2>
+        <p class="text-[9px] font-bold opacity-30 uppercase tracking-[5px] mb-8 italic">Now Playing: Trending Mix</p>
+
+        <div class="flex justify-center items-end gap-1 h-10 mb-8">
+            <div class="w-1 bg-rose-500 visualizer-bar" style="animation-delay: 0.1s"></div>
+            <div class="w-1 bg-rose-500 visualizer-bar" style="animation-delay: 0.3s"></div>
+            <div class="w-1 bg-rose-500 visualizer-bar" style="animation-delay: 0.2s"></div>
+            <div class="w-1 bg-rose-500 visualizer-bar" style="animation-delay: 0.4s"></div>
+            <div class="w-1 bg-rose-500 visualizer-bar" style="animation-delay: 0.1s"></div>
+        </div>
+
+        <div class="flex justify-center items-center gap-8">
+            <i class="fas fa-step-backward opacity-30"></i>
+            <div class="w-16 h-16 bg-white text-black rounded-full flex items-center justify-center shadow-xl shadow-white/10"><i class="fas fa-play ml-1"></i></div>
+            <i class="fas fa-step-forward opacity-30"></i>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4 mb-8">
-        <button onclick="payViaUPI()" class="bg-blue-600 p-4 rounded-3xl text-left relative overflow-hidden group shadow-xl shadow-blue-500/20">
-            <i class="fas fa-paper-plane text-2xl mb-2 opacity-50"></i>
-            <p class="font-black text-sm italic italic">Send to UPI ID</p>
-            <p class="text-[8px] opacity-70 uppercase font-bold">Real Transaction</p>
+    <h3 class="text-[10px] font-black uppercase tracking-[4px] mb-4 opacity-30 ml-2">Choose Your Mood</h3>
+    <div class="flex gap-4 overflow-x-auto no-scrollbar pb-6 mb-8">
+        <button onclick="playMood('Gym')" class="min-w-[100px] p-4 music-card text-center border-rose-500/20">
+            <i class="fas fa-dumbbell mb-2 text-rose-500"></i>
+            <p class="text-[9px] font-black uppercase">Gym</p>
         </button>
-        <button onclick="alert('Scanner Loading...')" class="bg-slate-800 p-4 rounded-3xl text-left border border-white/5 shadow-lg">
-            <i class="fas fa-qrcode text-2xl mb-2 text-blue-500"></i>
-            <p class="font-black text-sm italic italic">Scan Any QR</p>
-            <p class="text-[8px] opacity-40 uppercase font-bold">Payments</p>
+        <button onclick="playMood('Relax')" class="min-w-[100px] p-4 music-card text-center">
+            <i class="fas fa-coffee mb-2 text-amber-500"></i>
+            <p class="text-[9px] font-black uppercase">Relax</p>
+        </button>
+        <button onclick="playMood('Party')" class="min-w-[100px] p-4 music-card text-center">
+            <i class="fas fa-bolt mb-2 text-blue-500"></i>
+            <p class="text-[9px] font-black uppercase">Party</p>
         </button>
     </div>
 
-    <div class="flex justify-between items-center mb-4 px-2">
-        <h3 class="text-[10px] font-black uppercase tracking-widest opacity-40 italic">Passbook History</h3>
-        <button onclick="clearHistory()" class="text-[8px] font-black text-rose-500 uppercase">Clear All</button>
+    <div class="music-card p-6 border-t-4 border-rose-500">
+        <h4 class="text-[10px] font-black uppercase tracking-widest mb-4">Get Song QR Code</h4>
+        <input type="text" id="songUrl" placeholder="Paste Song URL" class="w-full p-4 rounded-2xl bg-black/20 border border-white/5 outline-none mb-4 text-xs font-bold">
+        <button onclick="generateSongQR()" class="w-full py-4 bg-rose-600 rounded-2xl font-black uppercase tracking-widest text-[10px] shadow-xl shadow-rose-900/20">Generate & Share</button>
     </div>
 
-    <div id="history" class="space-y-3">
+    <div id="qrModal" class="fixed inset-0 bg-black/95 hidden z-50 flex items-center justify-center p-6 text-center">
+        <div class="bg-white p-8 rounded-[40px] w-full max-w-xs">
+            <div id="qrcode" class="mb-4"></div>
+            <p class="text-black font-black italic text-lg uppercase tracking-tighter">Nexa Beats Link</p>
+            <button onclick="closeQR()" class="mt-6 w-full bg-rose-500 text-white py-3 rounded-2xl font-black uppercase text-[10px]">Close</button>
         </div>
-
-    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] glass-nav p-4 flex justify-around items-center rounded-[35px] shadow-2xl">
-        <i class="fas fa-home text-blue-500 text-lg"></i>
-        <i class="fas fa-chart-pie opacity-20"></i>
-        <div class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center -mt-12 shadow-2xl shadow-blue-500/50 border-4 border-[#0b1120] text-xl">
-            <i class="fas fa-bolt text-white"></i>
-        </div>
-        <i class="fas fa-history opacity-20"></i>
-        <i class="fas fa-user-shield opacity-20"></i>
     </div>
+
+    <footer class="fixed bottom-0 left-0 w-full p-8 bg-inherit backdrop-blur-md text-center border-t border-white/5">
+        <h2 class="text-xl font-black italic">Khagesh <span class="neon-text">ai-nexa</span></h2>
+        <p class="text-[8px] font-bold opacity-30 tracking-[6px] uppercase mt-1 italic">Music & Lifestyle Suite</p>
+    </footer>
 
     <script>
-        let wallet = JSON.parse(localStorage.getItem('nexa_pay_v2')) || { balance: 0, txns: [] };
+        function updateClock() { document.getElementById('clock').innerText = new Date().toLocaleTimeString('en-IN', {hour12: false}); }
+        setInterval(updateClock, 1000); updateClock();
 
-        function updateUI() {
-            document.getElementById('balance').innerText = wallet.balance.toLocaleString('en-IN');
-            const historyArea = document.getElementById('history');
-            historyArea.innerHTML = '';
-            
-            if(wallet.txns.length === 0) {
-                historyArea.innerHTML = '<p class="text-center py-10 opacity-20 text-[10px] font-black uppercase tracking-widest italic">No Transactions Yet</p>';
-                return;
-            }
-
-            wallet.txns.forEach(t => {
-                historyArea.innerHTML += `
-                    <div class="pay-card p-4 flex justify-between items-center">
-                        <div class="flex items-center gap-3">
-                            <div class="w-10 h-10 rounded-2xl flex items-center justify-center ${t.type === 'dr' ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-500'}">
-                                <i class="fas ${t.type === 'dr' ? 'fa-arrow-up' : 'fa-arrow-down'} text-[10px]"></i>
-                            </div>
-                            <div>
-                                <p class="text-xs font-black italic">${t.name}</p>
-                                <p class="text-[7px] opacity-40 font-bold uppercase">${t.date}</p>
-                            </div>
-                        </div>
-                        <p class="font-black italic text-sm ${t.type === 'dr' ? 'text-rose-500' : 'text-emerald-500'}">
-                            ${t.type === 'dr' ? '-' : '+'} ₹${t.amt}
-                        </p>
-                    </div>
-                `;
-            });
+        function playMood(mood) {
+            alert("Playing " + mood + " Music by Nexa Beats!");
         }
 
-        function addMoney() {
-            const amt = prompt("Amount to add in Wallet (₹):");
-            if(amt && !isNaN(amt)) {
-                wallet.balance += parseFloat(amt);
-                wallet.txns.unshift({ name: "Wallet Refill", amt: amt, type: 'cr', date: new Date().toLocaleString() });
-                save();
-            }
+        function generateSongQR() {
+            const url = document.getElementById('songUrl').value;
+            if(!url) return alert("URL dalo bhai!");
+            document.getElementById('qrcode').innerHTML = "";
+            new QRCode(document.getElementById('qrcode'), { text: url, width: 200, height: 200 });
+            document.getElementById('qrModal').classList.remove('hidden');
         }
 
-        function payViaUPI() {
-            const upiId = prompt("Enter Receiver UPI ID (e.g., name@okicici):");
-            const amt = prompt("Enter Amount (₹):");
-            
-            if(upiId && amt && !isNaN(amt)) {
-                // Real UPI Deep Link Trigger
-                const upiLink = `upi://pay?pa=${upiId}&pn=NexaPayUser&am=${amt}&cu=INR&tn=SentViaNexaPay`;
-                
-                // Track in our app history
-                wallet.txns.unshift({ name: "To: " + upiId, amt: amt, type: 'dr', date: new Date().toLocaleString() });
-                save();
-
-                // Launch External UPI App
-                window.location.href = upiLink;
-            }
-        }
-
-        function clearHistory() { if(confirm("Clear history?")) { wallet.txns = []; save(); } }
-        function save() { localStorage.setItem('nexa_pay_v2', JSON.stringify(wallet)); updateUI(); }
+        function closeQR() { document.getElementById('qrModal').classList.add('hidden'); }
         function toggleTheme() { document.body.classList.toggle('light-mode'); }
-        
-        updateUI();
     </script>
 </body>
-      </html>
-      
+            </html>
+            
