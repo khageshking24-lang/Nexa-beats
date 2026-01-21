@@ -3,118 +3,119 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Beats Fixed | Khagesh ai-nexa</title>
+    <title>Nexa Beats Pro | Khagesh ai-nexa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --main-bg: #050505; --neon: #00f2ff; }
-        .light-mode { --main-bg: #fdfdfd; --neon: #6366f1; }
-        body { background: var(--main-bg); color: white; font-family: sans-serif; transition: 0.5s; }
-        .music-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); }
-        .visualizer-bar { width: 4px; background: var(--neon); border-radius: 10px; height: 8px; }
-        .playing .visualizer-bar { animation: bounce 0.6s ease-in-out infinite; }
-        @keyframes bounce { 0%, 100% { height: 8px; } 50% { height: 35px; } }
-        .disk-rotate { animation: spin 5s linear infinite; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        :root { --bg: #05070a; --neon: #22d3ee; }
+        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
+        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 40px; }
+        .disk { border: 4px solid var(--neon); box-shadow: 0 0 20px rgba(34, 211, 238, 0.2); transition: 1s; }
+        .playing .disk { animation: rotate 4s linear infinite; }
+        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+        #yt-player { display: none; } /* Hidden Player */
     </style>
 </head>
-<body class="p-4 max-w-md mx-auto pb-32">
+<body class="p-6 max-w-md mx-auto pb-32">
 
-    <div class="flex justify-between items-center mb-10 pt-4">
-        <button onclick="document.body.classList.toggle('light-mode')" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10"><i class="fas fa-adjust"></i></button>
-        <div class="text-[10px] font-bold tracking-[4px] opacity-40 uppercase">Nexa Beats v3.0</div>
-        <button onclick="window.location.href='tel:8882737014'" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 text-cyan-400"><i class="fas fa-phone-alt"></i></button>
+    <div id="yt-player"></div>
+
+    <div class="flex justify-between items-center mb-10">
+        <div class="w-10 h-10 rounded-xl bg-white/5 flex items-center justify-center border border-white/10 italic font-black text-cyan-400">N</div>
+        <div class="text-[10px] font-bold tracking-[3px] opacity-30 uppercase">Nexa Beats v4.0</div>
+        <button onclick="window.location.href='tel:8882737014'" class="w-10 h-10 rounded-xl bg-cyan-500/10 text-cyan-400 border border-cyan-500/20"><i class="fas fa-phone-alt"></i></button>
     </div>
 
-    <div class="music-card p-8 mb-8 text-center">
-        <div id="diskContainer" class="w-44 h-44 mx-auto rounded-full overflow-hidden shadow-2xl mb-8 border-4 border-cyan-500/20">
-            <img src="https://images.unsplash.com/photo-1459749411177-042180ce673c?w=400" id="albumArt" class="w-full h-full object-cover">
+    <div class="glass-card p-8 mb-8 text-center">
+        <div id="diskWrap" class="w-40 h-40 mx-auto rounded-full overflow-hidden disk mb-8">
+            <img src="https://images.unsplash.com/photo-1493225255756-d9584f8606e9?w=400" id="coverArt" class="w-full h-full object-cover">
         </div>
         
-        <h2 id="songTitle" class="text-2xl font-black italic mb-1 tracking-tight">Select Music</h2>
-        <p id="songArtist" class="text-[9px] font-bold opacity-30 uppercase tracking-[5px] mb-8">Nexa AI Ecosystem</p>
-
-        <div id="viz" class="flex justify-center items-end gap-1 h-10 mb-8">
-            <div class="visualizer-bar" style="animation-delay: 0.1s"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.3s"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.5s"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.2s"></div>
-            <div class="visualizer-bar" style="animation-delay: 0.4s"></div>
-        </div>
+        <h2 id="title" class="text-2xl font-black italic tracking-tight mb-1">Ready to Play</h2>
+        <p id="artist" class="text-[9px] font-bold opacity-30 uppercase tracking-[4px] mb-8">Select a Nexa Mood</p>
 
         <div class="flex justify-center items-center gap-10">
-            <audio id="player" onended="nextSong()"></audio>
-            <button onclick="prevSong()" class="text-xl opacity-40"><i class="fas fa-backward"></i></button>
-            <button onclick="togglePlay()" id="playBtn" class="w-20 h-20 bg-cyan-500 text-black rounded-full flex items-center justify-center shadow-lg shadow-cyan-500/40">
-                <i class="fas fa-play text-2xl ml-1" id="playIcon"></i>
+            <button onclick="prev()" class="opacity-30 hover:opacity-100"><i class="fas fa-backward text-xl"></i></button>
+            <button onclick="togglePlay()" id="masterBtn" class="w-20 h-20 bg-cyan-500 text-black rounded-full flex items-center justify-center shadow-xl shadow-cyan-500/30">
+                <i class="fas fa-play text-2xl ml-1" id="ctrlIcon"></i>
             </button>
-            <button onclick="nextSong()" class="text-xl opacity-40"><i class="fas fa-forward"></i></button>
+            <button onclick="next()" class="opacity-30 hover:opacity-100"><i class="fas fa-forward text-xl"></i></button>
         </div>
     </div>
 
     <div class="grid grid-cols-2 gap-4">
-        <button onclick="playTrack(0)" class="music-card p-5 text-left border-l-4 border-cyan-500 active:scale-95 transition-all">
-            <p class="text-[8px] font-bold opacity-40 mb-1">LO-FI</p>
-            <p class="text-xs font-black">Nexa Chill</p>
+        <button onclick="playNow(0)" class="glass-card p-4 text-left border-l-4 border-cyan-500">
+            <p class="text-[8px] font-black opacity-30 mb-1">CHILL</p>
+            <p class="text-xs font-bold italic">Lofi Hip Hop</p>
         </button>
-        <button onclick="playTrack(1)" class="music-card p-5 text-left border-l-4 border-purple-500 active:scale-95 transition-all">
-            <p class="text-[8px] font-bold opacity-40 mb-1">WORKOUT</p>
-            <p class="text-xs font-black">Power Beats</p>
+        <button onclick="playNow(1)" class="glass-card p-4 text-left border-l-4 border-rose-500">
+            <p class="text-[8px] font-black opacity-30 mb-1">POWER</p>
+            <p class="text-xs font-bold italic">Gym Beast</p>
         </button>
-        <button onclick="playTrack(2)" class="music-card p-5 text-left border-l-4 border-amber-500 active:scale-95 transition-all">
-            <p class="text-[8px] font-bold opacity-40 mb-1">FOCUS</p>
-            <p class="text-xs font-black">Deep Mind</p>
+        <button onclick="playNow(2)" class="glass-card p-4 text-left border-l-4 border-amber-500">
+            <p class="text-[8px] font-black opacity-30 mb-1">FOCUS</p>
+            <p class="text-xs font-bold italic">Deep Study</p>
         </button>
-        <button onclick="playTrack(3)" class="music-card p-5 text-left border-l-4 border-rose-500 active:scale-95 transition-all">
-            <p class="text-[8px] font-bold opacity-40 mb-1">NIGHT</p>
-            <p class="text-xs font-black">Sweet Dream</p>
+        <button onclick="playNow(3)" class="glass-card p-4 text-left border-l-4 border-emerald-500">
+            <p class="text-[8px] font-black opacity-30 mb-1">RELAX</p>
+            <p class="text-xs font-bold italic">Nature Rain</p>
         </button>
     </div>
 
+    <footer class="mt-12 text-center">
+        <p class="text-[10px] font-black italic text-cyan-500">Khagesh ai-nexa</p>
+        <p class="text-[8px] opacity-20 uppercase font-bold tracking-[4px]">Ecosystem Member 12/12</p>
+    </footer>
+
+    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        const playlist = [
-            { name: "Nexa Chill", artist: "Lo-Fi Beats", url: "https://cdn.pixabay.com/audio/2022/05/27/audio_1808f3030e.mp3", art: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400" },
-            { name: "Power Beats", artist: "Gym Energy", url: "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3", art: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400" },
-            { name: "Deep Mind", artist: "Study Focus", url: "https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73484.mp3", art: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400" },
-            { name: "Sweet Dream", artist: "Sleep Mood", url: "https://cdn.pixabay.com/audio/2021/11/25/audio_91b106098c.mp3", art: "https://images.unsplash.com/photo-1511289080722-699d949c0f93?w=400" }
+        let player;
+        const songs = [
+            { id: 'jfKfPfyJRdk', title: 'Lofi Hip Hop', artist: 'Nexa Chill', art: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400' },
+            { id: '5qap5aO4i9A', title: 'Gym Beast', artist: 'Nexa Power', art: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400' },
+            { id: 'lP26UCnoH9s', title: 'Deep Study', artist: 'Nexa Focus', art: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400' },
+            { id: '6S8p0Cq-6-g', title: 'Nature Rain', artist: 'Nexa Relax', art: 'https://images.unsplash.com/photo-1511289080722-699d949c0f93?w=400' }
         ];
+        let currentIdx = 0;
 
-        let current = 0;
-        const audio = document.getElementById('player');
-        const playIcon = document.getElementById('playIcon');
-        const disk = document.getElementById('diskContainer');
-        const viz = document.getElementById('viz');
+        function onYouTubeIframeAPIReady() {
+            player = new YT.Player('yt-player', {
+                height: '0', width: '0',
+                videoId: songs[0].id,
+                events: { 'onStateChange': onPlayerStateChange }
+            });
+        }
 
-        function playTrack(index) {
-            current = index;
-            audio.src = playlist[index].url;
-            document.getElementById('songTitle').innerText = playlist[index].name;
-            document.getElementById('songArtist').innerText = playlist[index].artist;
-            document.getElementById('albumArt').src = playlist[index].art;
-            audio.play();
-            updateUI(true);
+        function playNow(idx) {
+            currentIdx = idx;
+            const s = songs[idx];
+            document.getElementById('title').innerText = s.title;
+            document.getElementById('artist').innerText = s.artist;
+            document.getElementById('coverArt').src = s.art;
+            player.loadVideoById(s.id);
+            player.playVideo();
         }
 
         function togglePlay() {
-            if(!audio.src) { playTrack(0); return; }
-            if(audio.paused) { audio.play(); updateUI(true); }
-            else { audio.pause(); updateUI(false); }
+            const state = player.getPlayerState();
+            if (state === 1) { player.pauseVideo(); }
+            else { player.playVideo(); }
         }
 
-        function updateUI(isPlaying) {
-            if(isPlaying) {
-                playIcon.className = "fas fa-pause text-2xl";
-                disk.classList.add('disk-rotate');
-                viz.classList.add('playing');
+        function onPlayerStateChange(event) {
+            const icon = document.getElementById('ctrlIcon');
+            const wrap = document.getElementById('diskWrap');
+            if (event.data === YT.PlayerState.PLAYING) {
+                icon.className = "fas fa-pause text-2xl";
+                wrap.classList.add('playing');
             } else {
-                playIcon.className = "fas fa-play text-2xl ml-1";
-                disk.classList.remove('disk-rotate');
-                viz.classList.remove('playing');
+                icon.className = "fas fa-play text-2xl ml-1";
+                wrap.classList.remove('playing');
             }
         }
 
-        function nextSong() { current = (current + 1) % playlist.length; playTrack(current); }
-        function prevSong() { current = (current - 1 + playlist.length) % playlist.length; playTrack(current); }
+        function next() { currentIdx = (currentIdx + 1) % songs.length; playNow(currentIdx); }
+        function prev() { currentIdx = (currentIdx - 1 + songs.length) % songs.length; playNow(currentIdx); }
     </script>
 </body>
 </html>
