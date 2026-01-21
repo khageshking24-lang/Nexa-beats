@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="hi">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa Pay Pro | Khagesh ai-nexa</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <style>
+        :root { --pay-bg: #0b1120; --accent: #3b82f6; }
+        .light-mode { --pay-bg: #f8fafc; --accent: #2563eb; }
+        body { background: var(--pay-bg); color: white; font-family: 'Inter', sans-serif; transition: 0.3s; overflow-x: hidden; }
+        .light-mode { color: #1e293b; }
+        .pay-card { background: linear-gradient(135deg, #1e293b, #0f172a); border-radius: 30px; border: 1px solid rgba(255,255,255,0.05); }
+        .light-mode .pay-card { background: white; border-color: #e2e8f0; box-shadow: 0 10px 30px rgba(0,0,0,0.05); }
+        .action-btn { background: rgba(59, 130, 246, 0.1); color: #60a5fa; }
+        .light-mode .action-btn { background: #eff6ff; color: #2563eb; }
+        .glass-nav { background: rgba(15, 23, 42, 0.8); backdrop-filter: blur(10px); border-top: 1px solid rgba(255,255,255,0.05); }
+    </style>
+</head>
+<body class="p-4 max-w-md mx-auto pb-32">
+
+    <div class="flex justify-between items-center mb-6 pt-4">
+        <div class="flex items-center gap-2">
+            <div class="w-10 h-10 bg-gradient-to-br from-blue-500 to-indigo-600 rounded-full flex items-center justify-center font-black shadow-lg">N</div>
+            <div>
+                <p class="text-[9px] opacity-40 font-bold uppercase tracking-widest">Verified Merchant</p>
+                <p class="text-xs font-black italic text-blue-500">Khagesh ai-nexa</p>
+            </div>
+        </div>
+        <button onclick="toggleTheme()" class="w-10 h-10 rounded-full bg-slate-800/50 flex items-center justify-center border border-white/5"><i class="fas fa-adjust"></i></button>
+    </div>
+
+    <div class="pay-card p-8 mb-8 text-center relative overflow-hidden">
+        <div class="absolute -top-10 -right-10 w-32 h-32 bg-blue-500/10 rounded-full blur-3xl"></div>
+        <p class="text-[9px] font-black opacity-40 uppercase tracking-[4px] mb-2 italic">Available Balance</p>
+        <h2 class="text-5xl font-black italic tracking-tighter">₹ <span id="balance">0</span></h2>
+        <div class="flex justify-center gap-4 mt-6">
+            <button onclick="addMoney()" class="action-btn px-6 py-2 rounded-full text-[9px] font-black uppercase tracking-widest border border-blue-500/20 shadow-lg">+ Add Funds</button>
+        </div>
+    </div>
+
+    <div class="grid grid-cols-2 gap-4 mb-8">
+        <button onclick="payViaUPI()" class="bg-blue-600 p-4 rounded-3xl text-left relative overflow-hidden group shadow-xl shadow-blue-500/20">
+            <i class="fas fa-paper-plane text-2xl mb-2 opacity-50"></i>
+            <p class="font-black text-sm italic italic">Send to UPI ID</p>
+            <p class="text-[8px] opacity-70 uppercase font-bold">Real Transaction</p>
+        </button>
+        <button onclick="alert('Scanner Loading...')" class="bg-slate-800 p-4 rounded-3xl text-left border border-white/5 shadow-lg">
+            <i class="fas fa-qrcode text-2xl mb-2 text-blue-500"></i>
+            <p class="font-black text-sm italic italic">Scan Any QR</p>
+            <p class="text-[8px] opacity-40 uppercase font-bold">Payments</p>
+        </button>
+    </div>
+
+    <div class="flex justify-between items-center mb-4 px-2">
+        <h3 class="text-[10px] font-black uppercase tracking-widest opacity-40 italic">Passbook History</h3>
+        <button onclick="clearHistory()" class="text-[8px] font-black text-rose-500 uppercase">Clear All</button>
+    </div>
+
+    <div id="history" class="space-y-3">
+        </div>
+
+    <div class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] glass-nav p-4 flex justify-around items-center rounded-[35px] shadow-2xl">
+        <i class="fas fa-home text-blue-500 text-lg"></i>
+        <i class="fas fa-chart-pie opacity-20"></i>
+        <div class="w-14 h-14 bg-blue-600 rounded-full flex items-center justify-center -mt-12 shadow-2xl shadow-blue-500/50 border-4 border-[#0b1120] text-xl">
+            <i class="fas fa-bolt text-white"></i>
+        </div>
+        <i class="fas fa-history opacity-20"></i>
+        <i class="fas fa-user-shield opacity-20"></i>
+    </div>
+
+    <script>
+        let wallet = JSON.parse(localStorage.getItem('nexa_pay_v2')) || { balance: 0, txns: [] };
+
+        function updateUI() {
+            document.getElementById('balance').innerText = wallet.balance.toLocaleString('en-IN');
+            const historyArea = document.getElementById('history');
+            historyArea.innerHTML = '';
+            
+            if(wallet.txns.length === 0) {
+                historyArea.innerHTML = '<p class="text-center py-10 opacity-20 text-[10px] font-black uppercase tracking-widest italic">No Transactions Yet</p>';
+                return;
+            }
+
+            wallet.txns.forEach(t => {
+                historyArea.innerHTML += `
+                    <div class="pay-card p-4 flex justify-between items-center">
+                        <div class="flex items-center gap-3">
+                            <div class="w-10 h-10 rounded-2xl flex items-center justify-center ${t.type === 'dr' ? 'bg-rose-500/10 text-rose-500' : 'bg-emerald-500/10 text-emerald-500'}">
+                                <i class="fas ${t.type === 'dr' ? 'fa-arrow-up' : 'fa-arrow-down'} text-[10px]"></i>
+                            </div>
+                            <div>
+                                <p class="text-xs font-black italic">${t.name}</p>
+                                <p class="text-[7px] opacity-40 font-bold uppercase">${t.date}</p>
+                            </div>
+                        </div>
+                        <p class="font-black italic text-sm ${t.type === 'dr' ? 'text-rose-500' : 'text-emerald-500'}">
+                            ${t.type === 'dr' ? '-' : '+'} ₹${t.amt}
+                        </p>
+                    </div>
+                `;
+            });
+        }
+
+        function addMoney() {
+            const amt = prompt("Amount to add in Wallet (₹):");
+            if(amt && !isNaN(amt)) {
+                wallet.balance += parseFloat(amt);
+                wallet.txns.unshift({ name: "Wallet Refill", amt: amt, type: 'cr', date: new Date().toLocaleString() });
+                save();
+            }
+        }
+
+        function payViaUPI() {
+            const upiId = prompt("Enter Receiver UPI ID (e.g., name@okicici):");
+            const amt = prompt("Enter Amount (₹):");
+            
+            if(upiId && amt && !isNaN(amt)) {
+                // Real UPI Deep Link Trigger
+                const upiLink = `upi://pay?pa=${upiId}&pn=NexaPayUser&am=${amt}&cu=INR&tn=SentViaNexaPay`;
+                
+                // Track in our app history
+                wallet.txns.unshift({ name: "To: " + upiId, amt: amt, type: 'dr', date: new Date().toLocaleString() });
+                save();
+
+                // Launch External UPI App
+                window.location.href = upiLink;
+            }
+        }
+
+        function clearHistory() { if(confirm("Clear history?")) { wallet.txns = []; save(); } }
+        function save() { localStorage.setItem('nexa_pay_v2', JSON.stringify(wallet)); updateUI(); }
+        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        
+        updateUI();
+    </script>
+</body>
+      </html>
+      
