@@ -3,35 +3,36 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Beats Pro | Khagesh ai-nexa</title>
+    <title>Nexa Beats Fixed | Khagesh ai-nexa</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         :root { --main-bg: #050505; --neon: #00f2ff; }
         .light-mode { --main-bg: #fdfdfd; --neon: #6366f1; }
-        body { background: var(--main-bg); color: white; font-family: 'Outfit', sans-serif; transition: 0.5s; }
-        .music-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(20px); border: 1px solid rgba(255,255,255,0.05); border-radius: 40px; }
-        .neon-text { text-shadow: 0 0 15px var(--neon); color: var(--neon); }
-        .visualizer-bar { width: 4px; background: var(--neon); border-radius: 10px; transition: 0.2s; }
-        .playing .visualizer-bar { animation: bounce 0.8s ease-in-out infinite; }
+        body { background: var(--main-bg); color: white; font-family: sans-serif; transition: 0.5s; }
+        .music-card { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(20px); border-radius: 40px; border: 1px solid rgba(255,255,255,0.1); }
+        .visualizer-bar { width: 4px; background: var(--neon); border-radius: 10px; height: 8px; }
+        .playing .visualizer-bar { animation: bounce 0.6s ease-in-out infinite; }
         @keyframes bounce { 0%, 100% { height: 8px; } 50% { height: 35px; } }
+        .disk-rotate { animation: spin 5s linear infinite; }
+        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
     </style>
 </head>
 <body class="p-4 max-w-md mx-auto pb-32">
 
     <div class="flex justify-between items-center mb-10 pt-4">
-        <button onclick="toggleTheme()" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10"><i class="fas fa-adjust"></i></button>
-        <div class="text-[10px] font-black tracking-[4px] opacity-40 italic">NEXA BEATS LIVE</div>
+        <button onclick="document.body.classList.toggle('light-mode')" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10"><i class="fas fa-adjust"></i></button>
+        <div class="text-[10px] font-bold tracking-[4px] opacity-40 uppercase">Nexa Beats v3.0</div>
         <button onclick="window.location.href='tel:8882737014'" class="w-12 h-12 rounded-2xl bg-white/5 flex items-center justify-center border border-white/10 text-cyan-400"><i class="fas fa-phone-alt"></i></button>
     </div>
 
-    <div class="music-card p-8 mb-8 text-center relative">
-        <div id="disk" class="w-48 h-48 mx-auto rounded-full overflow-hidden shadow-2xl mb-8 border-8 border-white/5 transition-all duration-1000">
-            <img src="https://images.unsplash.com/photo-1614613535308-eb5fbd3d2c17?w=500" class="w-full h-full object-cover">
+    <div class="music-card p-8 mb-8 text-center">
+        <div id="diskContainer" class="w-44 h-44 mx-auto rounded-full overflow-hidden shadow-2xl mb-8 border-4 border-cyan-500/20">
+            <img src="https://images.unsplash.com/photo-1459749411177-042180ce673c?w=400" id="albumArt" class="w-full h-full object-cover">
         </div>
         
-        <h2 id="songTitle" class="text-2xl font-black italic tracking-tighter mb-1">Nexa <span class="neon-text">Beats</span></h2>
-        <p id="songArtist" class="text-[9px] font-bold opacity-30 uppercase tracking-[5px] mb-8">Select a mood to play</p>
+        <h2 id="songTitle" class="text-2xl font-black italic mb-1 tracking-tight">Select Music</h2>
+        <p id="songArtist" class="text-[9px] font-bold opacity-30 uppercase tracking-[5px] mb-8">Nexa AI Ecosystem</p>
 
         <div id="viz" class="flex justify-center items-end gap-1 h-10 mb-8">
             <div class="visualizer-bar" style="animation-delay: 0.1s"></div>
@@ -41,86 +42,79 @@
             <div class="visualizer-bar" style="animation-delay: 0.4s"></div>
         </div>
 
-        <audio id="mainAudio" src=""></audio>
-
         <div class="flex justify-center items-center gap-10">
-            <button onclick="prevSong()" class="opacity-40 hover:opacity-100"><i class="fas fa-backward text-xl"></i></button>
-            <button onclick="togglePlay()" id="playBtn" class="w-20 h-20 bg-white text-black rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/20 active:scale-90 transition-all">
-                <i class="fas fa-play text-2xl ml-1"></i>
+            <audio id="player" onended="nextSong()"></audio>
+            <button onclick="prevSong()" class="text-xl opacity-40"><i class="fas fa-backward"></i></button>
+            <button onclick="togglePlay()" id="playBtn" class="w-20 h-20 bg-cyan-500 text-black rounded-full flex items-center justify-center shadow-lg shadow-cyan-500/40">
+                <i class="fas fa-play text-2xl ml-1" id="playIcon"></i>
             </button>
-            <button onclick="nextSong()" class="opacity-40 hover:opacity-100"><i class="fas fa-forward text-xl"></i></button>
+            <button onclick="nextSong()" class="text-xl opacity-40"><i class="fas fa-forward"></i></button>
         </div>
     </div>
 
-    <h3 class="text-[10px] font-black uppercase tracking-[4px] mb-4 opacity-30 ml-2 italic">Copyright Free Moods</h3>
-    <div class="grid grid-cols-2 gap-4 mb-8">
-        <button onclick="playTrack(0)" class="music-card p-4 text-left border-l-4 border-cyan-500">
-            <p class="text-[10px] font-black text-cyan-400">01</p>
-            <p class="text-xs font-bold italic">Lo-Fi Study</p>
+    <div class="grid grid-cols-2 gap-4">
+        <button onclick="playTrack(0)" class="music-card p-5 text-left border-l-4 border-cyan-500 active:scale-95 transition-all">
+            <p class="text-[8px] font-bold opacity-40 mb-1">LO-FI</p>
+            <p class="text-xs font-black">Nexa Chill</p>
         </button>
-        <button onclick="playTrack(1)" class="music-card p-4 text-left border-l-4 border-purple-500">
-            <p class="text-[10px] font-black text-purple-400">02</p>
-            <p class="text-xs font-bold italic">Gym Motivation</p>
+        <button onclick="playTrack(1)" class="music-card p-5 text-left border-l-4 border-purple-500 active:scale-95 transition-all">
+            <p class="text-[8px] font-bold opacity-40 mb-1">WORKOUT</p>
+            <p class="text-xs font-black">Power Beats</p>
         </button>
-        <button onclick="playTrack(2)" class="music-card p-4 text-left border-l-4 border-emerald-500">
-            <p class="text-[10px] font-black text-emerald-400">03</p>
-            <p class="text-xs font-bold italic">Deep Focus</p>
+        <button onclick="playTrack(2)" class="music-card p-5 text-left border-l-4 border-amber-500 active:scale-95 transition-all">
+            <p class="text-[8px] font-bold opacity-40 mb-1">FOCUS</p>
+            <p class="text-xs font-black">Deep Mind</p>
         </button>
-        <button onclick="playTrack(3)" class="music-card p-4 text-left border-l-4 border-rose-500">
-            <p class="text-[10px] font-black text-rose-400">04</p>
-            <p class="text-xs font-bold italic">Dreamy Night</p>
+        <button onclick="playTrack(3)" class="music-card p-5 text-left border-l-4 border-rose-500 active:scale-95 transition-all">
+            <p class="text-[8px] font-bold opacity-40 mb-1">NIGHT</p>
+            <p class="text-xs font-black">Sweet Dream</p>
         </button>
     </div>
 
-    <footer class="text-center py-6 opacity-40">
-        <p class="text-[8px] font-bold tracking-[5px] uppercase italic">Product of Nexa AI</p>
-        <p class="text-xs font-black italic mt-1">Khagesh ai-nexa</p>
-    </footer>
-
     <script>
-        const songs = [
-            { title: "Lo-Fi Study", artist: "Nexa Relax", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" },
-            { title: "Gym Power", artist: "Nexa Energy", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-2.mp3" },
-            { title: "Deep Focus", artist: "Nexa Mind", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" },
-            { title: "Dreamy Night", artist: "Nexa Sleep", url: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" }
+        const playlist = [
+            { name: "Nexa Chill", artist: "Lo-Fi Beats", url: "https://cdn.pixabay.com/audio/2022/05/27/audio_1808f3030e.mp3", art: "https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400" },
+            { name: "Power Beats", artist: "Gym Energy", url: "https://cdn.pixabay.com/audio/2022/01/18/audio_d0a13f69d2.mp3", art: "https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400" },
+            { name: "Deep Mind", artist: "Study Focus", url: "https://cdn.pixabay.com/audio/2022/03/10/audio_c8c8a73484.mp3", art: "https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400" },
+            { name: "Sweet Dream", artist: "Sleep Mood", url: "https://cdn.pixabay.com/audio/2021/11/25/audio_91b106098c.mp3", art: "https://images.unsplash.com/photo-1511289080722-699d949c0f93?w=400" }
         ];
 
-        let currentTrack = 0;
-        const audio = document.getElementById('mainAudio');
-        const playBtn = document.getElementById('playBtn');
-        const disk = document.getElementById('disk');
+        let current = 0;
+        const audio = document.getElementById('player');
+        const playIcon = document.getElementById('playIcon');
+        const disk = document.getElementById('diskContainer');
         const viz = document.getElementById('viz');
 
         function playTrack(index) {
-            currentTrack = index;
-            audio.src = songs[index].url;
-            document.getElementById('songTitle').innerText = songs[index].title;
-            document.getElementById('songArtist').innerText = songs[index].artist;
+            current = index;
+            audio.src = playlist[index].url;
+            document.getElementById('songTitle').innerText = playlist[index].name;
+            document.getElementById('songArtist').innerText = playlist[index].artist;
+            document.getElementById('albumArt').src = playlist[index].art;
             audio.play();
-            updatePlayUI(true);
+            updateUI(true);
         }
 
         function togglePlay() {
-            if(!audio.src) playTrack(0);
-            else if(audio.paused) { audio.play(); updatePlayUI(true); }
-            else { audio.pause(); updatePlayUI(false); }
+            if(!audio.src) { playTrack(0); return; }
+            if(audio.paused) { audio.play(); updateUI(true); }
+            else { audio.pause(); updateUI(false); }
         }
 
-        function updatePlayUI(isPlaying) {
+        function updateUI(isPlaying) {
             if(isPlaying) {
-                playBtn.innerHTML = '<i class="fas fa-pause text-2xl"></i>';
-                disk.classList.add('rotate-[360deg]');
-                disk.style.borderRadius = "50%";
+                playIcon.className = "fas fa-pause text-2xl";
+                disk.classList.add('disk-rotate');
                 viz.classList.add('playing');
             } else {
-                playBtn.innerHTML = '<i class="fas fa-play text-2xl ml-1"></i>';
+                playIcon.className = "fas fa-play text-2xl ml-1";
+                disk.classList.remove('disk-rotate');
                 viz.classList.remove('playing');
             }
         }
 
-        function nextSong() { currentTrack = (currentTrack + 1) % songs.length; playTrack(currentTrack); }
-        function prevSong() { currentTrack = (currentTrack - 1 + songs.length) % songs.length; playTrack(currentTrack); }
-        function toggleTheme() { document.body.classList.toggle('light-mode'); }
+        function nextSong() { current = (current + 1) % playlist.length; playTrack(current); }
+        function prevSong() { current = (current - 1 + playlist.length) % playlist.length; playTrack(current); }
     </script>
 </body>
 </html>
