@@ -3,120 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Beats Fixed | Khagesh ai-nexa</title>
+    <title>Music Nexa | 20-Min Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
-        :root { --bg: #020617; --neon: #22d3ee; }
-        body { background: var(--bg); color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass-card { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(25px); border: 1px solid rgba(255,255,255,0.05); border-radius: 40px; }
-        .disk-spin { animation: spin 5s linear infinite; animation-play-state: paused; }
-        .playing .disk-spin { animation-play-state: running; }
-        @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        #player-container { position: absolute; top: -1000px; left: -1000px; } /* Total Hidden */
+        #activationScreen { background: #000; min-height: 100vh; display: flex; align-items: center; justify-content: center; position: fixed; inset: 0; z-index: 100; }
+        .hidden { display: none; }
     </style>
 </head>
-<body class="p-6 max-w-md mx-auto pb-32">
+<body class="bg-zinc-950 text-white font-sans">
 
-    <div id="player-container">
-        <div id="yt-player"></div>
-    </div>
-
-    <div class="flex justify-between items-center mb-8">
-        <div class="bg-cyan-500/20 text-cyan-400 px-4 py-1 rounded-full text-[10px] font-black uppercase tracking-widest border border-cyan-500/30">Nexa AI</div>
-        <button onclick="window.location.href='tel:8882737014'" class="text-cyan-400 text-lg"><i class="fas fa-phone-alt"></i></button>
-    </div>
-
-    <div id="playerUI" class="glass-card p-10 mb-8 text-center border-t-2 border-cyan-500/30">
-        <div class="w-44 h-44 mx-auto rounded-full overflow-hidden mb-8 border-8 border-white/5 shadow-2xl disk-spin">
-            <img src="https://images.unsplash.com/photo-1470225620780-dba8ba36b745?w=400" id="art" class="w-full h-full object-cover">
-        </div>
-        
-        <h2 id="title" class="text-2xl font-black italic tracking-tighter mb-1">Nexa Beats</h2>
-        <p id="artist" class="text-[9px] font-bold opacity-30 uppercase tracking-[4px] mb-8 italic">Ready to Stream</p>
-
-        <div class="flex justify-center items-center gap-10">
-            <button onclick="prev()" class="opacity-20 hover:opacity-100"><i class="fas fa-backward"></i></button>
-            <button onclick="togglePlay()" id="playBtn" class="w-20 h-20 bg-cyan-500 text-black rounded-full flex items-center justify-center shadow-2xl shadow-cyan-500/40 active:scale-90 transition-all">
-                <i class="fas fa-play text-2xl ml-1" id="icon"></i>
-            </button>
-            <button onclick="next()" class="opacity-20 hover:opacity-100"><i class="fas fa-forward"></i></button>
+    <div id="activationScreen">
+        <div class="text-center p-6 bg-zinc-900 rounded-[32px] border border-white/10 w-80">
+            <h1 class="text-2xl font-black text-purple-500 mb-6 uppercase">Music Nexa</h1>
+            <input type="text" id="licenseKey" placeholder="Enter TRIAL123" class="w-full p-4 rounded-xl text-center bg-white/5 border border-purple-500/50 mb-4 outline-none">
+            <button onclick="activateApp()" class="w-full bg-purple-600 p-4 rounded-xl font-bold">Start 20-Min Test</button>
+            <p id="errorMsg" class="text-red-500 text-xs mt-3"></p>
         </div>
     </div>
 
-    <div class="grid grid-cols-2 gap-4">
-        <button onclick="playSong(0)" class="glass-card p-5 text-left active:scale-95 transition-all">
-            <i class="fas fa-moon text-cyan-400 mb-2"></i>
-            <p class="text-[8px] font-black opacity-30">MOOD 01</p>
-            <p class="text-xs font-bold italic">Lofi Chill</p>
-        </button>
-        <button onclick="playSong(1)" class="glass-card p-5 text-left active:scale-95 transition-all">
-            <i class="fas fa-fire text-orange-500 mb-2"></i>
-            <p class="text-[8px] font-black opacity-30">MOOD 02</p>
-            <p class="text-xs font-bold italic">Gym Energy</p>
-        </button>
-        <button onclick="playSong(2)" class="glass-card p-5 text-left active:scale-95 transition-all">
-            <i class="fas fa-brain text-purple-500 mb-2"></i>
-            <p class="text-[8px] font-black opacity-30">MOOD 03</p>
-            <p class="text-xs font-bold italic">Focus Mode</p>
-        </button>
-        <button onclick="playSong(3)" class="glass-card p-5 text-left active:scale-95 transition-all">
-            <i class="fas fa-cloud-showers-heavy text-blue-500 mb-2"></i>
-            <p class="text-[8px] font-black opacity-30">MOOD 04</p>
-            <p class="text-xs font-bold italic">Nature Rain</p>
-        </button>
+    <div id="mainApp" class="hidden p-6">
+        <div class="flex justify-between items-center mb-10">
+            <h1 class="text-xl font-black italic">MUSIC <span class="text-purple-500">NEXA</span></h1>
+            <div class="text-right">
+                <span id="timerDisplay" class="text-[10px] bg-red-500/20 text-red-500 px-3 py-1 rounded-full font-bold uppercase tracking-tighter">00:00 Left</span>
+            </div>
+        </div>
+
+        <div class="flex flex-col items-center justify-center mt-20">
+            <div class="w-48 h-48 bg-purple-600/20 rounded-full flex items-center justify-center border-4 border-purple-500 shadow-[0_0_50px_rgba(168,85,247,0.4)]">
+                <i class="fas fa-music text-6xl text-purple-500"></i>
+            </div>
+            <h2 class="mt-10 text-2xl font-bold">Testing Music System</h2>
+            <p class="text-zinc-500 text-sm mt-2">App will lock in 20 minutes</p>
+            <button onclick="logout()" class="mt-20 text-xs opacity-30 underline">Reset Test (Logout)</button>
+        </div>
     </div>
 
-    <footer class="mt-12 text-center opacity-30">
-        <p class="text-xs font-black italic">Khagesh ai-nexa</p>
-    </footer>
-
-    <script src="https://www.youtube.com/iframe_api"></script>
     <script>
-        let player;
-        const playlist = [
-            { id: 'jfKfPfyJRdk', title: 'Lofi Chill', artist: 'Nexa Relax', art: 'https://images.unsplash.com/photo-1516280440614-37939bbacd81?w=400' },
-            { id: 'S19X67dvK3U', title: 'Gym Energy', artist: 'Nexa Power', art: 'https://images.unsplash.com/photo-1534438327276-14e5300c3a48?w=400' },
-            { id: '5qap5aO4i9A', title: 'Focus Mode', artist: 'Nexa Study', art: 'https://images.unsplash.com/photo-1456513080510-7bf3a84b82f8?w=400' },
-            { id: 'mPZkdNFkNps', title: 'Nature Rain', artist: 'Nexa Sleep', art: 'https://images.unsplash.com/photo-1511289080722-699d949c0f93?w=400' }
-        ];
-        let cur = 0;
+        const KEYS = { trial: "TRIAL123", full: "Permanentkey63793119" };
+        const TRIAL_DURATION = 20 * 60 * 1000; // 20 minutes in milliseconds
 
-        function onYouTubeIframeAPIReady() {
-            player = new YT.Player('yt-player', {
-                height: '0', width: '0', videoId: playlist[0].id,
-                events: { 'onStateChange': onStateChange }
-            });
-        }
-
-        function playSong(i) {
-            cur = i;
-            document.getElementById('title').innerText = playlist[i].title;
-            document.getElementById('artist').innerText = playlist[i].artist;
-            document.getElementById('art').src = playlist[i].art;
-            player.loadVideoById(playlist[i].id);
-            player.playVideo();
-        }
-
-        function togglePlay() {
-            if(player.getPlayerState() === 1) player.pauseVideo();
-            else player.playVideo();
-        }
-
-        function onStateChange(e) {
-            const btn = document.getElementById('icon');
-            const ui = document.getElementById('playerUI');
-            if(e.data === 1) {
-                btn.className = "fas fa-pause text-2xl";
-                ui.classList.add('playing');
+        function activateApp() {
+            const val = document.getElementById('licenseKey').value.trim();
+            if(val === KEYS.full) {
+                localStorage.setItem('music_auth', 'FULL');
+                launchApp('Permanent');
+            } else if(val === KEYS.trial) {
+                localStorage.setItem('music_auth', 'TRIAL');
+                localStorage.setItem('music_start_time', Date.now());
+                launchApp('Trial Active');
             } else {
-                btn.className = "fas fa-play text-2xl ml-1";
-                ui.classList.remove('playing');
+                document.getElementById('errorMsg').innerText = "Wrong Key!";
             }
         }
 
-        function next() { cur = (cur + 1) % playlist.length; playSong(cur); }
-        function prev() { cur = (cur - 1 + playlist.length) % playlist.length; playSong(cur); }
+        function launchApp(type) {
+            document.getElementById('activationScreen').style.display = 'none';
+            document.getElementById('mainApp').classList.remove('hidden');
+            if(type === 'Trial Active') startTimer();
+        }
+
+        function startTimer() {
+            setInterval(() => {
+                const startTime = localStorage.getItem('music_start_time');
+                const now = Date.now();
+                const diff = now - startTime;
+
+                if (diff >= TRIAL_DURATION) {
+                    alert("Trial Over! 20 Minutes Complete.");
+                    logout();
+                } else {
+                    const remaining = TRIAL_DURATION - diff;
+                    const mins = Math.floor(remaining / 60000);
+                    const secs = Math.floor((remaining % 60000) / 1000);
+                    document.getElementById('timerDisplay').innerText = `${mins}:${secs < 10 ? '0' : ''}${secs} Left`;
+                }
+            }, 1000);
+        }
+
+        function logout() {
+            localStorage.removeItem('music_auth');
+            localStorage.removeItem('music_start_time');
+            location.reload();
+        }
+
+        window.onload = () => {
+            const auth = localStorage.getItem('music_auth');
+            if(auth === 'FULL') {
+                launchApp('Permanent');
+                document.getElementById('timerDisplay').innerText = "UNLIMITED";
+            } else if(auth === 'TRIAL') {
+                const startTime = localStorage.getItem('music_start_time');
+                if (Date.now() - startTime < TRIAL_DURATION) {
+                    launchApp('Trial Active');
+                } else {
+                    logout();
+                }
+            }
+        }
     </script>
 </body>
 </html>
