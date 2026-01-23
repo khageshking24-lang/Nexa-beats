@@ -3,112 +3,105 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Music-Nexa Test | Khagesh ai-nexa</title>
+    <title>Nexa Security Test | Khagesh ai-nexa</title>
     <script src="https://cdn.tailwindcss.com"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     <style>
         body { background: #0f172a; color: white; font-family: sans-serif; }
         .hidden { display: none !important; }
         #activationScreen { position: fixed; inset: 0; background: #0f172a; z-index: 100; display: flex; align-items: center; justify-content: center; }
-        .music-card { background: rgba(255,255,255,0.05); border-radius: 20px; padding: 20px; border: 1px solid rgba(255,255,255,0.1); }
     </style>
 </head>
 <body class="p-6">
 
     <div id="activationScreen">
-        <div class="text-center w-full max-w-xs">
-            <i class="fas fa-music text-5xl text-purple-500 mb-6"></i>
-            <h1 class="text-2xl font-bold mb-6">MUSIC NEXA TEST</h1>
-            <input type="text" id="licenseKey" placeholder="TRIAL123" class="w-full p-4 rounded-xl bg-white/10 border border-white/20 mb-4 text-center outline-none">
-            <button onclick="checkKey()" class="w-full bg-purple-600 p-4 rounded-xl font-bold uppercase">Test Key</button>
-            <p id="lockStatus" class="mt-4 text-xs text-white/40 uppercase tracking-widest"></p>
+        <div class="text-center w-full max-w-xs p-6 bg-white/5 rounded-3xl border border-white/10">
+            <h1 class="text-xl font-bold mb-6 text-purple-400">NEXA SECURITY LOCK</h1>
+            <p id="errorMsg" class="text-rose-500 text-[10px] mb-4 font-bold uppercase"></p>
+            <input type="text" id="licenseKey" placeholder="Enter Key" class="w-full p-4 rounded-xl bg-white/10 border border-white/20 mb-4 text-center outline-none">
+            <button onclick="checkKey()" class="w-full bg-purple-600 p-4 rounded-xl font-bold uppercase active:scale-95 transition">Verify Key</button>
         </div>
     </div>
 
     <div id="mainApp" class="hidden">
         <div class="flex justify-between items-center mb-6">
-            <h1 class="text-xl font-black italic text-purple-400">MUSIC PRO</h1>
-            <p id="trialBanner" class="text-[10px] bg-orange-500/20 text-orange-400 px-3 py-1 rounded-full font-bold hidden"></p>
+            <h1 class="text-xl font-black italic text-purple-400 italic">MUSIC PRO</h1>
+            <p id="trialBanner" class="text-[10px] bg-orange-500/20 text-orange-400 px-3 py-1 rounded-full font-bold"></p>
         </div>
-
-        <div class="music-card text-center space-y-4">
-            <div class="w-32 h-32 bg-gradient-to-tr from-purple-500 to-pink-500 rounded-full mx-auto flex items-center justify-center shadow-2xl">
-                <i class="fas fa-play text-4xl"></i>
-            </div>
-            <h2 class="text-lg font-bold">Testing Logic...</h2>
-            <p class="text-xs text-white/50">Aapka Permanent Key System check ho raha hai.</p>
+        <div class="p-10 bg-white/5 rounded-3xl border border-white/10 text-center">
+            <p class="text-sm opacity-60">Trial active for 15 seconds...</p>
+            <p id="timerDisplay" class="text-3xl font-black mt-4 text-purple-400">00</p>
         </div>
-
-        <div class="mt-8 space-y-4">
-            <p class="text-[10px] uppercase opacity-40">Test Playlist</p>
-            <div class="music-card flex justify-between items-center py-3">
-                <span class="text-sm">1. Security Check Track</span>
-                <i class="fas fa-heart text-purple-500"></i>
-            </div>
-        </div>
-
-        <footer class="mt-12 text-center text-[10px] opacity-20 uppercase tracking-widest">
-            Khagesh ai-nexa Security Lab
-        </footer>
     </div>
 
     <script>
         const MASTER_KEY = "Permanentkey63793119";
         const TRIAL_KEY = "TRIAL123";
-        const TRIAL_DAYS = 7; // TEST: Isko 0.0001 karke dekho 10 sec lock ke liye
+        const TRIAL_DURATION_MS = 15 * 1000; // SIRF 15 SECOND TEST KE LIYE
 
         function checkKey() {
             const val = document.getElementById('licenseKey').value.trim();
             const now = Date.now();
 
             if (val === MASTER_KEY) {
-                localStorage.setItem('test_music_auth', 'PERMANENT');
-                launchApp();
+                localStorage.setItem('nexa_auth_status', 'PERMANENT');
+                location.reload(); // Refresh to apply
             } else if (val === TRIAL_KEY) {
-                let start = localStorage.getItem('test_music_start');
-                if (!start) { 
-                    localStorage.setItem('test_music_start', now); 
-                    start = now; 
+                // Agar pehle se trial start nahi hua, toh ab karo
+                if (!localStorage.getItem('nexa_trial_start_time')) {
+                    localStorage.setItem('nexa_trial_start_time', now);
+                }
+                localStorage.setItem('nexa_auth_status', 'TRIAL');
+                location.reload();
+            } else { alert("Invalid Key!"); }
+        }
+
+        function validateTrial() {
+            const auth = localStorage.getItem('nexa_auth_status');
+            const startTime = localStorage.getItem('nexa_trial_start_time');
+            const now = Date.now();
+
+            if (!auth) return; // Login screen pe hi raho
+
+            if (auth === 'TRIAL' && startTime) {
+                const elapsed = now - parseInt(startTime);
+                const timeLeft = TRIAL_DURATION_MS - elapsed;
+
+                if (timeLeft <= 0) {
+                    // TRIAL KHATAM! Sab clear karo aur lock screen dikhao
+                    localStorage.removeItem('nexa_auth_status');
+                    document.getElementById('mainApp').classList.add('hidden');
+                    document.getElementById('activationScreen').classList.remove('hidden');
+                    document.getElementById('errorMsg').innerText = "Trial Expired! Buy Permanent Key";
+                    return false;
                 }
                 
-                const diff = now - parseInt(start);
-                if (diff < (TRIAL_DAYS * 24 * 60 * 60 * 1000)) {
-                    localStorage.setItem('test_music_auth', 'TRIAL');
-                    launchApp();
-                } else {
-                    document.getElementById('lockStatus').innerText = "TRIAL EXPIRED! USE PERMANENT KEY";
-                    document.getElementById('lockStatus').style.color = "#f43f5e";
-                    alert("Testing Successful: Trial is now locked!");
-                }
-            } else {
-                alert("Galat Key!");
+                // Banner update karo
+                const secondsLeft = Math.ceil(timeLeft / 1000);
+                document.getElementById('trialBanner').innerText = `LOCKING IN: ${secondsLeft}s`;
+                if(document.getElementById('timerDisplay')) document.getElementById('timerDisplay').innerText = secondsLeft;
+                return true;
+            }
+            
+            if (auth === 'PERMANENT') {
+                document.getElementById('trialBanner').innerText = "LIFETIME UNLOCKED";
+                document.getElementById('trialBanner').classList.replace('text-orange-400', 'text-emerald-400');
+                return true;
             }
         }
 
-        function launchApp() {
-            const auth = localStorage.getItem('test_music_auth');
-            if (!auth) return;
-
-            if (auth === 'TRIAL') {
-                const start = localStorage.getItem('test_music_start');
-                const diff = Date.now() - parseInt(start);
-                const daysLeft = Math.ceil(TRIAL_DAYS - (diff / (1000 * 60 * 60 * 24)));
-                
-                if (daysLeft <= 0) {
-                    localStorage.removeItem('test_music_auth');
-                    location.reload();
-                    return;
-                }
-                document.getElementById('trialBanner').innerText = `TRIAL: ${daysLeft} DAYS LEFT`;
-                document.getElementById('trialBanner').classList.remove('hidden');
+        // Ye function har 1 second mein check karega (Real-time Monitoring)
+        setInterval(() => {
+            if (localStorage.getItem('nexa_auth_status') === 'TRIAL') {
+                validateTrial();
             }
+        }, 1000);
 
-            document.getElementById('activationScreen').classList.add('hidden');
-            document.getElementById('mainApp').classList.remove('hidden');
-        }
-
-        window.onload = launchApp;
+        window.onload = () => {
+            if (validateTrial()) {
+                document.getElementById('activationScreen').classList.add('hidden');
+                document.getElementById('mainApp').classList.remove('hidden');
+            }
+        };
     </script>
 </body>
-            </html>
-            
+</html>
