@@ -3,128 +3,98 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Music Pro | Khagesh ai-nexa</title>
+    <title>Nexa Music | Hybrid Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #020617; color: white; font-family: 'Inter', sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.03); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.1); border-radius: 40px; }
-        .neon-text { text-shadow: 0 0 10px #38bdf8, 0 0 20px #38bdf8; }
-        #lockScreen { background: #020617; position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-center: center; }
+        body { background: #0f172a; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        #lockScreen { background: #0f172a; position: fixed; inset: 0; z-index: 10000; display: flex; align-items: center; justify-content: center; flex-direction: column; }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-6">
+<body class="min-h-screen flex items-center justify-center p-4">
 
     <div id="lockScreen">
-        <div class="glass p-10 w-full max-w-sm text-center border-sky-500/20">
-            <div class="w-20 h-20 bg-sky-500/10 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <i class="fas fa-shield-alt text-3xl text-sky-500"></i>
-            </div>
-            <h2 class="text-2xl font-black mb-1">NEXA <span class="text-sky-500">SECURE</span></h2>
-            <p class="text-[10px] text-slate-500 font-bold mb-8 tracking-widest uppercase">Activation Required</p>
-            
-            <input type="text" id="masterKey" placeholder="Enter License Key" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 mb-4 outline-none text-center font-bold text-sky-400 placeholder:text-slate-700">
-            
-            <button onclick="activateApp()" class="w-full bg-sky-600 hover:bg-sky-500 text-white py-4 rounded-2xl font-black shadow-lg shadow-sky-600/20 transition-all active:scale-95">ACTIVATE NOW</button>
-            
-            <div class="mt-6 flex flex-col gap-1">
-                <p class="text-[9px] text-slate-500 font-bold">TEST KEY: TEST-30</p>
-                <p class="text-[9px] text-slate-600 uppercase font-black">Khagesh ai-nexa Labs</p>
+        <div class="glass p-10 w-full max-w-sm text-center">
+            <h2 class="text-2xl font-black mb-4 tracking-tighter">NEXA <span class="text-sky-400">UPGRADE</span></h2>
+            <input type="text" id="musicKeyInput" placeholder="Enter Key (Monthly/Permanent)" class="w-full p-4 rounded-xl bg-white/10 mb-4 outline-none text-center font-bold">
+            <button onclick="unlockMusic()" class="w-full bg-sky-600 py-4 rounded-xl font-bold active:scale-95 transition">ACTIVATE</button>
+            <div class="mt-6 text-[9px] text-slate-500 font-bold space-y-1">
+                <p>TEST KEY: MU-TEST-30SEC</p>
+                <p>JANUARY KEY: MU-JAN26-XQ92B</p>
             </div>
         </div>
     </div>
 
-    <div class="glass p-12 w-full max-w-md text-center relative shadow-2xl">
-        <div id="statusBadge" class="absolute top-8 right-8 px-3 py-1 bg-sky-500/10 rounded-full text-[10px] font-bold text-sky-400 border border-sky-500/20 uppercase">Active</div>
+    <div class="glass p-12 text-center w-full max-w-md">
+        <div class="w-32 h-32 bg-sky-500/20 rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse">
+            <i class="fas fa-compact-disc text-5xl text-sky-400"></i>
+        </div>
+        <h2 class="text-xl font-bold">Nexa Music Active</h2>
         
-        <div class="w-40 h-40 bg-gradient-to-tr from-sky-600 to-indigo-600 rounded-full mx-auto mb-10 flex items-center justify-center shadow-2xl shadow-sky-500/20 animate-pulse">
-            <i class="fas fa-play text-5xl text-white ml-2"></i>
+        <div class="mt-4 p-4 bg-white/5 rounded-2xl border border-white/5">
+            <p id="timerDisplay" class="text-sky-400 font-mono font-bold"></p>
+            <p id="statusLabel" class="text-[10px] text-slate-500 uppercase mt-1"></p>
         </div>
 
-        <h1 class="text-3xl font-black mb-2 tracking-tighter">Nexa Music Pro</h1>
-        <p class="text-slate-500 text-sm mb-8 font-medium italic">Premium Audio System</p>
-
-        <div class="bg-white/5 rounded-3xl p-4 mb-8 border border-white/5">
-            <p class="text-[10px] text-slate-500 font-bold uppercase mb-1">Remaining Access Time</p>
-            <h3 id="timerDisplay" class="text-2xl font-mono font-black text-sky-400 neon-text">Checking...</h3>
-        </div>
-
-        <div class="flex justify-around items-center text-2xl text-slate-400">
-            <i class="fas fa-backward hover:text-white cursor-pointer transition"></i>
-            <i class="fas fa-pause text-sky-500"></i>
-            <i class="fas fa-forward hover:text-white cursor-pointer transition"></i>
-        </div>
+        <button id="upgradeBtn" onclick="showLock()" class="mt-6 text-[10px] text-sky-400 underline font-bold uppercase" style="display:none;">Upgrade to Permanent Access</button>
     </div>
 
     <script>
-        // --- 🛡️ NEXA SECURITY VAULT ---
-        const NEXA_KEYS = {
-            "TEST-30": 30000, // 30 Seconds for Testing
-            "MU-JAN26-XQ92B": 31 * 86400000, // Full January
-            "Permanentkey63793119": "LIFETIME" // Fixed Elite Key [cite: 2026-01-22]
+        // --- HYBRID VAULT ---
+        const MUSIC_KEYS = {
+            "MU-TEST-30SEC": 30000,           // 30 Secs
+            "MU-JAN26-XQ92B": 31 * 86400000,  // 31 Days
+            "Permanentkey63793119": "LIFETIME" // Forever
         };
 
-        function activateApp() {
-            const keyInput = document.getElementById('masterKey').value.trim();
-            
-            if (NEXA_KEYS[keyInput]) {
-                const duration = NEXA_KEYS[keyInput];
+        function unlockMusic() {
+            const key = document.getElementById('musicKeyInput').value.trim();
+            if(MUSIC_KEYS[key]) {
+                const duration = MUSIC_KEYS[key];
                 const expiry = (duration === "LIFETIME") ? "PERMANENT" : Date.now() + duration;
                 
-                localStorage.setItem('nexa_mu_expiry', expiry);
-                alert("🚀 App Activated Successfully!");
+                localStorage.setItem('mu_expiry', expiry);
+                alert(duration === "LIFETIME" ? "Upgrade Successful: Lifetime Access! 👑" : "Activated for Limited Time! 🚀");
                 location.reload();
-            } else {
-                alert("🚨 Invalid Key! Access Denied.");
-            }
+            } else { alert("Invalid Key!"); }
         }
 
-        function runSecurityCheck() {
-            const expiry = localStorage.getItem('nexa_mu_expiry');
-            const lockUI = document.getElementById('lockScreen');
+        function checkAccess() {
+            const exp = localStorage.getItem('mu_expiry');
+            const screen = document.getElementById('lockScreen');
             const timerUI = document.getElementById('timerDisplay');
+            const statusUI = document.getElementById('statusLabel');
+            const upBtn = document.getElementById('upgradeBtn');
 
-            if (!expiry) {
-                lockUI.style.display = 'flex';
+            if(!exp) {
+                screen.style.display = 'flex';
                 return;
             }
 
-            if (expiry === "PERMANENT") {
-                lockUI.style.display = 'none';
-                timerUI.innerText = "LIFETIME ACCESS";
-                document.getElementById('statusBadge').innerText = "Elite Member";
-                return;
-            }
-
-            // Time calculation
-            const now = Date.now();
-            const timeLeft = parseInt(expiry) - now;
-
-            if (timeLeft <= 0) {
-                // 🔒 LOCK TRIGGER
-                localStorage.removeItem('nexa_mu_expiry');
-                lockUI.style.display = 'flex';
-                alert("⌛ Access Expired! Please renew your subscription.");
-                location.reload();
+            if(exp === "PERMANENT") {
+                screen.style.display = 'none';
+                timerUI.innerText = "LIFETIME UNLOCKED";
+                statusUI.innerText = "Premium Membership Active";
+                upBtn.style.display = 'none';
             } else {
-                // Update Timer
-                lockUI.style.display = 'none';
-                const seconds = Math.floor((timeLeft / 1000) % 60);
-                const minutes = Math.floor((timeLeft / (1000 * 60)) % 60);
-                const hours = Math.floor((timeLeft / (1000 * 60 * 60)) % 24);
-                const days = Math.floor(timeLeft / (1000 * 60 * 60 * 24));
-
-                if (days > 0) {
-                    timerUI.innerText = `${days}d ${hours}h ${minutes}m`;
+                const timeLeft = parseInt(exp) - Date.now();
+                if(timeLeft <= 0) {
+                    localStorage.removeItem('mu_expiry');
+                    screen.style.display = 'flex';
                 } else {
-                    timerUI.innerText = `${minutes}m ${seconds}s`;
+                    screen.style.display = 'none';
+                    timerUI.innerText = "Expires in: " + Math.ceil(timeLeft/1000) + "s";
+                    statusUI.innerText = "Trial/Monthly Mode";
+                    upBtn.style.display = 'block'; // Monthly user upgrade dekh sakta hai
                 }
             }
         }
 
-        // Real-time tracking (Every 1 second)
-        setInterval(runSecurityCheck, 1000);
-        runSecurityCheck();
+        function showLock() { document.getElementById('lockScreen').style.display = 'flex'; }
+
+        setInterval(checkAccess, 1000);
+        checkAccess();
     </script>
 </body>
 </html>
