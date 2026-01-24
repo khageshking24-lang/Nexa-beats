@@ -3,85 +3,52 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Music | Khagesh ai-nexa</title>
+    <title>Nexa Music | Fix Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <style>
-        body { background: #0f172a; color: white; font-family: 'Inter', sans-serif; overflow-x: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(10px); border: 1px solid rgba(255,255,255,0.1); border-radius: 30px; }
-        .player-card { background: linear-gradient(145deg, #1e293b, #0f172a); border-radius: 50px; box-shadow: 20px 20px 60px #080c16, -20px -20px 60px #16223e; }
-        .disk-rotate { animation: rotate 10s linear infinite; border: 4px solid #38bdf8; padding: 10px; }
-        @keyframes rotate { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
-        #lockScreen { background: rgba(15, 23, 42, 0.98); backdrop-filter: blur(20px); }
+        body { background: #0f172a; color: white; font-family: sans-serif; }
+        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
+        #lockScreen { background: #0f172a; display: flex; }
     </style>
 </head>
 <body class="min-h-screen flex items-center justify-center p-4">
 
-    <div id="lockScreen" class="fixed inset-0 z-[10000] flex items-center justify-center p-6">
-        <div class="glass p-10 w-full max-w-sm text-center shadow-2xl border-sky-500/30 border-2">
-            <div class="w-20 h-20 bg-sky-500/20 rounded-full mx-auto mb-6 flex items-center justify-center">
-                <i class="fas fa-music text-3xl text-sky-400"></i>
-            </div>
-            <h2 class="text-2xl font-black mb-2 tracking-tighter">NEXA <span class="text-sky-400">MUSIC</span></h2>
-            <p class="text-[10px] text-slate-400 font-bold mb-8 uppercase tracking-widest">Subscription Required</p>
-            <input type="text" id="musicKeyInput" placeholder="Enter Monthly License Key" class="w-full p-4 rounded-2xl bg-white/5 border border-white/10 mb-4 outline-none text-center font-bold text-sky-400 placeholder:text-slate-600">
-            <button onclick="unlockMusic()" class="w-full bg-sky-600 hover:bg-sky-500 text-white py-4 rounded-2xl font-black shadow-lg shadow-sky-600/20 transition-all active:scale-95">ACTIVATE PLAYER</button>
-            <p class="mt-6 text-[9px] text-slate-500 font-bold uppercase tracking-widest leading-relaxed">System by Khagesh ai-nexa<br>Contact: 8882737014</p>
+    <div id="lockScreen" class="fixed inset-0 z-[10000] items-center justify-center flex-col p-6">
+        <div class="glass p-10 w-full max-w-sm text-center">
+            <h2 class="text-2xl font-black mb-4">NEXA <span class="text-sky-400">LOCK</span></h2>
+            <input type="text" id="musicKeyInput" placeholder="Enter Key" class="w-full p-4 rounded-xl bg-white/10 mb-4 outline-none text-center font-bold">
+            <button onclick="unlockMusic()" class="w-full bg-sky-600 py-4 rounded-xl font-bold">ACTIVATE</button>
+            <p class="mt-4 text-[10px] text-slate-500 uppercase">Test Key: MU-TEST-30SEC</p>
         </div>
     </div>
 
-    <div class="player-card w-full max-w-md p-8 text-center relative overflow-hidden">
-        <div class="absolute top-0 right-0 p-6">
-             <i class="fas fa-cog text-slate-500 cursor-pointer hover:text-sky-400"></i>
+    <div class="glass p-12 text-center w-full max-w-md">
+        <div class="w-32 h-32 bg-sky-500/20 rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse">
+            <i class="fas fa-play text-4xl text-sky-400"></i>
         </div>
-
-        <div class="disk-rotate w-48 h-48 rounded-full mx-auto mb-8 overflow-hidden bg-slate-800 flex items-center justify-center">
-            <i class="fas fa-compact-disc text-8xl text-sky-400"></i>
-        </div>
-
-        <h2 class="text-2xl font-bold mb-1">Testing Smoothness</h2>
-        <p class="text-slate-500 text-sm mb-8 italic">Khagesh AI-Nexa Audio Lab</p>
-
-        <div class="w-full bg-slate-800 h-1 rounded-full mb-8 relative">
-            <div class="bg-sky-500 h-1 w-1/3 rounded-full absolute top-0 left-0"></div>
-            <div class="absolute -top-1 left-1/3 w-3 h-3 bg-white rounded-full shadow-lg"></div>
-        </div>
-
-        <div class="flex justify-between items-center px-4">
-            <i class="fas fa-random text-slate-600"></i>
-            <i class="fas fa-step-backward text-2xl"></i>
-            <div class="w-16 h-16 bg-sky-600 rounded-full flex items-center justify-center shadow-lg shadow-sky-600/40 cursor-pointer active:scale-90 transition">
-                <i class="fas fa-play text-xl ml-1"></i>
-            </div>
-            <i class="fas fa-step-forward text-2xl"></i>
-            <i class="fas fa-redo text-slate-600"></i>
-        </div>
+        <h2 class="text-xl font-bold">Nexa Music Active</h2>
+        <p id="timerDisplay" class="text-sky-400 font-mono mt-2 text-sm italic"></p>
     </div>
 
     <script>
-        // 🔑 POORE SAAL KI KEYS (Same as Tally/Kirana Logic)
+        // VAULT
         const MUSIC_KEYS = {
-            "MU-JAN26-XQ92B": 31, "MU-FEB26-782QX": 28, "MU-MAR26-991PZ": 31,
-            "MU-APR26-V102M": 30, "MU-MAY26-B992K": 31, "MU-JUN26-ZZ11R": 30,
-            "MU-JUL26-CC33T": 31, "MU-AUG26-DD44S": 31, "MU-SEP26-EE55V": 30,
-            "MU-OCT26-FF66N": 31, "MU-NOV26-GG77M": 30, "MU-DEC26-HH88L": 31,
-            "MU-TEST-60SEC": 0.00069, // Sirf 60 Seconds ke liye test key
+            "MU-TEST-30SEC": 30000, // Direct 30 Seconds in milliseconds
+            "MU-JAN26-XQ92B": 31 * 86400000,
             "Permanentkey63793119": "LIFETIME"
         };
 
         function unlockMusic() {
             const key = document.getElementById('musicKeyInput').value.trim();
             if(MUSIC_KEYS[key]) {
-                const val = MUSIC_KEYS[key];
-                localStorage.setItem('mu_auth_key', key);
-                // Expiry Calculation
-                const expiry = (val === "LIFETIME") ? "PERMANENT" : Date.now() + (val * 86400000);
+                const duration = MUSIC_KEYS[key];
+                const expiry = (duration === "LIFETIME") ? "PERMANENT" : Date.now() + duration;
+                
                 localStorage.setItem('mu_expiry', expiry);
-                alert("Nexa Music Activated Successfully!");
+                alert("Activated!");
                 location.reload();
-            } else {
-                alert("🚨 Error: Key invalid ya expired hai!");
-            }
+            } else { alert("Invalid Key!"); }
         }
 
         function checkAccess() {
@@ -94,21 +61,25 @@
             }
 
             if(exp !== "PERMANENT") {
-                if(Date.now() > parseInt(exp)) {
-                    alert("Subscription Expired! Please get a new key.");
-                    localStorage.removeItem('mu_auth_key');
+                const timeLeft = parseInt(exp) - Date.now();
+                
+                if(timeLeft <= 0) {
+                    // LOCK TRIGGER
                     localStorage.removeItem('mu_expiry');
-                    location.reload();
+                    screen.style.display = 'flex';
+                    alert("Time Over! App Locked.");
                 } else {
                     screen.style.display = 'none';
+                    document.getElementById('timerDisplay').innerText = "Expires in: " + Math.ceil(timeLeft/1000) + "s";
                 }
             } else {
                 screen.style.display = 'none';
+                document.getElementById('timerDisplay').innerText = "ELITE ACCESS: PERMANENT";
             }
         }
 
-        // Har 1 second mein check karega (Real-time security)
-        setInterval(checkAccess, 1000);
+        // Fast checking - every 500ms
+        setInterval(checkAccess, 500);
         checkAccess();
     </script>
 </body>
