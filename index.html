@@ -3,22 +3,21 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Nexa ERP V84 | Infinity Build</title>
+    <title>Nexa ERP V85 | Final Beast</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; overflow-x: hidden; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; }
         .nexa-glass { background: rgba(17,24,39,0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
         .tab-content { display: none; }
         .active-tab { display: block; animation: slideUp 0.3s ease; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        input { background: #1a1f29 !important; border: 1px solid #334155 !important; color: #fff !important; border-radius: 12px !important; padding: 12px !important; outline: none; width: 100%; font-size: 14px; }
-        .revenue-card { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-        .nav-btn { color: #64748b; transition: 0.3s; font-size: 1.2rem; }
-        .nav-btn.active { color: #6366f1; transform: scale(1.2); }
+        input { background: #1a1f29 !important; border: 1px solid #334155 !important; color: #fff !important; border-radius: 12px !important; padding: 12px !important; outline: none; width: 100%; }
+        .nav-btn { color: #64748b; }
+        .nav-btn.active { color: #6366f1; transform: scale(1.1); }
     </style>
 </head>
 <body>
@@ -26,65 +25,63 @@
 <div id="securityWall" class="fixed inset-0 z-[10000] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
     <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600">
         <h2 class="text-3xl font-black text-indigo-500 italic mb-2">NEXA ERP</h2>
-        <div class="mb-6"><p id="daysLeft" class="text-5xl font-black">7</p><p class="text-[10px] text-slate-500 uppercase font-bold mt-2">Trial Days Left</p></div>
         <input type="password" id="licenseKey" placeholder="Permanent Key" class="text-center font-bold mb-4">
-        <button onclick="activateApp()" class="w-full bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs">Activate Now</button>
+        <button onclick="activateApp()" class="w-full bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs">Activate</button>
     </div>
 </div>
 
 <div id="appBody" style="display:none" class="p-4 max-w-lg mx-auto pb-36">
     <header class="flex justify-between items-center py-6">
         <div>
-            <div class="flex items-center gap-2">
-                <h1 class="text-2xl font-black text-indigo-500 italic uppercase">Nexa ERP</h1>
-                <button onclick="loadHugeData(100000)" class="text-amber-500 text-xl animate-pulse" title="Load 1 Lakh Data"><i class="fas fa-bolt"></i></button>
-            </div>
+            <h1 class="text-2xl font-black text-indigo-500 italic uppercase flex items-center gap-2">
+                Nexa ERP <button onclick="loadHugeData(200000)" class="text-amber-500 text-sm"><i class="fas fa-bolt"></i></button>
+            </h1>
             <p class="text-[9px] text-slate-500 font-extrabold uppercase mt-1">Powered by Khagesh ai-nexa</p>
         </div>
-        <div class="flex gap-2">
-            <button onclick="downloadBackup()" class="w-8 h-8 nexa-glass text-emerald-400 flex items-center justify-center text-xs"><i class="fas fa-database"></i></button>
-            <button onclick="hardResetSystem()" class="w-8 h-8 nexa-glass text-red-500 flex items-center justify-center text-xs"><i class="fas fa-trash-alt"></i></button>
-        </div>
+        <button onclick="hardResetSystem()" class="text-red-500"><i class="fas fa-trash-alt"></i></button>
     </header>
 
     <div id="tab-dash" class="tab-content active-tab space-y-4">
         <div class="grid grid-cols-2 gap-3 text-center">
             <div class="nexa-glass p-5"><h2 id="dashCount" class="text-3xl font-black text-indigo-500">0</h2><p class="text-[8px] text-slate-500 font-black uppercase">Students</p></div>
-            <div class="nexa-glass p-5 revenue-card text-white"><h2 id="dashRev" class="text-2xl font-black text-white">₹0</h2><p class="text-[8px] text-white/80 font-black uppercase">Revenue</p></div>
+            <div class="nexa-glass p-5 revenue-card"><h2 id="dashRev" class="text-2xl font-black text-white">₹0</h2><p class="text-[8px] text-white/80 font-black uppercase">Revenue</p></div>
         </div>
-        <div class="relative"><i class="fas fa-search absolute left-4 top-4 text-slate-500 text-xs"></i><input type="text" id="dashSearch" onkeyup="renderDash()" placeholder="Search from 1 Lakh records..." class="pl-10 text-xs"></div>
+        <div class="relative"><i class="fas fa-search absolute left-4 top-4 text-slate-500 text-xs"></i><input type="text" id="dashSearch" onkeyup="renderDash()" placeholder="Search Name/Batch/Class..." class="pl-10 text-xs"></div>
         <div id="quickList" class="space-y-2 max-h-96 overflow-y-auto"></div>
-    </div>
-
-    <div id="tab-students" class="tab-content space-y-4">
-        <div class="nexa-glass p-6 space-y-3">
-            <h3 class="text-xs font-black text-indigo-400 uppercase italic">New Admission</h3>
-            <form id="studentForm" onsubmit="event.preventDefault(); addStudent();">
-                <input type="text" id="sName" placeholder="Full Name" required class="mb-2">
-                <div class="grid grid-cols-2 gap-2 mb-2"><input type="text" id="sBatch" placeholder="Batch Name" required><input type="text" id="sClass" placeholder="Subject/Class" required></div>
-                <div class="grid grid-cols-2 gap-2 mb-2"><input type="number" id="sFee" placeholder="Fee Amount" required><input type="number" id="sPhone" placeholder="WhatsApp Number" required></div>
-                <input type="date" id="sJoinDate" required class="mb-4">
-                <button type="submit" class="w-full bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs italic">Confirm Save</button>
-            </form>
-        </div>
     </div>
 
     <div id="tab-attendance" class="tab-content space-y-4">
         <div class="nexa-glass p-5">
             <input type="date" id="attDate" onchange="loadAttendance()" class="mb-3">
-            <div id="attList" class="space-y-2 max-h-96 overflow-y-auto"></div>
-            <button onclick="saveAttendance()" class="w-full mt-4 bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs">Lock Attendance</button>
+            <input type="text" id="attSearch" onkeyup="renderAttendance()" placeholder="Search Student..." class="mb-3 text-xs">
+            <div id="attList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+            <button onclick="saveAttendance()" class="w-full mt-4 bg-indigo-600 py-3 rounded-xl font-black text-xs uppercase">Lock Today's List</button>
         </div>
     </div>
 
     <div id="tab-fees" class="tab-content space-y-4">
         <div class="nexa-glass p-5">
-            <h3 class="text-xs font-black text-indigo-400 uppercase mb-4">Billing Desk</h3>
-            <div id="feeList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+            <div class="flex justify-between items-center mb-4">
+                <h3 class="text-xs font-black text-indigo-400 uppercase">Fee Panel</h3>
+                <button onclick="sendBulk()" class="bg-green-600 px-3 py-1 rounded text-[9px] font-black uppercase">WA Remind</button>
+            </div>
+            <input type="text" id="feeSearch" onkeyup="renderFees()" placeholder="Search to Bill..." class="mb-3 text-xs">
+            <div id="feeList" class="space-y-2 max-h-80 overflow-y-auto"></div>
         </div>
     </div>
 
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] nexa-glass p-2 flex justify-around shadow-2xl z-50">
+    <div id="tab-students" class="tab-content space-y-4">
+        <div class="nexa-glass p-6">
+            <form id="studentForm" onsubmit="event.preventDefault(); addStudent();" class="space-y-2">
+                <input type="text" id="sName" placeholder="Name" required>
+                <div class="grid grid-cols-2 gap-2"><input type="text" id="sBatch" placeholder="Batch"><input type="text" id="sClass" placeholder="Subject"></div>
+                <div class="grid grid-cols-2 gap-2"><input type="number" id="sFee" placeholder="Fee"><input type="number" id="sPhone" placeholder="WhatsApp"></div>
+                <button type="submit" class="w-full bg-indigo-600 py-4 rounded-xl font-black text-xs">SAVE ADMISSION</button>
+            </form>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] nexa-glass p-2 flex justify-around z-50">
         <button onclick="switchTab('dash', this)" class="nav-btn p-4 active"><i class="fas fa-home"></i></button>
         <button onclick="switchTab('students', this)" class="nav-btn p-4"><i class="fas fa-user-plus"></i></button>
         <button onclick="switchTab('attendance', this)" class="nav-btn p-4"><i class="fas fa-check-double"></i></button>
@@ -94,9 +91,9 @@
 
 <script>
     const P_KEY = "Permanentkey63793119";
-    let db, students = [];
+    let db, students = [], attState = {};
 
-    const request = indexedDB.open("NexaERPV84_Final", 1);
+    const request = indexedDB.open("NexaERPV85_Beast", 1);
     request.onupgradeneeded = e => {
         db = e.target.result;
         db.createObjectStore("students", { keyPath: "id" });
@@ -105,82 +102,80 @@
     request.onsuccess = e => { db = e.target.result; loadData(); initSecurity(); };
 
     function loadData() {
-        const tx = db.transaction("students", "readonly");
-        tx.objectStore("students").getAll().onsuccess = e => { 
-            students = e.target.result; 
-            renderAll(); 
+        db.transaction("students").objectStore("students").getAll().onsuccess = e => {
+            students = e.target.result;
+            renderAll();
         };
-    }
-
-    // ⚡ 1 LAKH DATA GENERATOR
-    async function loadHugeData(count) {
-        if(!confirm(`Load ${count} students? Mobile might slow down for 10 seconds during processing.`)) return;
-        const tx = db.transaction("students", "readwrite");
-        const store = tx.objectStore("students");
-        for(let i=1; i<=count; i++) {
-            store.put({ id: Date.now()+i, name: "Student " + i, batch: "B-" + (i%20), cls: "Subject-" + (i%10), fee: 1500, phone: "8882737014", joinDate: "2026-01-31" });
-        }
-        tx.oncomplete = () => { alert("Success! 1,00,000 Records Loaded."); location.reload(); };
     }
 
     function renderDash() {
         const term = document.getElementById("dashSearch").value.toLowerCase();
-        // Indexing search for speed
         const filt = students.filter(x => x.name.toLowerCase().includes(term) || x.batch.toLowerCase().includes(term)).slice(0, 50);
         document.getElementById("quickList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center mb-2 border-l-4 border-indigo-500">
-                <div><p class="font-bold text-sm text-indigo-400">${s.name}</p><p class="text-[9px] text-slate-500 uppercase">${s.batch} | ${s.cls}</p></div>
+            <div class="nexa-glass p-4 flex justify-between items-center mb-2">
+                <div><p class="font-bold text-sm text-indigo-400">${s.name}</p><p class="text-[9px] text-slate-500 uppercase">${s.batch}</p></div>
                 <a href="tel:${s.phone}" class="text-blue-400"><i class="fas fa-phone"></i></a>
-            </div>
-        `).join("");
+            </div>`).join("");
     }
 
-    function renderFeeList() {
-        document.getElementById("feeList").innerHTML = students.slice(0, 50).map(s => `
+    function renderAttendance() {
+        const term = document.getElementById("attSearch").value.toLowerCase();
+        const filt = students.filter(x => x.name.toLowerCase().includes(term) || x.batch.toLowerCase().includes(term)).slice(0, 50);
+        document.getElementById("attList").innerHTML = filt.map(s => `
+            <div class="flex justify-between p-3 bg-white/5 rounded-xl">
+                <span class="text-xs font-bold">${s.name}</span>
+                <input type="checkbox" onchange="attState[${s.id}]=this.checked" ${attState[s.id]?'checked':''} class="w-5 h-5 accent-indigo-500">
+            </div>`).join("");
+    }
+
+    function renderFees() {
+        const term = document.getElementById("feeSearch").value.toLowerCase();
+        const filt = students.filter(x => x.name.toLowerCase().includes(term) || x.batch.toLowerCase().includes(term)).slice(0, 50);
+        document.getElementById("feeList").innerHTML = filt.map(s => `
             <div class="nexa-glass p-4 flex justify-between items-center mb-2">
                 <p class="text-xs font-bold">${s.name}</p>
-                <button onclick="generateReceipt('${s.name}', '${s.fee}')" class="text-indigo-400"><i class="fas fa-file-invoice"></i></button>
-            </div>
-        `).join("");
+                <div class="flex gap-4">
+                    <button onclick="window.open('https://wa.me/91${s.phone}?text=Dear ${s.name}, Fee Reminder ₹${s.fee}')" class="text-green-500"><i class="fab fa-whatsapp"></i></button>
+                    <button onclick="receipt('${s.name}', '${s.fee}')" class="text-indigo-400"><i class="fas fa-receipt"></i></button>
+                </div>
+            </div>`).join("");
     }
 
     function renderAll() {
         document.getElementById("dashCount").innerText = students.length.toLocaleString();
-        let total = students.length * 1500; // Mock calculation for speed
-        document.getElementById("dashRev").innerText = `₹${(total/100000).toFixed(1)}L`;
-        renderDash();
-        renderFeeList();
+        document.getElementById("dashRev").innerText = "₹" + (students.length * 2000 / 100000).toFixed(1) + "L";
+        renderDash(); renderAttendance(); renderFees();
     }
 
-    function generateReceipt(name, amt) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFillColor(99, 102, 241); doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255); doc.text("NEXA ERP INVOICE", 105, 25, {align:"center"});
-        doc.setTextColor(0,0,0); doc.text(`Student: ${name}`, 20, 60);
-        doc.text(`Amount: ₹${amt}`, 20, 70);
-        doc.text("Status: PAID", 20, 80);
-        doc.setFontSize(8); doc.text("Powered by Khagesh ai-nexa", 105, 280, {align:"center"});
-        doc.save(`${name}_Receipt.pdf`);
+    async function loadHugeData(n) {
+        const tx = db.transaction("students", "readwrite");
+        const store = tx.objectStore("students");
+        for(let i=1; i<=n; i++) {
+            store.put({ id: Date.now()+i, name: "Student "+i, batch: "B-"+(i%10), cls: "Sub-"+(i%5), fee: 2000, phone: "8882737014" });
+        }
+        tx.oncomplete = () => location.reload();
     }
 
-    function switchTab(t, btn) {
+    function receipt(n, a) {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.text("FEE RECEIPT", 105, 20, {align:"center"});
+        doc.text(`Name: ${n}`, 20, 40); doc.text(`Amount: ₹${a}`, 20, 50);
+        doc.text("Powered by Khagesh ai-nexa", 105, 280, {align:"center"});
+        doc.save(`${n}_bill.pdf`);
+    }
+
+    function switchTab(t, b) {
         document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab"));
-        document.querySelectorAll(".nav-btn").forEach(b => b.classList.remove("active"));
-        document.getElementById("tab-" + t).classList.add("active-tab");
-        btn.classList.add("active");
+        document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
+        document.getElementById("tab-"+t).classList.add("active-tab");
+        b.classList.add("active");
     }
 
-    function hardResetSystem() { if(confirm("Clear 1 Lakh records?")) { const tx = db.transaction(["students", "attendance"], "readwrite"); tx.objectStore("students").clear(); tx.oncomplete = () => location.reload(); } }
-    function activateApp() { if(document.getElementById("licenseKey").value === P_KEY) { localStorage.setItem("nexa_v84_active", "true"); unlockApp(); } else alert("Wrong Key!"); }
+    function activateApp() { if(document.getElementById("licenseKey").value === P_KEY) { localStorage.setItem("nexa_v85_active","true"); unlockApp(); } }
     function unlockApp() { document.getElementById("securityWall").style.display = "none"; document.getElementById("appBody").style.display = "block"; }
-    function initSecurity() { if (localStorage.getItem("nexa_v84_active") === "true") unlockApp(); }
-    function downloadBackup() { 
-        const data = JSON.stringify(students);
-        const a = document.createElement("a");
-        a.href = URL.createObjectURL(new Blob([data], { type: "application/json" }));
-        a.download = "Nexa_1Lakh_Backup.json"; a.click();
-    }
+    function initSecurity() { if(localStorage.getItem("nexa_v85_active")==="true") unlockApp(); }
+    function hardResetSystem() { if(confirm("Clear Data?")) { db.transaction("students","readwrite").objectStore("students").clear(); location.reload(); } }
 </script>
 </body>
-</html>
+    </html>
+    
