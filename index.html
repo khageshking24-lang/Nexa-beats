@@ -1,104 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa Music | Hybrid 20s Fix</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>Nexa ERP V83 | Stress Test</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <style>
-        body { background: #0f172a; color: white; font-family: sans-serif; overflow: hidden; }
-        .glass { background: rgba(255, 255, 255, 0.05); backdrop-filter: blur(15px); border-radius: 30px; border: 1px solid rgba(255,255,255,0.1); }
-        #lockScreen { background: #0f172a; position: fixed; inset: 0; z-index: 10000; display: none; align-items: center; justify-content: center; flex-direction: column; }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; }
+        .nexa-glass { background: rgba(17,24,39,0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
+        .tab-content { display: none; }
+        .active-tab { display: block; animation: slideUp 0.3s ease; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
+        input { background: #1a1f29 !important; border: 1px solid #334155 !important; color: #fff !important; border-radius: 12px !important; padding: 12px !important; outline: none; width: 100%; }
+        .revenue-card { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
     </style>
 </head>
-<body class="min-h-screen flex items-center justify-center p-4">
+<body>
 
-    <div id="lockScreen">
-        <div class="glass p-10 w-full max-w-sm text-center">
-            <h2 class="text-2xl font-black mb-4">NEXA <span class="text-sky-400">SECURE</span></h2>
-            <input type="text" id="musicKeyInput" placeholder="Enter Key" class="w-full p-4 rounded-xl bg-white/10 mb-4 outline-none text-center font-bold">
-            <button onclick="unlockMusic()" class="w-full bg-sky-600 py-4 rounded-xl font-bold active:scale-95 transition">ACTIVATE</button>
-            <p class="mt-4 text-[10px] text-slate-500 uppercase">Test Key: TEST-20</p>
+<div id="securityWall" class="fixed inset-0 z-[10000] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
+    <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600">
+        <h2 class="text-3xl font-black text-indigo-500 italic mb-2">NEXA ERP</h2>
+        <div class="mb-6"><p id="daysLeft" class="text-5xl font-black">7</p><p class="text-[10px] text-slate-500 uppercase font-bold mt-2">Trial Days Left</p></div>
+        <input type="password" id="licenseKey" placeholder="Permanent Key" class="text-center font-bold mb-4">
+        <button onclick="activateApp()" class="w-full bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs">Activate</button>
+    </div>
+</div>
+
+<div id="appBody" style="display:none" class="p-4 max-w-lg mx-auto pb-36">
+    <header class="flex justify-between items-center py-6">
+        <div>
+            <div class="flex items-center gap-2">
+                <h1 class="text-2xl font-black text-indigo-500 italic uppercase">Nexa ERP</h1>
+                <button onclick="load10kTest()" class="text-amber-500 text-xl animate-pulse"><i class="fas fa-bolt"></i></button>
+            </div>
+            <p class="text-[9px] text-slate-500 font-extrabold uppercase mt-1">Powered by Khagesh ai-nexa</p>
+        </div>
+        <div class="flex gap-2">
+            <button onclick="exportToCSV()" class="w-8 h-8 nexa-glass text-amber-400 flex items-center justify-center text-xs"><i class="fas fa-file-export"></i></button>
+            <button onclick="downloadBackup()" class="w-8 h-8 nexa-glass text-emerald-400 flex items-center justify-center text-xs"><i class="fas fa-database"></i></button>
+            <button onclick="hardResetSystem()" class="w-8 h-8 nexa-glass text-red-500 flex items-center justify-center text-xs"><i class="fas fa-trash-alt"></i></button>
+        </div>
+    </header>
+
+    <div id="tab-dash" class="tab-content active-tab space-y-4">
+        <div class="grid grid-cols-2 gap-3 text-center">
+            <div class="nexa-glass p-5"><h2 id="dashCount" class="text-3xl font-black text-indigo-500">0</h2><p class="text-[8px] text-slate-500 font-black uppercase">Students</p></div>
+            <div class="nexa-glass p-5 revenue-card text-white"><h2 id="dashRev" class="text-2xl font-black text-white">₹0</h2><p class="text-[8px] text-white/80 font-black uppercase">Revenue</p></div>
+        </div>
+        <div class="relative"><i class="fas fa-search absolute left-4 top-4 text-slate-500 text-xs"></i><input type="text" id="dashSearch" onkeyup="renderDash()" placeholder="Search Name/Batch/Class..." class="pl-10 text-xs"></div>
+        <div id="quickList" class="space-y-2 max-h-96 overflow-y-auto"></div>
+    </div>
+
+    <div id="tab-students" class="tab-content space-y-4">
+        <div class="nexa-glass p-6 space-y-3">
+            <h3 class="text-xs font-black text-indigo-400 uppercase italic">New Admission</h3>
+            <form id="studentForm" onsubmit="event.preventDefault(); addStudent();">
+                <input type="text" id="sName" placeholder="Full Name" required class="mb-2">
+                <div class="grid grid-cols-2 gap-2 mb-2"><input type="text" id="sBatch" placeholder="Batch" required><input type="text" id="sClass" placeholder="Subject" required></div>
+                <div class="grid grid-cols-2 gap-2 mb-2"><input type="number" id="sFee" placeholder="Fee" required><input type="number" id="sPhone" placeholder="WhatsApp" required></div>
+                <input type="date" id="sJoinDate" required class="mb-4">
+                <button type="submit" class="w-full bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs italic">Confirm Save</button>
+            </form>
         </div>
     </div>
 
-    <div class="glass p-12 text-center w-full max-w-md">
-        <div class="w-32 h-32 bg-sky-500/20 rounded-full mx-auto mb-6 flex items-center justify-center animate-pulse">
-            <i class="fas fa-compact-disc text-5xl text-sky-400"></i>
-        </div>
-        <h2 class="text-xl font-bold">Nexa Music Active</h2>
-        
-        <div class="mt-4 p-4 bg-white/5 rounded-2xl border border-white/5">
-            <h3 id="timerDisplay" class="text-2xl font-mono font-bold text-sky-400"></h3>
-            <p id="statusLabel" class="text-[10px] text-slate-500 uppercase mt-1"></p>
-        </div>
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] nexa-glass p-2 flex justify-around shadow-2xl z-50">
+        <button onclick="switchTab('dash')" class="p-4 text-slate-400"><i class="fas fa-home"></i></button>
+        <button onclick="switchTab('students')" class="p-4 text-slate-400"><i class="fas fa-user-plus"></i></button>
+        <button onclick="switchTab('attendance')" class="p-4 text-slate-400"><i class="fas fa-check-double"></i></button>
+        <button onclick="switchTab('fees')" class="p-4 text-slate-400"><i class="fas fa-receipt"></i></button>
+    </nav>
+</div>
 
-        <button id="upgradeBtn" onclick="forceUpgrade()" class="mt-6 text-[10px] text-sky-400 underline font-bold uppercase cursor-pointer">Upgrade to Permanent Access</button>
-    </div>
+<script>
+    const P_KEY = "Permanentkey63793119";
+    let db, students = [];
 
-    <script>
-        // --- VAULT ---
-        const MUSIC_KEYS = {
-            "TEST-20": 20000, // 20 Seconds ONLY
-            "MU-JAN26-XQ92B": 31 * 86400000,
-            "Permanentkey63793119": "LIFETIME" // [cite: 2026-01-22]
-        };
+    const request = indexedDB.open("NexaERPV83_Final", 1);
+    request.onupgradeneeded = e => {
+        db = e.target.result;
+        db.createObjectStore("students", { keyPath: "id" });
+        db.createObjectStore("attendance", { keyPath: "date" });
+    };
+    request.onsuccess = e => { db = e.target.result; loadData(); initSecurity(); };
 
-        let isUpgrading = false; // Flag to stop auto-redirect back to player
+    function loadData() {
+        const tx = db.transaction("students", "readonly");
+        tx.objectStore("students").getAll().onsuccess = e => { students = e.target.result; renderAll(); };
+    }
 
-        function unlockMusic() {
-            const key = document.getElementById('musicKeyInput').value.trim();
-            if(MUSIC_KEYS[key]) {
-                const duration = MUSIC_KEYS[key];
-                const expiry = (duration === "LIFETIME") ? "PERMANENT" : Date.now() + duration;
-                
-                localStorage.setItem('mu_expiry', expiry);
-                isUpgrading = false; // Reset flag
-                alert(duration === "LIFETIME" ? "Success: Permanent Access! 👑" : "Success: 20 Seconds Active! 🚀");
-                location.reload();
-            } else { alert("Invalid Key!"); }
+    // MAGIC BUTTON FUNCTION
+    function load10kTest() {
+        if(!confirm("Load 10,000 Dummy Students for Stress Test?")) return;
+        const tx = db.transaction("students", "readwrite");
+        const store = tx.objectStore("students");
+        for(let i=1; i<=10000; i++) {
+            store.put({ id: Date.now()+i, name: "Student "+i, batch: "Batch-"+(i%5+1), cls: "Sub-"+(i%3+1), fee: 2000, phone: "8882737014", joinDate: "2026-01-31" });
         }
+        tx.oncomplete = () => { alert("10,000 Students Loaded!"); location.reload(); };
+    }
 
-        function forceUpgrade() {
-            isUpgrading = true; // Tell system we are upgrading
-            document.getElementById('lockScreen').style.display = 'flex';
-        }
+    function renderDash() {
+        const s = document.getElementById("dashSearch").value.toLowerCase();
+        const filt = students.filter(x => x.name.toLowerCase().includes(s) || x.batch.toLowerCase().includes(s));
+        document.getElementById("quickList").innerHTML = filt.slice(0, 50).map(s => `<div class="nexa-glass p-4 flex justify-between items-center mb-2"><div><p class="font-bold text-sm text-indigo-400">${s.name}</p><p class="text-[9px] text-slate-500 uppercase">${s.batch}</p></div></div>`).join("");
+    }
 
-        function checkAccess() {
-            if(isUpgrading) return; // Stop checking if user is on Upgrade screen
+    function renderAll() {
+        document.getElementById("dashCount").innerText = students.length;
+        let rev = 0; students.forEach(s => rev += Number(s.fee));
+        document.getElementById("dashRev").innerText = `₹${rev}`;
+        renderDash();
+    }
 
-            const exp = localStorage.getItem('mu_expiry');
-            const screen = document.getElementById('lockScreen');
-            const timerUI = document.getElementById('timerDisplay');
-            const statusUI = document.getElementById('statusLabel');
-            const upBtn = document.getElementById('upgradeBtn');
-
-            if(!exp) {
-                screen.style.display = 'flex';
-                return;
-            }
-
-            if(exp === "PERMANENT") {
-                screen.style.display = 'none';
-                timerUI.innerText = "LIFETIME ACCESS";
-                statusUI.innerText = "Premium Verified";
-                upBtn.style.display = 'none'; // Permanent users don't need upgrade button
-            } else {
-                const timeLeft = parseInt(exp) - Date.now();
-                if(timeLeft <= 0) {
-                    localStorage.removeItem('mu_expiry');
-                    screen.style.display = 'flex';
-                } else {
-                    screen.style.display = 'none';
-                    timerUI.innerText = Math.ceil(timeLeft/1000) + "s";
-                    statusUI.innerText = "Trial Mode Active";
-                }
-            }
-        }
-
-        setInterval(checkAccess, 1000);
-        checkAccess();
-    </script>
+    function hardResetSystem() { if(confirm("Clear Data?")) { const tx = db.transaction(["students", "attendance"], "readwrite"); tx.objectStore("students").clear(); tx.objectStore("attendance").clear(); tx.oncomplete = () => location.reload(); } }
+    function switchTab(t) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("tab-" + t).classList.add("active-tab"); }
+    function activateApp() { if(document.getElementById("licenseKey").value === P_KEY) { localStorage.setItem("nexa_v83_active", "true"); unlockApp(); } else { alert("Key Error!"); } }
+    function unlockApp() { document.getElementById("securityWall").style.display = "none"; document.getElementById("appBody").style.display = "block"; }
+    function initSecurity() { if (localStorage.getItem("nexa_v83_active") === "true") unlockApp(); }
+</script>
 </body>
 </html>
