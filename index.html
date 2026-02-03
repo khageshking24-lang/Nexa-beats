@@ -3,238 +3,202 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Nexa EduMaster - MALHOTRA CLASSES</title>
+    <title>MALHOTRA CLASSES - Nexa EduMaster ERP</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
     
     <style>
-        :root {
-            --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; --text: #1e293b;
-        }
-        body.dark-mode {
-            --primary: #818cf8; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9;
-        }
-        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: 0.3s; }
-        body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 70px; }
+        :root { --p: #6366f1; --bg: #f8fafc; --c: #ffffff; --t: #1e293b; --g: #64748b; }
+        body.dark { --p: #818cf8; --bg: #0f172a; --c: #1e293b; --t: #f1f5f9; --g: #94a3b8; }
+        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.2s; }
+        body { background: var(--bg); color: var(--t); margin: 0; padding-bottom: 80px; overflow-x: hidden; }
         
-        /* Glassmorphism Header */
-        header {
-            background: rgba(99, 102, 241, 0.1);
-            backdrop-filter: blur(10px);
-            padding: 15px; text-align: center; border-bottom: 1px solid var(--primary);
-        }
-        .branding { font-size: 0.8rem; color: var(--primary); font-weight: bold; }
+        /* Glassmorphism UI Components */
+        header { background: rgba(99, 102, 241, 0.1); backdrop-filter: blur(12px); padding: 15px; border-bottom: 1px solid var(--p); position: sticky; top: 0; z-index: 100; }
+        .branding { font-size: 10px; text-align: center; color: var(--p); font-weight: 800; letter-spacing: 1px; margin-top: 5px; }
+        
+        #trial-lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
+        
+        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--c); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(0,0,0,0.1); box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
+        .nav-item { cursor: pointer; color: var(--g); font-size: 11px; font-weight: 600; text-align: center; }
+        .nav-item.active { color: var(--p); }
+        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
 
-        /* Trial Lock Overlay */
-        #lock-screen {
-            position: fixed; inset: 0; background: var(--bg); z-index: 9999;
-            display: none; flex-direction: column; align-items: center; justify-content: center;
-        }
-
-        /* 4-Tab Navigation */
-        .nav-bar {
-            position: fixed; bottom: 0; width: 100%; background: var(--card);
-            display: flex; justify-content: space-around; padding: 10px 0;
-            border-top: 1px solid #ddd; z-index: 1000;
-        }
-        .nav-item { cursor: pointer; text-align: center; font-size: 0.8rem; flex: 1; }
-        .nav-item i { font-size: 1.5rem; display: block; }
-        .nav-item.active { color: var(--primary); }
-
-        .container { padding: 15px; max-width: 800px; margin: auto; }
-        .card { 
-            background: var(--card); border-radius: 15px; padding: 15px; 
-            margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
-            border-left: 5px solid var(--primary);
-        }
-        .search-box { 
-            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd;
-            margin-bottom: 15px; background: var(--card); color: var(--text);
-        }
-        .btn { 
-            padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; 
-            font-weight: bold; display: inline-flex; align-items: center; gap: 5px;
-        }
+        .card { background: var(--c); border-radius: 16px; padding: 16px; margin: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); border-left: 6px solid var(--p); }
+        .search-container { padding: 15px; }
+        .search-box { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid var(--g); background: var(--c); color: var(--t); outline: none; }
+        
+        .btn { padding: 8px 14px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; }
+        .btn-p { background: var(--p); color: white; }
         .btn-call { background: #22c55e; color: white; }
         .btn-del { background: #ef4444; color: white; }
         .btn-wa { background: #25d366; color: white; }
-
-        .hidden { display: none; }
+        
+        .input-group { margin-bottom: 15px; }
+        .input-group label { display: block; margin-bottom: 5px; font-size: 12px; color: var(--g); }
+        .input-group input, .input-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--g); background: var(--c); color: var(--t); }
     </style>
 </head>
 <body>
 
-<div id="lock-screen">
-    <h2>Trial Expired or Clock Tampered!</h2>
-    <p>Please enter Master Key to continue.</p>
-    <input type="password" id="master-key-input" placeholder="Enter Key...">
-    <button class="btn" style="background:var(--primary); color:white; margin-top:10px;" onclick="unlockApp()">Unlock</button>
+<div id="trial-lock">
+    <i class="fas fa-user-lock" style="font-size: 50px; color: var(--p); margin-bottom: 20px;"></i>
+    <h2>Security Alert</h2>
+    <p>Trial Expired or Clock Tampered. Enter Master Key.</p>
+    <input type="password" id="mkey" style="padding:10px; border-radius:8px; border:1px solid var(--p); width: 80%; max-width: 300px;" placeholder="Enter Key...">
+    <button class="btn btn-p" style="margin-top:15px;" onclick="unlock()">Verify & Access</button>
 </div>
 
 <header>
-    <div style="display:flex; justify-content: space-between; align-items:center;">
-        <button onclick="toggleMode()" class="btn"><i class="fas fa-moon"></i></button>
-        <div>
-            <h3 style="margin:0;">MALHOTRA CLASSES</h3>
-            <small>Sant Nagar Burari, Delhi-84</small>
+    <div style="display:flex; justify-content: space-between; align-items: center;">
+        <div onclick="document.body.classList.toggle('dark')" style="cursor:pointer;"><i class="fas fa-circle-half-stroke"></i></div>
+        <div style="text-align: center;">
+            <div style="font-weight: 900; font-size: 16px;">MALHOTRA CLASSES (ACCOUNTS VILLA)</div>
+            <div style="font-size: 10px; color: var(--g);">St. No 112/10, B Block, Sant Nagar Burari, Delhi-84</div>
         </div>
-        <div style="display:flex; gap:10px;">
-            <label class="btn" style="background:#22c55e; color:white;">
-                <i class="fas fa-file-excel"></i>
-                <input type="file" hidden onchange="importExcel(this)" accept=".xlsx, .xls, .json">
-            </label>
-            <button onclick="exportData()" class="btn" style="background:var(--primary); color:white;"><i class="fas fa-download"></i></button>
-            <button onclick="masterReset()" class="btn btn-del"><i class="fas fa-power-off"></i></button>
+        <div style="display:flex; gap: 8px;">
+            <label class="btn btn-p" title="Import Excel"><i class="fas fa-file-import"></i><input type="file" hidden onchange="importX(this)" accept=".xlsx, .xls, .json"></label>
+            <button class="btn btn-del" onclick="mReset()"><i class="fas fa-rotate"></i></button>
         </div>
     </div>
-    <div class="branding">Powered by Khagesh ai-nexa</div>
+    <div class="branding">POWERED BY KHAGESH AI-NEXA</div>
 </header>
 
-<div class="container">
-    <input type="text" id="globalSearch" class="search-box" placeholder="Search by Name, Batch, or Subject..." oninput="sync()">
-
-    <div id="home-tab" class="tab-content">
-        <h4><i class="fas fa-users"></i> Students List</h4>
-        <div id="student-list"></div>
+<div id="view-home" class="tab-view">
+    <div class="search-container">
+        <input type="text" id="qHome" class="search-box" placeholder="Search students, batch or subject..." oninput="sync()">
     </div>
+    <div id="list-home"></div>
+</div>
 
+<div id="view-admission" class="tab-view" style="display:none; padding: 20px;">
+    <h3><i class="fas fa-user-plus"></i> New Admission</h3>
+    <div class="card">
+        <div class="input-group"><label>Student Name</label><input type="text" id="a_name"></div>
+        <div class="input-group"><label>WhatsApp Number</label><input type="number" id="a_phone"></div>
+        <div class="input-group"><label>Batch</label><input type="text" id="a_batch"></div>
+        <div class="input-group"><label>Subject</label><input type="text" id="a_cls"></div>
+        <div class="input-group"><label>Monthly Fee</label><input type="number" id="a_fee"></div>
+        <div class="input-group"><label>Joined Date</label><input type="date" id="a_date"></div>
+        <button class="btn btn-p" style="width:100%; justify-content:center;" onclick="saveSt()">Save Student</button>
     </div>
+</div>
 
 <nav class="nav-bar">
-    <div class="nav-item active" onclick="showTab('home')"><i class="fas fa-home"></i>Home</div>
-    <div class="nav-item" onclick="showTab('admission')"><i class="fas fa-user-plus"></i>Admission</div>
-    <div class="nav-item" onclick="showTab('attendance')"><i class="fas fa-calendar-check"></i>Attendance</div>
-    <div class="nav-item" onclick="showTab('fees')"><i class="fas fa-file-invoice-dollar"></i>Fees</div>
+    <div class="nav-item active" onclick="tab('home')"><i class="fas fa-th-large"></i>Home</div>
+    <div class="nav-item" onclick="tab('admission')"><i class="fas fa-user-graduate"></i>Admission</div>
+    <div class="nav-item" onclick="tab('attendance')"><i class="fas fa-clipboard-user"></i>Attendance</div>
+    <div class="nav-item" onclick="tab('fees')"><i class="fas fa-indian-rupee-sign"></i>Fees</div>
 </nav>
 
 <script>
-    const CLIENT_NAME = "MALHOTRA CLASSES (ACCOUNTS VILLA)"; [cite: 2026-02-01]
     const MASTER_KEY = "Permanentkey63793119"; [cite: 2026-01-22]
     let db;
 
-    // Database Init with Persistence [cite: 2026-01-31]
-    const request = indexedDB.open("NexaEduDB_Malhotra", 1);
-    request.onupgradeneeded = (e) => {
-        db = e.target.result;
-        db.createObjectStore("st", { keyPath: "id" });
-        db.createObjectStore("config", { keyPath: "key" });
+    // IndexedDB + Persistence [cite: 2026-01-31, 2026-02-01]
+    const req = indexedDB.open("MalhotraEduERP", 1);
+    req.onupgradeneeded = e => {
+        let d = e.target.result;
+        d.createObjectStore("st", {keyPath: "id"});
+        d.createObjectStore("cfg", {keyPath: "k"});
     };
-    request.onsuccess = (e) => {
+    req.onsuccess = e => {
         db = e.target.result;
-        checkTrial();
+        initSecurity(); [cite: 2026-02-01]
         sync();
     };
 
-    // 7-Day Trial & Clock Protection [cite: 2026-02-01]
-    async function checkTrial() {
-        const now = new Date().getTime();
-        const tx = db.transaction("config", "readwrite");
-        const store = tx.objectStore("config");
-        
-        let startDate = await new Promise(r => store.get("start_date").onsuccess = e => r(e.target.result));
-        let lastVisit = await new Promise(r => store.get("last_visit").onsuccess = e => r(e.target.result));
+    // 7-Day Anti-Tamper Trial [cite: 2026-02-01]
+    async function initSecurity() {
+        const now = Date.now();
+        const tx = db.transaction("cfg", "readwrite").objectStore("cfg");
+        let start = await g(tx, "sd");
+        let last = await g(tx, "lv");
+        let lock = await g(tx, "lock");
 
-        if (!startDate) {
-            store.put({ key: "start_date", val: now });
-            store.put({ key: "last_visit", val: now });
-            return;
-        }
-
-        // Anti-Tamper: If system time is behind last visit
-        if (now < lastVisit.val) {
-            document.getElementById('lock-screen').style.display = 'flex';
-        }
-        
-        // 7 Day Trial check
-        if (now - startDate.val > 7 * 24 * 60 * 60 * 1000) {
-            let isUnlocked = await new Promise(r => store.get("unlocked").onsuccess = e => r(e.target.result));
-            if (!isUnlocked) document.getElementById('lock-screen').style.display = 'flex';
-        }
-        
-        store.put({ key: "last_visit", val: now });
+        if(!start) { tx.put({k:"sd", v:now}); tx.put({k:"lv", v:now}); return; }
+        if(now < last.v) { document.getElementById('trial-lock').style.display = 'flex'; }
+        if(now - start.v > 7*24*60*60*1000 && !lock) { document.getElementById('trial-lock').style.display = 'flex'; }
+        tx.put({k:"lv", v:now});
     }
 
-    function unlockApp() {
-        if (document.getElementById('master-key-input').value === MASTER_KEY) {
-            db.transaction("config", "readwrite").objectStore("config").put({ key: "unlocked", val: true });
-            document.getElementById('lock-screen').style.display = 'none';
-        } else { alert("Wrong Master Key!"); }
+    function g(s, k) { return new Promise(r => s.get(k).onsuccess = e => r(e.target.result)); }
+
+    function unlock() {
+        if(document.getElementById('mkey').value === MASTER_KEY) {
+            db.transaction("cfg", "readwrite").objectStore("cfg").put({k:"lock", v:true});
+            document.getElementById('trial-lock').style.display = 'none';
+        } else alert("Invalid Key!");
     }
 
     // Direct Excel Import [cite: 2026-02-01]
-    async function importExcel(input) {
-        const file = input.files[0];
+    function importX(inp) {
+        const file = inp.files[0];
         const reader = new FileReader();
-        const ext = file.name.split('.').pop().toLowerCase();
-
-        reader.onload = async (e) => {
-            let students = [];
-            if (ext === 'xlsx' || ext === 'xls') {
-                const workbook = XLSX.read(e.target.result, { type: 'binary' });
-                students = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+        reader.onload = e => {
+            let data = [];
+            if(file.name.endsWith('.json')) {
+                data = JSON.parse(e.target.result);
             } else {
-                students = JSON.parse(e.target.result);
+                const wb = XLSX.read(e.target.result, {type:'binary'});
+                data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             }
-
-            const tx = db.transaction("st", "readwrite");
-            students.forEach(s => {
+            const tx = db.transaction("st", "readwrite").objectStore("st");
+            data.forEach(s => {
                 if(!s.id) s.id = Date.now() + Math.random();
                 if(!s.date) s.date = new Date().toISOString().split('T')[0];
-                tx.objectStore("st").put(s);
+                tx.put(s);
             });
-            tx.oncomplete = () => { alert("Import Successful!"); sync(); };
+            tx.transaction.oncomplete = () => { alert("Import Done!"); sync(); };
         };
         reader.readAsBinaryString(file);
     }
 
-    // Sync UI with Multi-Filter [cite: 2026-02-01]
+    // Home Sync with Call & Delete [cite: 2026-02-01]
     function sync() {
-        const searchTerm = document.getElementById('globalSearch').value.toLowerCase();
-        const list = document.getElementById('student-list');
+        const q = document.getElementById('qHome').value.toLowerCase();
+        const list = document.getElementById('list-home');
         list.innerHTML = "";
-
-        db.transaction("st").objectStore("st").getAll().onsuccess = (e) => {
-            const students = e.target.result;
-            students.filter(s => 
-                s.name.toLowerCase().includes(searchTerm) || 
-                s.batch.toLowerCase().includes(searchTerm) || 
-                s.cls.toLowerCase().includes(searchTerm)
-            ).forEach(s => {
+        db.transaction("st").objectStore("st").getAll().onsuccess = e => {
+            e.target.result.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || s.cls.toLowerCase().includes(q)).forEach(s => {
                 list.innerHTML += `
-                    <div class="card">
-                        <div style="display:flex; justify-content:space-between;">
-                            <b>${s.name} (${s.cls})</b>
-                            <span style="font-size:0.8rem; color:gray;">Joined: ${s.date}</span>
+                <div class="card">
+                    <div style="display:flex; justify-content:space-between; align-items:start;">
+                        <div>
+                            <div style="font-weight:700; font-size:16px;">${s.name}</div>
+                            <div style="font-size:12px; color:var(--g);">${s.cls} | ${s.batch}</div>
                         </div>
-                        <p style="margin:5px 0;">Batch: ${s.batch} | Fee: ₹${s.fee}</p>
-                        <div style="display:flex; gap:10px; margin-top:10px;">
-                            <a href="tel:${s.phone}" class="btn btn-call"><i class="fas fa-phone"></i> Call</a>
-                            <button onclick="deleteStudent(${s.id})" class="btn btn-del"><i class="fas fa-trash"></i></button>
-                            <button onclick="sendBulkWA('${s.phone}', '${s.name}')" class="btn btn-wa"><i class="fab fa-whatsapp"></i> Reminder</button>
-                        </div>
+                        <div style="font-size:10px; background:rgba(99,102,241,0.1); padding:4px 8px; border-radius:6px; color:var(--p);">Joined: ${s.date}</div>
                     </div>
-                `;
+                    <div style="margin-top:15px; display:flex; gap:8px;">
+                        <a href="tel:${s.phone}" class="btn btn-call"><i class="fas fa-phone"></i> Call</a>
+                        <button class="btn btn-wa" onclick="remind('${s.phone}', '${s.name}')"><i class="fab fa-whatsapp"></i> Fee</button>
+                        <button class="btn btn-del" onclick="delSt(${s.id})"><i class="fas fa-trash"></i></button>
+                    </div>
+                </div>`;
             });
         };
     }
 
-    function deleteStudent(id) {
-        if(confirm("Are you sure?")) {
-            db.transaction("st", "readwrite").objectStore("st").delete(id).onsuccess = () => sync();
-        }
+    function saveSt() {
+        const s = {
+            id: Date.now(),
+            name: document.getElementById('a_name').value,
+            phone: document.getElementById('a_phone').value,
+            batch: document.getElementById('a_batch').value,
+            cls: document.getElementById('a_cls').value,
+            fee: document.getElementById('a_fee').value,
+            date: document.getElementById('a_date').value || new Date().toISOString().split('T')[0]
+        };
+        db.transaction("st", "readwrite").objectStore("st").add(s).onsuccess = () => { alert("Student Added!"); tab('home'); sync(); };
     }
 
-    function masterReset() {
-        if(confirm("MASTER RESET: This will delete ALL data. Continue?")) {
-            indexedDB.deleteDatabase("NexaEduDB_Malhotra");
-            location.reload();
-        }
-    }
-
-    function toggleMode() { document.body.classList.toggle('dark-mode'); }
-    function showTab(tab) { /* Tab switching logic */ }
+    function delSt(id) { if(confirm("Delete Student?")) db.transaction("st", "readwrite").objectStore("st").delete(id).onsuccess = () => sync(); }
+    function mReset() { if(confirm("Master Reset? All data will be wiped!")) { indexedDB.deleteDatabase("MalhotraEduERP"); location.reload(); } }
+    function tab(t) { document.querySelectorAll('.tab-view').forEach(v => v.style.display='none'); document.getElementById('view-'+t).style.display='block'; document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); event.currentTarget.classList.add('active'); }
+    function remind(p, n) { window.open(`https://wa.me/91${p}?text=Hi ${n}, this is a reminder regarding your pending fee at MALHOTRA CLASSES.`); }
 </script>
 </body>
 </html>
