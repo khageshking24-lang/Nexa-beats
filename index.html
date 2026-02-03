@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>MALHOTRA CLASSES | Pro v17.2 Stable</title>
+    <title>MALHOTRA CLASSES | Pro v17.3</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -28,8 +28,9 @@
         <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">Powered by Khagesh ai-nexa</p>
         <div class="space-y-4">
             <input type="password" id="mKey" placeholder="Activation Key" class="text-center font-bold">
-            <button onclick="unlockApp()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate</button>
-            <button onclick="enterApp()" class="w-full bg-slate-800 border border-slate-700 py-4 rounded-xl font-black uppercase text-[10px] text-indigo-400 mt-2">7-Day Trial</button>
+            <button onclick="unlockApp()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate Premium</button>
+            <button id="trialBtn" onclick="enterApp()" class="w-full bg-slate-800 border border-slate-700 py-4 rounded-xl font-black uppercase text-[10px] text-indigo-400 mt-2">Continue Trial</button>
+            <p id="expiryMsg" class="text-[9px] text-red-500 font-bold uppercase hidden">Trial Expired! Enter Key to Access Data.</p>
         </div>
     </div>
 </div>
@@ -50,21 +51,21 @@
     <div id="t-home" class="tab-content active-tab space-y-4">
         <div class="grid grid-cols-2 gap-3">
             <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/20"><h2 id="stCount" class="text-4xl font-black">0</h2><p class="text-[9px] text-slate-500 uppercase font-black">Students</p></div>
-            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-2xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black">Monthly Rev</p></div>
+            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-2xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black">Revenue</p></div>
         </div>
-        <input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Home..." class="text-xs">
+        <input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Name, Batch, School..." class="text-xs">
         <div id="hList" class="space-y-3"></div>
     </div>
 
     <div id="t-add" class="tab-content space-y-4">
-        <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600">
-            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">Enrollment</h3>
-            <input type="text" id="inN" placeholder="Name">
+        <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600 shadow-xl">
+            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">Student Admission</h3>
+            <input type="text" id="inN" placeholder="Full Name">
             <input type="text" id="inS" placeholder="School">
             <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch"><input type="text" id="inC" placeholder="Subject"></div>
             <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee"><input type="number" id="inP" placeholder="Phone"></div>
             <input type="date" id="inD">
-            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Save Record</button>
+            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Save Student</button>
         </div>
     </div>
 
@@ -72,19 +73,22 @@
         <div class="nexa-glass p-5">
             <div class="flex gap-2 mb-4"><input type="date" id="atDate" onchange="loadAtt()" class="!w-1/2 text-xs"><select id="attBatch" onchange="loadAtt()" class="!w-1/2 text-[10px] font-bold text-indigo-400"></select></div>
             <div id="atList" class="space-y-2 mb-4 max-h-60 overflow-y-auto pr-1"></div>
-            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs mb-6">Lock Attendance</button>
+            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs mb-6">Save Attendance</button>
             <div class="p-4 border-t border-white/5 text-center">
-                <p class="text-[9px] text-slate-400 uppercase font-black mb-3 italic">Reports</p>
+                <p class="text-[9px] text-slate-400 uppercase font-black mb-3 italic">Attendance PDF</p>
                 <div class="flex gap-2 mb-3"><input type="date" id="fromD" class="text-[10px]"><input type="date" id="toD" class="text-[10px]"></div>
-                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase italic">Download PDF</button>
+                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase italic">Download Report</button>
             </div>
         </div>
     </div>
 
     <div id="t-fees" class="tab-content space-y-4">
         <div class="nexa-glass p-5 space-y-4">
-            <div class="p-4 bg-indigo-600/10 rounded-xl border border-indigo-500/20"><textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at MALHOTRA CLASSES.</textarea></div>
-            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Search by Name/Batch/School in Fees..." class="text-xs">
+            <div class="p-4 bg-indigo-600/10 rounded-xl border border-indigo-500/20">
+                <h4 class="text-[9px] font-black uppercase text-indigo-400 mb-2">WA Message</h4>
+                <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, fee of ₹{fee} is pending at MALHOTRA CLASSES.</textarea>
+            </div>
+            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Search by Name/Batch/School..." class="text-xs">
             <div class="flex justify-between items-center px-2">
                 <label class="flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase"><input type="checkbox" id="selectAllWA" onchange="toggleSelectAll(this)" class="w-4 h-4"> Select All</label>
                 <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic">Send Reminders</button>
@@ -106,31 +110,42 @@
     let db, students = [], attData = {}, 
     config = JSON.parse(localStorage.getItem("mal_config")) || { name: "MALHOTRA CLASSES", addr: "Sant Nagar Burari, Delhi-84" };
 
-    function checkBoot() { if(localStorage.getItem("mal_premium") === "true") enterApp(); }
-    function unlockApp() { if(document.getElementById("mKey").value === MASTER_KEY) { localStorage.setItem("mal_premium", "true"); enterApp(); } else alert("Wrong Key!"); }
-    function enterApp() { 
-        document.getElementById("lockScreen").style.display = "none"; 
-        document.getElementById("appUI").style.display = "block"; 
-        refreshConfig(); 
-        initDB(); 
+    function checkBoot() {
+        const installDate = localStorage.getItem("mal_install") || Date.now();
+        if(!localStorage.getItem("mal_install")) localStorage.setItem("mal_install", installDate);
+        
+        const lastOpened = parseInt(localStorage.getItem("mal_last_seen") || 0);
+        const now = Date.now();
+
+        // ANTI-TAMPER: If system date is manually set back
+        if(now < lastOpened && localStorage.getItem("mal_premium") !== "true") {
+            document.getElementById("trialBtn").style.display = "none";
+            document.getElementById("expiryMsg").innerText = "Security Alert: Date Tampered! Enter Key.";
+            document.getElementById("expiryMsg").classList.remove("hidden");
+            return;
+        }
+        localStorage.setItem("mal_last_seen", now);
+
+        // 7-DAY TRIAL CHECK
+        const diff = (now - installDate) / (1000 * 60 * 60 * 24);
+        if(diff > 7 && localStorage.getItem("mal_premium") !== "true") {
+            document.getElementById("trialBtn").style.display = "none";
+            document.getElementById("expiryMsg").classList.remove("hidden");
+        } else if(localStorage.getItem("mal_premium") === "true") {
+            enterApp();
+        }
     }
 
-    function refreshConfig() {
-        document.getElementById("disName").innerText = config.name;
-        document.getElementById("disAddr").innerText = config.addr;
-    }
+    function unlockApp() { if(document.getElementById("mKey").value === MASTER_KEY) { localStorage.setItem("mal_premium", "true"); enterApp(); } else alert("Invalid Key!"); }
+    function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; refreshConfig(); initDB(); }
 
-    function editProfile() {
-        const n = prompt("Institute Name:", config.name);
-        const a = prompt("Address:", config.addr);
-        if(n && a) { config = {name: n, addr: a}; localStorage.setItem("mal_config", JSON.stringify(config)); refreshConfig(); }
-    }
+    function refreshConfig() { document.getElementById("disName").innerText = config.name; document.getElementById("disAddr").innerText = config.addr; }
+    function editProfile() { const n = prompt("Name:", config.name); const a = prompt("Address:", config.addr); if(n && a) { config = {name: n, addr: a}; localStorage.setItem("mal_config", JSON.stringify(config)); refreshConfig(); } }
 
     function initDB() {
-        const req = indexedDB.open("MalhotraERP_Stable_v17", 1);
+        const req = indexedDB.open("MalhotraERP_v17_Stable", 1);
         req.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("st", {keyPath: "id"}); db.createObjectStore("at", {keyPath: "date"}); };
         req.onsuccess = e => { db = e.target.result; sync(); };
-        req.onerror = e => alert("Database Error. Please refresh or use Chrome.");
     }
 
     function sync() {
@@ -153,7 +168,7 @@
         const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
         document.getElementById("hList").innerHTML = filt.map(s => `
             <div class="nexa-glass p-4 flex justify-between items-center border-l-4 border-indigo-500">
-                <div><p class="font-black text-sm uppercase italic">${s.name}</p><p class="text-[8px] text-slate-500 uppercase">${s.batch} | ${s.school || 'N/A'}</p></div>
+                <div><p class="font-black text-sm uppercase italic">${s.name}</p><p class="text-[8px] text-slate-500 uppercase">${s.batch} | Joined: ${s.date || 'N/A'}</p></div>
                 <div class="flex gap-1"><button onclick="migrateStudent(${s.id})" class="text-indigo-400 p-2"><i class="fas fa-exchange-alt"></i></button><a href="tel:${s.phone}" class="text-blue-400 p-2"><i class="fas fa-phone-alt"></i></a><button onclick="delSt(${s.id})" class="text-red-500 p-2"><i class="fas fa-trash-alt"></i></button></div>
             </div>`).join("");
     }
@@ -163,23 +178,45 @@
         const msgT = document.getElementById("waMsg").value;
         const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
         document.getElementById("fList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center">
-                <div class="flex items-center gap-3"><input type="checkbox" class="wa-check w-4 h-4 accent-indigo-500" data-id="${s.id}">
-                <div><p class="text-xs font-black uppercase">${s.name}</p><p class="text-[8px] text-indigo-400">Fee: ₹${s.fee}</p></div></div>
-                <div class="flex gap-2"><button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400"><i class="fas fa-file-invoice"></i></button><button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="text-emerald-500"><i class="fab fa-whatsapp"></i></button></div>
+            <div class="nexa-glass p-4 flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-3"><input type="checkbox" class="wa-check w-5 h-5 accent-indigo-500" data-id="${s.id}">
+                <div><p class="text-xs font-black uppercase">${s.name}</p><p class="text-[8px] text-indigo-400 font-bold">Fee: ₹${s.fee}</p></div></div>
+                <div class="flex gap-2"><button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400 text-lg"><i class="fas fa-file-invoice"></i></button><button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button></div>
             </div>`).join("");
+    }
+
+    function genReceipt(s) {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 50, 'F');
+        doc.setTextColor(255); doc.setFontSize(22); doc.text(config.name, 105, 20, {align:"center"});
+        doc.setFontSize(10); doc.text(config.addr, 105, 28, {align:"center"});
+        doc.autoTable({ startY: 60, head: [['Details', 'Info']], body: [['Name', s.name.toUpperCase()], ['Batch', s.batch], ['Fee', `₹${s.fee}`], ['Date', new Date().toLocaleDateString()]], headStyles:{fillColor:[79, 70, 229]} });
+        doc.save(`${s.name}_Receipt.pdf`);
+    }
+
+    function exportAttendanceReport() {
+        const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
+        if(!f || !t) return alert("Select Range!");
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255); doc.setFontSize(18); doc.text(config.name, 105, 15, {align:"center"});
+        doc.setFontSize(8); doc.text(config.addr, 105, 22, {align:"center"});
+        doc.text(`ATTENDANCE REPORT (${f} - ${t})`, 105, 30, {align:"center"});
+        const rows = []; Object.keys(attData).sort().forEach(d => { if(d>=f && d<=t) attData[d].forEach(e => { const s = students.find(x=>x.id===e.id); if(s) rows.push([d, s.name, s.batch, e.status]); }); });
+        doc.autoTable({ startY: 45, head: [['Date', 'Name', 'Batch', 'Status']], body: rows, headStyles:{fillColor:[79, 70, 229]} });
+        doc.save("Attendance_Sheet.pdf");
     }
 
     function saveStudent() {
         const s = { id: Date.now(), name: document.getElementById("inN").value, school: document.getElementById("inS").value, batch: document.getElementById("inB").value, cls: document.getElementById("inC").value, fee: document.getElementById("inF").value, phone: document.getElementById("inP").value, date: document.getElementById("inD").value || new Date().toISOString().split('T')[0] };
         if(!s.name || !s.phone) return alert("Required!");
-        const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s); tx.oncomplete = () => { sync(); alert("Success!"); };
+        const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s); tx.oncomplete = () => { sync(); alert("Saved!"); };
     }
 
     function importData(input) {
         if (!input.files[0]) return;
-        const r = new FileReader();
-        r.onload = e => {
+        const reader = new FileReader();
+        reader.onload = e => {
             const wb = XLSX.read(e.target.result, {type: 'binary'});
             const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             const list = raw.map(row => {
@@ -188,7 +225,7 @@
             });
             const tx = db.transaction("st", "readwrite"); list.forEach(s=>tx.objectStore("st").put(s)); tx.oncomplete = () => { alert("Imported!"); sync(); };
         };
-        r.readAsBinaryString(input.files[0]);
+        reader.readAsBinaryString(input.files[0]);
     }
 
     function sendBulkWA() {
@@ -196,25 +233,6 @@
         const sel = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
         if(!sel.length) return alert("Select Students!");
         sel.forEach((s, i) => setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(t.replace("{name}", s.name).replace("{fee}", s.fee))}`, '_blank'), i * 3500));
-    }
-
-    function genReceipt(s) {
-        const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 50, 'F');
-        doc.setTextColor(255); doc.setFontSize(22); doc.text(config.name, 105, 20, {align:"center"});
-        doc.setFontSize(10); doc.text(config.addr, 105, 28, {align:"center"});
-        doc.autoTable({ startY: 60, head: [['Details', 'Student']], body: [['Name', s.name.toUpperCase()], ['Batch', s.batch], ['Fee', `₹${s.fee}`], ['Date', new Date().toLocaleDateString()]], headStyles:{fillColor:[79, 70, 229]} });
-        doc.save(`${s.name}_Receipt.pdf`);
-    }
-
-    function exportAttendanceReport() {
-        const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
-        if(!f || !t) return alert("Select Dates!");
-        const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.text(config.name, 105, 15, {align:"center"});
-        const r = []; Object.keys(attData).sort().forEach(d => { if(d>=f && d<=t) attData[d].forEach(e => { const s = students.find(x=>x.id===e.id); if(s) r.push([d, s.name, s.batch, e.status]); }); });
-        doc.autoTable({ startY: 30, head: [['Date', 'Name', 'Batch', 'Status']], body: r });
-        doc.save("Attendance.pdf");
     }
 
     function loadAtt() {
@@ -238,9 +256,6 @@
     function toggleSelectAll(btn) { document.querySelectorAll(".wa-check").forEach(c => c.checked = btn.checked); }
     function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); }
     function delSt(id) { if(confirm("Delete?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
-    function masterReset() { if(confirm("Wipe All Data?")) { indexedDB.deleteDatabase("MalhotraERP_Stable_v17"); localStorage.clear(); location.reload(); } }
+    function masterReset() { if(confirm("Wipe All Data?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Stable"); localStorage.clear(); location.reload(); } }
     function exportExcel() { const ws = XLSX.utils.json_to_sheet(students); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `Backup.xlsx`); }
-    function migrateStudent(id) { const s = students.find(x => x.id == id); const nb = prompt("New Batch:", s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
-</script>
-</body>
-</html>
+    function migrateStudent(id) { const s = students.find(x => x.id == id); const nb = prompt("New Batch:", s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sy
