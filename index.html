@@ -2,203 +2,290 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MALHOTRA CLASSES - Nexa EduMaster ERP</title>
+    <meta name="viewport" content="width=device-width,initial-scale=1.0">
+    <title>MALHOTRA CLASSES | Nexa EduMaster ERP</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
-    
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <style>
-        :root { --p: #6366f1; --bg: #f8fafc; --c: #ffffff; --t: #1e293b; --g: #64748b; }
-        body.dark { --p: #818cf8; --bg: #0f172a; --c: #1e293b; --t: #f1f5f9; --g: #94a3b8; }
-        * { box-sizing: border-box; font-family: 'Inter', sans-serif; transition: 0.2s; }
-        body { background: var(--bg); color: var(--t); margin: 0; padding-bottom: 80px; overflow-x: hidden; }
-        
-        /* Glassmorphism UI Components */
-        header { background: rgba(99, 102, 241, 0.1); backdrop-filter: blur(12px); padding: 15px; border-bottom: 1px solid var(--p); position: sticky; top: 0; z-index: 100; }
-        .branding { font-size: 10px; text-align: center; color: var(--p); font-weight: 800; letter-spacing: 1px; margin-top: 5px; }
-        
-        #trial-lock { position: fixed; inset: 0; background: var(--bg); z-index: 9999; display: none; flex-direction: column; align-items: center; justify-content: center; padding: 20px; text-align: center; }
-        
-        .nav-bar { position: fixed; bottom: 0; width: 100%; background: var(--c); display: flex; justify-content: space-around; padding: 12px 0; border-top: 1px solid rgba(0,0,0,0.1); box-shadow: 0 -4px 10px rgba(0,0,0,0.05); }
-        .nav-item { cursor: pointer; color: var(--g); font-size: 11px; font-weight: 600; text-align: center; }
-        .nav-item.active { color: var(--p); }
-        .nav-item i { font-size: 20px; display: block; margin-bottom: 4px; }
-
-        .card { background: var(--c); border-radius: 16px; padding: 16px; margin: 12px; box-shadow: 0 4px 20px rgba(0,0,0,0.05); border: 1px solid rgba(0,0,0,0.05); border-left: 6px solid var(--p); }
-        .search-container { padding: 15px; }
-        .search-box { width: 100%; padding: 12px 15px; border-radius: 12px; border: 1px solid var(--g); background: var(--c); color: var(--t); outline: none; }
-        
-        .btn { padding: 8px 14px; border-radius: 10px; border: none; font-weight: 600; cursor: pointer; display: flex; align-items: center; gap: 6px; font-size: 13px; }
-        .btn-p { background: var(--p); color: white; }
-        .btn-call { background: #22c55e; color: white; }
-        .btn-del { background: #ef4444; color: white; }
-        .btn-wa { background: #25d366; color: white; }
-        
-        .input-group { margin-bottom: 15px; }
-        .input-group label { display: block; margin-bottom: 5px; font-size: 12px; color: var(--g); }
-        .input-group input, .input-group select { width: 100%; padding: 10px; border-radius: 8px; border: 1px solid var(--g); background: var(--c); color: var(--t); }
+        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; overflow-x: hidden; }
+        .nexa-glass { background: #151921; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
+        .tab-content { display: none; }
+        .active-tab { display: block; animation: slideUp 0.3s ease; }
+        input { background: #1e232d !important; border: 1px solid #2d3545 !important; color: #fff !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; transition: 0.3s; }
+        @keyframes slideUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+        .btn-gradient { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
     </style>
 </head>
 <body>
 
-<div id="trial-lock">
-    <i class="fas fa-user-lock" style="font-size: 50px; color: var(--p); margin-bottom: 20px;"></i>
-    <h2>Security Alert</h2>
-    <p>Trial Expired or Clock Tampered. Enter Master Key.</p>
-    <input type="password" id="mkey" style="padding:10px; border-radius:8px; border:1px solid var(--p); width: 80%; max-width: 300px;" placeholder="Enter Key...">
-    <button class="btn btn-p" style="margin-top:15px;" onclick="unlock()">Verify & Access</button>
-</div>
-
-<header>
-    <div style="display:flex; justify-content: space-between; align-items: center;">
-        <div onclick="document.body.classList.toggle('dark')" style="cursor:pointer;"><i class="fas fa-circle-half-stroke"></i></div>
-        <div style="text-align: center;">
-            <div style="font-weight: 900; font-size: 16px;">MALHOTRA CLASSES (ACCOUNTS VILLA)</div>
-            <div style="font-size: 10px; color: var(--g);">St. No 112/10, B Block, Sant Nagar Burari, Delhi-84</div>
-        </div>
-        <div style="display:flex; gap: 8px;">
-            <label class="btn btn-p" title="Import Excel"><i class="fas fa-file-import"></i><input type="file" hidden onchange="importX(this)" accept=".xlsx, .xls, .json"></label>
-            <button class="btn btn-del" onclick="mReset()"><i class="fas fa-rotate"></i></button>
+<div id="lockScreen" class="fixed inset-0 z-[9999] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
+    <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600 shadow-2xl">
+        <h2 class="text-3xl font-black text-indigo-500 mb-2 italic">NEXA ERP</h2>
+        <p id="secMsg" class="text-[10px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">System Secured</p>
+        <div class="space-y-4">
+            <input type="password" id="mKey" placeholder="License Key" class="text-center font-bold tracking-widest">
+            <button onclick="unlockApp()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate Premium</button>
+            <div id="trialArea" class="hidden">
+                <button onclick="enterApp()" class="w-full bg-slate-800 border border-slate-700 py-4 rounded-xl font-black uppercase text-[10px] text-indigo-400 mt-2">Continue Trial</button>
+            </div>
         </div>
     </div>
-    <div class="branding">POWERED BY KHAGESH AI-NEXA</div>
-</header>
-
-<div id="view-home" class="tab-view">
-    <div class="search-container">
-        <input type="text" id="qHome" class="search-box" placeholder="Search students, batch or subject..." oninput="sync()">
-    </div>
-    <div id="list-home"></div>
 </div>
 
-<div id="view-admission" class="tab-view" style="display:none; padding: 20px;">
-    <h3><i class="fas fa-user-plus"></i> New Admission</h3>
-    <div class="card">
-        <div class="input-group"><label>Student Name</label><input type="text" id="a_name"></div>
-        <div class="input-group"><label>WhatsApp Number</label><input type="number" id="a_phone"></div>
-        <div class="input-group"><label>Batch</label><input type="text" id="a_batch"></div>
-        <div class="input-group"><label>Subject</label><input type="text" id="a_cls"></div>
-        <div class="input-group"><label>Monthly Fee</label><input type="number" id="a_fee"></div>
-        <div class="input-group"><label>Joined Date</label><input type="date" id="a_date"></div>
-        <button class="btn btn-p" style="width:100%; justify-content:center;" onclick="saveSt()">Save Student</button>
-    </div>
-</div>
+<div id="appUI" class="p-4 max-w-lg mx-auto pb-40" style="display: none;">
+    <header class="py-6 flex justify-between items-center">
+        <div>
+            <h1 class="text-xl font-black text-indigo-500 italic leading-none">MALHOTRA CLASSES</h1>
+            <p class="text-[7px] text-slate-500 font-bold uppercase tracking-[1px] mt-1">Sant Nagar Burari, Delhi-84</p>
+            <p class="text-[8px] text-indigo-400/50 font-bold uppercase mt-1">Powered by Khagesh ai-nexa</p>
+        </div>
+        <div class="flex gap-2">
+            <label title="Import Excel/JSON" class="w-9 h-9 nexa-glass text-emerald-400 flex items-center justify-center text-xs cursor-pointer shadow-lg active:scale-90 transition">
+                <i class="fas fa-file-import"></i>
+                <input type="file" id="importFile" class="hidden" accept=".xlsx, .xls, .json" onchange="importData(this)">
+            </label>
+            <button onclick="exportExcel()" title="Export Excel" class="w-9 h-9 nexa-glass text-blue-400 flex items-center justify-center text-xs shadow-lg active:scale-90 transition"><i class="fas fa-file-excel"></i></button>
+            <button onclick="masterReset()" title="Reset All Data" class="w-9 h-9 nexa-glass text-red-500 flex items-center justify-center text-xs shadow-lg active:scale-90 transition"><i class="fas fa-sync-alt"></i></button>
+        </div>
+    </header>
 
-<nav class="nav-bar">
-    <div class="nav-item active" onclick="tab('home')"><i class="fas fa-th-large"></i>Home</div>
-    <div class="nav-item" onclick="tab('admission')"><i class="fas fa-user-graduate"></i>Admission</div>
-    <div class="nav-item" onclick="tab('attendance')"><i class="fas fa-clipboard-user"></i>Attendance</div>
-    <div class="nav-item" onclick="tab('fees')"><i class="fas fa-indian-rupee-sign"></i>Fees</div>
-</nav>
+    <div id="t-home" class="tab-content active-tab space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+            <div class="nexa-glass p-6 text-center shadow-xl border-b-2 border-indigo-500/20"><h2 id="stCount" class="text-4xl font-black">0</h2><p class="text-[9px] text-slate-500 uppercase font-black mt-1">Students</p></div>
+            <div class="nexa-glass bg-indigo-600/10 p-6 text-center shadow-xl border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-3xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black mt-1">Revenue</p></div>
+        </div>
+        <div class="relative"><input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Name, Batch, or Subject..." class="pl-11 text-xs border-white/5"><i class="fas fa-search absolute left-4 top-4 text-slate-600 text-xs"></i></div>
+        <div id="hList" class="space-y-3"></div>
+    </div>
+
+    <div id="t-add" class="tab-content space-y-4">
+        <div class="nexa-glass p-6 space-y-3 shadow-2xl border-t-2 border-indigo-500">
+            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">Enrollment Form</h3>
+            <input type="text" id="inN" placeholder="Full Student Name">
+            <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch Name"><input type="text" id="inC" placeholder="Subject/Class"></div>
+            <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee Amount"><input type="number" id="inP" placeholder="WhatsApp Number"></div>
+            <div class="flex flex-col"><label class="text-[8px] text-slate-500 font-bold mb-1 ml-1 uppercase italic">Joining Date</label><input type="date" id="inD"></div>
+            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic shadow-lg mt-4">Save Enrollment</button>
+        </div>
+    </div>
+
+    <div id="t-att" class="tab-content space-y-4">
+        <div class="nexa-glass p-5 shadow-xl">
+            <div class="flex gap-2 mb-4"><input type="date" id="atDate" onchange="loadAtt()" class="!w-1/2"><input type="text" id="atSearch" onkeyup="loadAtt()" placeholder="Filter..." class="!w-1/2 text-xs"></div>
+            <div id="atList" class="space-y-2 mb-4 max-h-60 overflow-y-auto pr-1"></div>
+            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg mb-4">Lock Daily Attendance</button>
+            <hr class="border-white/5 my-4">
+            <p class="text-[8px] text-slate-500 uppercase font-black mb-2 text-center">Export Attendance PDF</p>
+            <div class="flex gap-2 mb-2"><input type="date" id="fromD" class="text-[10px]"><input type="date" id="toD" class="text-[10px]"></div>
+            <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase">Download Report</button>
+        </div>
+    </div>
+
+    <div id="t-fees" class="tab-content space-y-4">
+        <div class="nexa-glass p-5 shadow-xl">
+            <div class="flex justify-between items-center mb-4"><h3 class="text-[10px] font-black uppercase text-indigo-400 italic">Billing Center</h3><button onclick="waBulk()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg text-[8px] font-black uppercase">Bulk WhatsApp</button></div>
+            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Search Billing..." class="text-xs mb-4">
+            <div id="fList" class="space-y-2"></div>
+        </div>
+    </div>
+
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] nexa-glass p-2 flex justify-around shadow-2xl z-50 backdrop-blur-xl border-white/10">
+        <button onclick="nav('home', this)" class="p-4 text-indigo-500"><i class="fas fa-home"></i></button>
+        <button onclick="nav('add', this)" class="p-4 text-slate-500"><i class="fas fa-user-plus"></i></button>
+        <button onclick="nav('att', this)" class="p-4 text-slate-500"><i class="fas fa-calendar-check"></i></button>
+        <button onclick="nav('fees', this)" class="p-4 text-slate-500"><i class="fas fa-receipt"></i></button>
+    </nav>
+</div>
 
 <script>
-    const MASTER_KEY = "Permanentkey63793119"; [cite: 2026-01-22]
-    let db;
+    const CLIENT_INFO = { name: "MALHOTRA CLASSES (ACCOUNTS VILLA)", addr: "St. No 112/10, B Block, Sant Nagar Burari, Delhi-84" }; [cite: 2026-02-01]
+    const getLicenseKey = () => atob("UGVybWFuZW50a2V5NjM3OTMxMTk="); 
+    let db, students = [], attData = {};
 
-    // IndexedDB + Persistence [cite: 2026-01-31, 2026-02-01]
-    const req = indexedDB.open("MalhotraEduERP", 1);
-    req.onupgradeneeded = e => {
-        let d = e.target.result;
-        d.createObjectStore("st", {keyPath: "id"});
-        d.createObjectStore("cfg", {keyPath: "k"});
+    window.onload = () => {
+        const start = localStorage.getItem("nexa_start") || Date.now();
+        if(!localStorage.getItem("nexa_start")) localStorage.setItem("nexa_start", start);
+        const daysUsed = Math.floor((Date.now() - start) / 86400000);
+        if(localStorage.getItem("nexa_ver") === "true") { enterApp(); }
+        else if(daysUsed < 7) { 
+            document.getElementById("secMsg").innerText = `TRIAL MODE: ${7-daysUsed} DAYS REMAINING`;
+            document.getElementById("trialArea").classList.remove("hidden");
+        } else { 
+            document.getElementById("secMsg").innerText = "TRIAL EXPIRED"; 
+            document.getElementById("secMsg").style.color = "#ef4444"; 
+        }
     };
-    req.onsuccess = e => {
-        db = e.target.result;
-        initSecurity(); [cite: 2026-02-01]
-        sync();
-    };
 
-    // 7-Day Anti-Tamper Trial [cite: 2026-02-01]
-    async function initSecurity() {
-        const now = Date.now();
-        const tx = db.transaction("cfg", "readwrite").objectStore("cfg");
-        let start = await g(tx, "sd");
-        let last = await g(tx, "lv");
-        let lock = await g(tx, "lock");
+    function unlockApp() { if(document.getElementById("mKey").value === getLicenseKey()) { localStorage.setItem("nexa_ver", "true"); location.reload(); } else alert("Invalid Key!"); }
+    function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; initDB(); }
 
-        if(!start) { tx.put({k:"sd", v:now}); tx.put({k:"lv", v:now}); return; }
-        if(now < last.v) { document.getElementById('trial-lock').style.display = 'flex'; }
-        if(now - start.v > 7*24*60*60*1000 && !lock) { document.getElementById('trial-lock').style.display = 'flex'; }
-        tx.put({k:"lv", v:now});
+    function initDB() {
+        const req = indexedDB.open("NexaEduMaster_Final_Malhotra", 1);
+        req.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("st", {keyPath: "id"}); db.createObjectStore("at", {keyPath: "date"}); };
+        req.onsuccess = e => { db = e.target.result; sync(); if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); };
     }
 
-    function g(s, k) { return new Promise(r => s.get(k).onsuccess = e => r(e.target.result)); }
-
-    function unlock() {
-        if(document.getElementById('mkey').value === MASTER_KEY) {
-            db.transaction("cfg", "readwrite").objectStore("cfg").put({k:"lock", v:true});
-            document.getElementById('trial-lock').style.display = 'none';
-        } else alert("Invalid Key!");
+    function sync() {
+        const tx = db.transaction(["st", "at"], "readonly");
+        tx.objectStore("st").getAll().onsuccess = e => { students = e.target.result; updateUI(); };
+        tx.objectStore("at").getAll().onsuccess = e => { e.target.result.forEach(r => attData[r.date] = r.data); loadAtt(); };
     }
 
-    // Direct Excel Import [cite: 2026-02-01]
-    function importX(inp) {
-        const file = inp.files[0];
+    function updateUI() {
+        let rv = 0; students.forEach(s => rv += Number(s.fee));
+        document.getElementById("stCount").innerText = students.length;
+        document.getElementById("revCount").innerText = `₹${rv}`;
+        renderHome(); renderFees();
+    }
+
+    function renderHome() {
+        const q = document.getElementById("hSearch").value.toLowerCase();
+        const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || s.cls.toLowerCase().includes(q));
+        document.getElementById("hList").innerHTML = filt.map(s => `
+            <div class="nexa-glass p-5 flex justify-between items-center shadow-md border-l-4 border-indigo-500">
+                <div>
+                    <p class="font-black text-sm text-white uppercase italic leading-tight">${s.name}</p>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase tracking-widest">${s.batch} | ${s.cls}</p>
+                    <p class="text-[8px] text-indigo-400/70 font-black mt-1 uppercase italic">Joined: ${s.date || 'N/A'}</p>
+                </div>
+                <div class="flex gap-2">
+                    <a href="tel:${s.phone}" class="w-8 h-8 nexa-glass flex items-center justify-center text-blue-400 text-[10px] shadow-lg"><i class="fas fa-phone-alt"></i></a>
+                    <button onclick="delSt(${s.id})" class="w-8 h-8 nexa-glass flex items-center justify-center text-red-500 text-[10px] shadow-lg"><i class="fas fa-trash-alt"></i></button>
+                </div>
+            </div>`).join("");
+    }
+
+    function saveStudent() {
+        const s = { id: Date.now(), name: document.getElementById("inN").value, batch: document.getElementById("inB").value, cls: document.getElementById("inC").value, fee: document.getElementById("inF").value, phone: document.getElementById("inP").value, date: document.getElementById("inD").value || new Date().toISOString().split('T')[0] };
+        if(!s.name || !s.phone) return alert("Required: Name & Phone");
+        const tx = db.transaction("st", "readwrite");
+        tx.objectStore("st").add(s);
+        tx.oncomplete = () => { sync(); alert("Student Saved!"); clearForm(); };
+    }
+
+    function clearForm() { ["inN", "inB", "inC", "inF", "inP", "inD"].forEach(id => document.getElementById(id).value = ""); }
+
+    function masterReset() {
+        if(confirm("⚠️ DANGER: This will delete ALL students and records for Malhotra Classes. Continue?")) {
+            const tx = db.transaction(["st", "at"], "readwrite");
+            tx.objectStore("st").clear(); tx.objectStore("at").clear();
+            tx.oncomplete = () => { alert("All Data Wiped!"); location.reload(); };
+        }
+    }
+
+    // ⭐ DIRECT EXCEL IMPORT [cite: 2026-02-01]
+    function importData(input) {
+        if (!input.files[0]) return;
+        const file = input.files[0];
         const reader = new FileReader();
-        reader.onload = e => {
-            let data = [];
-            if(file.name.endsWith('.json')) {
-                data = JSON.parse(e.target.result);
+        const ext = file.name.split('.').pop().toLowerCase();
+
+        reader.onload = function(e) {
+            let dataArr = [];
+            if(ext === 'xlsx' || ext === 'xls') {
+                const workbook = XLSX.read(e.target.result, {type: 'binary'});
+                dataArr = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
             } else {
-                const wb = XLSX.read(e.target.result, {type:'binary'});
-                data = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
+                const json = JSON.parse(e.target.result);
+                dataArr = json.st || json;
             }
-            const tx = db.transaction("st", "readwrite").objectStore("st");
-            data.forEach(s => {
+
+            const tx = db.transaction("st", "readwrite");
+            dataArr.forEach(s => {
                 if(!s.id) s.id = Date.now() + Math.random();
                 if(!s.date) s.date = new Date().toISOString().split('T')[0];
-                tx.put(s);
+                tx.objectStore("st").put(s);
             });
-            tx.transaction.oncomplete = () => { alert("Import Done!"); sync(); };
+            tx.oncomplete = () => { alert("Excel/JSON Import Successful!"); sync(); };
         };
-        reader.readAsBinaryString(file);
+        if(ext === 'xlsx' || ext === 'xls') reader.readAsBinaryString(file);
+        else reader.readAsText(file);
     }
 
-    // Home Sync with Call & Delete [cite: 2026-02-01]
-    function sync() {
-        const q = document.getElementById('qHome').value.toLowerCase();
-        const list = document.getElementById('list-home');
-        list.innerHTML = "";
-        db.transaction("st").objectStore("st").getAll().onsuccess = e => {
-            e.target.result.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || s.cls.toLowerCase().includes(q)).forEach(s => {
-                list.innerHTML += `
-                <div class="card">
-                    <div style="display:flex; justify-content:space-between; align-items:start;">
-                        <div>
-                            <div style="font-weight:700; font-size:16px;">${s.name}</div>
-                            <div style="font-size:12px; color:var(--g);">${s.cls} | ${s.batch}</div>
-                        </div>
-                        <div style="font-size:10px; background:rgba(99,102,241,0.1); padding:4px 8px; border-radius:6px; color:var(--p);">Joined: ${s.date}</div>
-                    </div>
-                    <div style="margin-top:15px; display:flex; gap:8px;">
-                        <a href="tel:${s.phone}" class="btn btn-call"><i class="fas fa-phone"></i> Call</a>
-                        <button class="btn btn-wa" onclick="remind('${s.phone}', '${s.name}')"><i class="fab fa-whatsapp"></i> Fee</button>
-                        <button class="btn btn-del" onclick="delSt(${s.id})"><i class="fas fa-trash"></i></button>
-                    </div>
-                </div>`;
-            });
-        };
+    // ⭐ DIRECT EXCEL EXPORT [cite: 2026-02-01]
+    function exportExcel() {
+        const ws = XLSX.utils.json_to_sheet(students);
+        const wb = XLSX.utils.book_new();
+        XLSX.utils.book_append_sheet(wb, ws, "Students");
+        XLSX.writeFile(wb, `MalhotraClasses_Data_${new Date().toISOString().split('T')[0]}.xlsx`);
     }
 
-    function saveSt() {
-        const s = {
-            id: Date.now(),
-            name: document.getElementById('a_name').value,
-            phone: document.getElementById('a_phone').value,
-            batch: document.getElementById('a_batch').value,
-            cls: document.getElementById('a_cls').value,
-            fee: document.getElementById('a_fee').value,
-            date: document.getElementById('a_date').value || new Date().toISOString().split('T')[0]
-        };
-        db.transaction("st", "readwrite").objectStore("st").add(s).onsuccess = () => { alert("Student Added!"); tab('home'); sync(); };
+    // ⭐ PROFESSIONAL PDF (WITH CLIENT INFO)
+    function exportAttendanceReport() {
+        const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
+        if(!f || !t) return alert("Select Range!");
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 45, 'F');
+        doc.setTextColor(255); doc.setFontSize(18); doc.text(CLIENT_INFO.name, 105, 20, {align:"center"});
+        doc.setFontSize(8); doc.text(CLIENT_INFO.addr, 105, 28, {align:"center"});
+        doc.setFontSize(14); doc.text("ATTENDANCE REPORT", 105, 40, {align:"center"});
+        const rows = [];
+        Object.keys(attData).sort().forEach(date => {
+            if(date >= f && date <= t) attData[date].forEach(e => { const s = students.find(x => x.id === e.id); if(s) rows.push([date, s.name, s.batch, e.status]); });
+        });
+        doc.autoTable({ startY: 50, head: [['Date', 'Name', 'Batch', 'Status']], body: rows, headStyles:{fillColor:[63, 102, 241]}, theme: 'grid' });
+        doc.save(`Attendance_${f}_to_${t}.pdf`);
     }
 
-    function delSt(id) { if(confirm("Delete Student?")) db.transaction("st", "readwrite").objectStore("st").delete(id).onsuccess = () => sync(); }
-    function mReset() { if(confirm("Master Reset? All data will be wiped!")) { indexedDB.deleteDatabase("MalhotraEduERP"); location.reload(); } }
-    function tab(t) { document.querySelectorAll('.tab-view').forEach(v => v.style.display='none'); document.getElementById('view-'+t).style.display='block'; document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active')); event.currentTarget.classList.add('active'); }
-    function remind(p, n) { window.open(`https://wa.me/91${p}?text=Hi ${n}, this is a reminder regarding your pending fee at MALHOTRA CLASSES.`); }
+    function genInvoice(s) {
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 55, 'F');
+        doc.setTextColor(255); doc.setFontSize(20); doc.text(CLIENT_INFO.name, 105, 25, {align:"center"});
+        doc.setFontSize(8); doc.text(CLIENT_INFO.addr, 105, 33, {align:"center"});
+        doc.setFontSize(10); doc.text("FEE RECEIPT", 105, 48, {align:"center"});
+        doc.autoTable({
+            startY: 70, head: [['Description', 'Details']],
+            body: [['Student Name', s.name.toUpperCase()], ['Batch', s.batch], ['Subject', s.cls], ['Total Paid', `INR ${s.fee}`], ['Date', new Date().toLocaleDateString()]],
+            headStyles: {fillColor:[31, 41, 55]}, theme: 'grid'
+        });
+        doc.setFontSize(8); doc.setTextColor(150); doc.text("Powered by Khagesh ai-nexa", 105, 150, {align:"center"});
+        doc.save(`${s.name}_Receipt.pdf`);
+    }
+
+    function loadAtt() {
+        const d = document.getElementById("atDate").value || new Date().toISOString().split('T')[0];
+        document.getElementById("atDate").value = d;
+        const q = document.getElementById("atSearch").value.toLowerCase();
+        const saved = attData[d] || [];
+        const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || s.cls.toLowerCase().includes(q));
+        document.getElementById("atList").innerHTML = filt.map(s => {
+            const isP = saved.length === 0 ? true : (saved.find(x => x.id === s.id)?.status === "P");
+            return `<div class="flex justify-between items-center p-4 bg-white/5 rounded-xl mb-1 border-l-2 ${isP ? 'border-emerald-500' : 'border-red-500'}">
+                <div><span class="text-xs font-black uppercase text-white">${s.name}</span><p class="text-[8px] text-slate-500 uppercase">${s.batch}</p></div>
+                <input type="checkbox" class="w-6 h-6 accent-indigo-500" data-id="${s.id}" ${isP ? 'checked' : ''}>
+            </div>`;
+        }).join("");
+    }
+
+    function saveAtt() {
+        const d = document.getElementById("atDate").value;
+        const checks = Array.from(document.querySelectorAll("#atList input[type='checkbox']")).map(c => ({ id: Number(c.dataset.id), status: c.checked ? "P" : "A" }));
+        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: checks });
+        tx.oncomplete = () => { attData[d] = checks; alert("Log Saved!"); };
+    }
+
+    function renderFees() {
+        const q = document.getElementById("fSearch").value.toLowerCase();
+        document.getElementById("fList").innerHTML = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || s.cls.toLowerCase().includes(q)).map(s => `
+            <div class="nexa-glass p-4 flex justify-between items-center mb-2 shadow-lg">
+                <div class="flex items-center gap-3"><input type="checkbox" class="wa-sel w-5 h-5 accent-indigo-500" data-id="${s.id}"><p class="text-xs font-black uppercase text-white">${s.name}</p></div>
+                <button onclick='genInvoice(${JSON.stringify(s)})' class="text-indigo-400 text-xl"><i class="fas fa-file-invoice-dollar"></i></button>
+            </div>`).join("");
+    }
+
+    function waBulk() {
+        const sel = Array.from(document.querySelectorAll(".wa-sel:checked"));
+        if(!sel.length) return alert("Select students!");
+        sel.forEach((cb, i) => { const s = students.find(x => x.id == cb.dataset.id); setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=Hello ${s.name}, Fee ₹${s.fee} is pending at MALHOTRA CLASSES.`, '_blank'), i * 3000); });
+    }
+
+    function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.querySelectorAll("nav button").forEach(btn => btn.classList.replace("text-indigo-500", "text-slate-500")); document.getElementById("t-"+t).classList.add("active-tab"); b.classList.replace("text-slate-500", "text-indigo-500"); }
+    function delSt(id) { if(confirm("Delete record?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
 </script>
 </body>
-</html>
+                                             </html>
+                                             
