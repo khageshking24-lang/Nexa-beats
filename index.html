@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>MALHOTRA CLASSES | Pro v17.5</title>
+    <title>MALHOTRA CLASSES | Final v17.6</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -26,16 +26,13 @@
     <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600 shadow-2xl">
         <h2 class="text-2xl font-black text-indigo-500 italic mb-1 uppercase">Malhotra Classes</h2>
         <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">Powered by Khagesh ai-nexa</p>
-        
         <div class="space-y-4">
             <div id="trialBox">
                <button onclick="enterApp()" class="w-full bg-slate-800 border border-slate-700 py-4 rounded-xl font-black uppercase text-[10px] text-indigo-400">Continue 7-Day Trial</button>
             </div>
-            
             <div id="lockBox" class="hidden space-y-4">
                 <p class="text-[10px] text-red-500 font-bold uppercase tracking-tight">Trial expired can be unlocked only with perma key</p>
             </div>
-
             <input type="password" id="mKey" placeholder="Enter Permanent Key" class="text-center font-bold tracking-widest mt-4">
             <button onclick="verifyKey()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate Lifetime Access</button>
         </div>
@@ -60,18 +57,19 @@
             <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/20"><h2 id="stCount" class="text-4xl font-black">0</h2><p class="text-[9px] text-slate-500 uppercase font-black">Students</p></div>
             <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-2xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black">Revenue</p></div>
         </div>
-        <input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Students..." class="text-xs">
+        <input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Name, Batch or School..." class="text-xs">
         <div id="hList" class="space-y-3"></div>
     </div>
 
     <div id="t-add" class="tab-content space-y-4">
         <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600">
-            <input type="text" id="inN" placeholder="Student Name">
-            <input type="text" id="inS" placeholder="School">
+            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">Student Admission</h3>
+            <input type="text" id="inN" placeholder="Full Name">
+            <input type="text" id="inS" placeholder="School Name">
             <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch"><input type="text" id="inC" placeholder="Subject"></div>
-            <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee"><input type="number" id="inP" placeholder="Phone"></div>
+            <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee Amount"><input type="number" id="inP" placeholder="WhatsApp Number"></div>
             <input type="date" id="inD">
-            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic">Confirm Admission</button>
+            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Confirm Admission</button>
         </div>
     </div>
 
@@ -90,16 +88,16 @@
     <div id="t-fees" class="tab-content space-y-4">
         <div class="nexa-glass p-5 space-y-4">
             <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at MALHOTRA CLASSES.</textarea>
-            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Filter by Name/Batch/School..." class="text-xs">
-            <div class="flex justify-between items-center">
+            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Filter Students..." class="text-xs">
+            <div class="flex justify-between items-center px-2">
                 <label class="text-[9px] font-black text-slate-500 uppercase flex items-center gap-2"><input type="checkbox" id="selectAllWA" onchange="toggleSelectAll(this)"> Select All</label>
-                <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic">Send WhatsApp</button>
+                <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic">Send Reminders</button>
             </div>
             <div id="fList" class="space-y-2 max-h-80 overflow-y-auto"></div>
         </div>
     </div>
 
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] nexa-glass p-2 flex justify-around shadow-2xl backdrop-blur-xl border-white/10">
+    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] nexa-glass p-2 flex justify-around shadow-2xl backdrop-blur-xl border-white/10 z-50">
         <button onclick="nav('home', this)" class="p-4 text-indigo-500"><i class="fas fa-home"></i></button>
         <button onclick="nav('add', this)" class="p-4 text-slate-500"><i class="fas fa-user-plus"></i></button>
         <button onclick="nav('att', this)" class="p-4 text-slate-500"><i class="fas fa-calendar-check"></i></button>
@@ -115,11 +113,9 @@
         if(localStorage.getItem("mal_premium") === "true") { enterApp(); return; }
         const start = localStorage.getItem("mal_start") || Date.now();
         if(!localStorage.getItem("mal_start")) localStorage.setItem("mal_start", start);
-        
         const last = parseInt(localStorage.getItem("mal_last") || 0);
         const now = Date.now();
         const diff = (now - start) / (1000 * 60 * 60 * 24);
-
         if(now < last || diff > 7) {
             document.getElementById("trialBox").style.display = "none";
             document.getElementById("lockBox").classList.remove("hidden");
@@ -128,22 +124,19 @@
     }
 
     function verifyKey() {
-        const input = document.getElementById("mKey").value;
-        if(input === atob(MK_ENC)) {
+        if(document.getElementById("mKey").value === atob(MK_ENC)) {
             localStorage.setItem("mal_premium", "true");
-            alert("Lifetime Unlocked!");
+            alert("Lifetime Activation Successful!");
             location.reload(); 
-        } else {
-            alert("Wrong Permanent Key!");
-        }
+        } else alert("Invalid Key!");
     }
 
     function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; refreshConfig(); initDB(); }
     function refreshConfig() { document.getElementById("disName").innerText = config.name; document.getElementById("disAddr").innerText = config.addr; }
-    function editProfile() { const n = prompt("Name:", config.name); const a = prompt("Address:", config.addr); if(n && a) { config = {name: n, addr: a}; localStorage.setItem("mal_config", JSON.stringify(config)); refreshConfig(); } }
+    function editProfile() { const n = prompt("Name:", config.name), a = prompt("Address:", config.addr); if(n && a) { config = {name: n, addr: a}; localStorage.setItem("mal_config", JSON.stringify(config)); refreshConfig(); } }
 
     function initDB() {
-        const req = indexedDB.open("MalhotraERP_v17_Final", 1);
+        const req = indexedDB.open("MalhotraERP_v17_Stable_Final", 1);
         req.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("st", {keyPath: "id"}); db.createObjectStore("at", {keyPath: "date"}); };
         req.onsuccess = e => { db = e.target.result; sync(); };
     }
@@ -168,7 +161,11 @@
         const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
         document.getElementById("hList").innerHTML = filt.map(s => `
             <div class="nexa-glass p-4 flex justify-between items-center border-l-4 border-indigo-500">
-                <div><p class="font-black text-sm uppercase italic">${s.name}</p><p class="text-[8px] text-slate-500 uppercase">${s.batch} | ${s.school || 'N/A'}</p></div>
+                <div>
+                    <p class="font-black text-sm uppercase italic">${s.name}</p>
+                    <p class="text-[8px] text-slate-500 uppercase font-bold">${s.batch} | ${s.school || 'N/A'}</p>
+                    <p class="text-[7px] text-indigo-400 font-bold mt-1"><i class="fas fa-calendar-alt mr-1"></i>Joined: ${s.date || 'N/A'}</p>
+                </div>
                 <div class="flex gap-1"><button onclick="migrateStudent(${s.id})" class="text-indigo-400 p-2"><i class="fas fa-exchange-alt"></i></button><a href="tel:${s.phone}" class="text-blue-400 p-2"><i class="fas fa-phone-alt"></i></a><button onclick="delSt(${s.id})" class="text-red-500 p-2"><i class="fas fa-trash-alt"></i></button></div>
             </div>`).join("");
     }
@@ -187,8 +184,14 @@
 
     function saveStudent() {
         const s = { id: Date.now(), name: document.getElementById("inN").value, school: document.getElementById("inS").value, batch: document.getElementById("inB").value, cls: document.getElementById("inC").value, fee: document.getElementById("inF").value, phone: document.getElementById("inP").value, date: document.getElementById("inD").value || new Date().toISOString().split('T')[0] };
-        if(!s.name || !s.phone) return alert("Missing Info!");
-        const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s); tx.oncomplete = () => { sync(); alert("Admission Saved!"); };
+        if(!s.name || !s.phone) return alert("Required!");
+        const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s);
+        tx.oncomplete = () => { 
+            sync(); 
+            alert("Admission Success!");
+            // RESET FORM FIELDS
+            ['inN', 'inS', 'inB', 'inC', 'inF', 'inP', 'inD'].forEach(id => document.getElementById(id).value = "");
+        };
     }
 
     function genReceipt(s) {
@@ -202,21 +205,14 @@
 
     function exportAttendanceReport() {
         const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
-        if(!f || !t) return alert("Select Dates!");
+        if(!f || !t) return alert("Dates Required!");
         const { jsPDF } = window.jspdf; const doc = new jsPDF();
         doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 40, 'F');
         doc.setTextColor(255); doc.setFontSize(18); doc.text(config.name, 105, 15, {align:"center"});
         doc.setFontSize(8); doc.text(config.addr, 105, 22, {align:"center"});
         const rows = []; Object.keys(attData).sort().forEach(d => { if(d>=f && d<=t) attData[d].forEach(e => { const s = students.find(x=>x.id===e.id); if(s) rows.push([d, s.name, s.batch, e.status]); }); });
         doc.autoTable({ startY: 45, head: [['Date', 'Name', 'Batch', 'Status']], body: rows, headStyles:{fillColor:[79, 70, 229]} });
-        doc.save("Attendance_Report.pdf");
-    }
-
-    function sendBulkWA() {
-        const t = document.getElementById("waMsg").value;
-        const sel = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
-        if(!sel.length) return alert("Select Students!");
-        sel.forEach((s, i) => setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(t.replace("{name}", s.name).replace("{fee}", s.fee))}`, '_blank'), i * 3500));
+        doc.save("Attendance_Sheet.pdf");
     }
 
     function loadAtt() {
@@ -232,9 +228,14 @@
     }
 
     function saveAtt() {
-        const d = document.getElementById("atDate").value;
-        const c = Array.from(document.querySelectorAll("#atList input[type='checkbox']")).map(x => ({ id: Number(x.dataset.id), status: x.checked ? "P" : "A" }));
-        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: c }); tx.oncomplete = () => { attData[d] = c; alert("Saved!"); };
+        const d = document.getElementById("atDate").value, c = Array.from(document.querySelectorAll("#atList input[type='checkbox']")).map(x => ({ id: Number(x.dataset.id), status: x.checked ? "P" : "A" }));
+        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: c }); tx.oncomplete = () => { attData[d] = c; alert("Attendance Saved!"); };
+    }
+
+    function sendBulkWA() {
+        const t = document.getElementById("waMsg").value, sel = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
+        if(!sel.length) return alert("Select Students!");
+        sel.forEach((s, i) => setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(t.replace("{name}", s.name).replace("{fee}", s.fee))}`, '_blank'), i * 3500));
     }
 
     function importData(input) {
@@ -245,9 +246,9 @@
             const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             const list = raw.map(row => {
                 const k = Object.keys(row);
-                return { id: Date.now()+Math.random(), name: row[k.find(x=>x.toLowerCase().includes('name'))]||"N/A", school: row[k.find(x=>x.toLowerCase().includes('school'))]||"N/A", batch: row[k.find(x=>x.toLowerCase().includes('batch'))]||"General", fee: row[k.find(x=>x.toLowerCase().includes('fee'))]||0, phone: row[k.find(x=>x.toLowerCase().includes('phone')||x.toLowerCase().includes('mobile')||x.includes('__EMPTY'))]||"", date: new Date().toISOString().split('T')[0] };
+                return { id: Date.now()+Math.random(), name: row[k.find(x=>x.toLowerCase().includes('name'))]||"N/A", school: row[k.find(x=>x.toLowerCase().includes('school'))]||"N/A", batch: row[k.find(x=>x.toLowerCase().includes('batch'))]||"General", fee: row[k.find(x=>x.toLowerCase().includes('fee'))]||0, phone: row[k.find(x=>x.toLowerCase().includes('phone')||x.toLowerCase().includes('mobile'))]||"", date: new Date().toISOString().split('T')[0] };
             });
-            const tx = db.transaction("st", "readwrite"); list.forEach(s=>tx.objectStore("st").put(s)); tx.oncomplete = () => { alert("Imported!"); sync(); };
+            const tx = db.transaction("st", "readwrite"); list.forEach(s=>tx.objectStore("st").put(s)); tx.oncomplete = () => { alert("Data Imported!"); sync(); };
         };
         r.readAsBinaryString(input.files[0]);
     }
@@ -255,9 +256,10 @@
     function toggleSelectAll(btn) { document.querySelectorAll(".wa-check").forEach(c => c.checked = btn.checked); }
     function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); }
     function delSt(id) { if(confirm("Delete Student?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
-    function masterReset() { if(confirm("Wipe All Data?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Final"); localStorage.clear(); location.reload(); } }
-    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `Backup.xlsx`); }
-    function migrateStudent(id) { const s = students.find(x => x.id == id); const nb = prompt("New Batch:", s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
+    function masterReset() { if(confirm("Wipe All Data?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Stable_Final"); localStorage.clear(); location.reload(); } }
+    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `Malhotra_Backup.xlsx`); }
+    function migrateStudent(id) { const s = students.find(x => x.id == id), nb = prompt("New Batch:", s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
 </script>
 </body>
-</html>
+    </html>
+    
