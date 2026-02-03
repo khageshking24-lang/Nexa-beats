@@ -2,213 +2,239 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>Nexa ERP V86 | Millionaire Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Nexa EduMaster - MALHOTRA CLASSES</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;600;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; }
-        .nexa-glass { background: rgba(17,24,39,0.8); backdrop-filter: blur(15px); border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
-        .tab-content { display: none; }
-        .active-tab { display: block; animation: slideUp 0.3s ease; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(10px); } to { opacity: 1; transform: translateY(0); } }
-        input { background: #1a1f29 !important; border: 1px solid #334155 !important; color: #fff !important; border-radius: 12px !important; padding: 12px !important; outline: none; width: 100%; font-size: 14px; }
-        .revenue-card { background: linear-gradient(135deg, #6366f1 0%, #a855f7 100%); }
-        .nav-btn { color: #64748b; transition: 0.3s; }
-        .nav-btn.active { color: #6366f1; transform: scale(1.2); }
+        :root {
+            --primary: #6366f1; --bg: #f8fafc; --card: #ffffff; --text: #1e293b;
+        }
+        body.dark-mode {
+            --primary: #818cf8; --bg: #0f172a; --card: #1e293b; --text: #f1f5f9;
+        }
+        * { box-sizing: border-box; font-family: 'Segoe UI', sans-serif; transition: 0.3s; }
+        body { background: var(--bg); color: var(--text); margin: 0; padding-bottom: 70px; }
+        
+        /* Glassmorphism Header */
+        header {
+            background: rgba(99, 102, 241, 0.1);
+            backdrop-filter: blur(10px);
+            padding: 15px; text-align: center; border-bottom: 1px solid var(--primary);
+        }
+        .branding { font-size: 0.8rem; color: var(--primary); font-weight: bold; }
+
+        /* Trial Lock Overlay */
+        #lock-screen {
+            position: fixed; inset: 0; background: var(--bg); z-index: 9999;
+            display: none; flex-direction: column; align-items: center; justify-content: center;
+        }
+
+        /* 4-Tab Navigation */
+        .nav-bar {
+            position: fixed; bottom: 0; width: 100%; background: var(--card);
+            display: flex; justify-content: space-around; padding: 10px 0;
+            border-top: 1px solid #ddd; z-index: 1000;
+        }
+        .nav-item { cursor: pointer; text-align: center; font-size: 0.8rem; flex: 1; }
+        .nav-item i { font-size: 1.5rem; display: block; }
+        .nav-item.active { color: var(--primary); }
+
+        .container { padding: 15px; max-width: 800px; margin: auto; }
+        .card { 
+            background: var(--card); border-radius: 15px; padding: 15px; 
+            margin-bottom: 15px; box-shadow: 0 4px 6px -1px rgba(0,0,0,0.1);
+            border-left: 5px solid var(--primary);
+        }
+        .search-box { 
+            width: 100%; padding: 12px; border-radius: 10px; border: 1px solid #ddd;
+            margin-bottom: 15px; background: var(--card); color: var(--text);
+        }
+        .btn { 
+            padding: 10px 15px; border-radius: 8px; border: none; cursor: pointer; 
+            font-weight: bold; display: inline-flex; align-items: center; gap: 5px;
+        }
+        .btn-call { background: #22c55e; color: white; }
+        .btn-del { background: #ef4444; color: white; }
+        .btn-wa { background: #25d366; color: white; }
+
+        .hidden { display: none; }
     </style>
 </head>
 <body>
 
-<div id="securityWall" class="fixed inset-0 z-[10000] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
-    <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600">
-        <h2 class="text-3xl font-black text-indigo-500 italic mb-2">NEXA ERP</h2>
-        <div class="mb-6"><p id="daysLeft" class="text-5xl font-black">7</p><p class="text-[10px] text-slate-500 uppercase font-bold mt-2">Trial Days Left</p></div>
-        <input type="password" id="licenseKey" placeholder="Enter Permanent Key" class="text-center font-bold mb-4 italic">
-        <button onclick="activateApp()" class="w-full bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs tracking-widest">Activate System</button>
-    </div>
+<div id="lock-screen">
+    <h2>Trial Expired or Clock Tampered!</h2>
+    <p>Please enter Master Key to continue.</p>
+    <input type="password" id="master-key-input" placeholder="Enter Key...">
+    <button class="btn" style="background:var(--primary); color:white; margin-top:10px;" onclick="unlockApp()">Unlock</button>
 </div>
 
-<div id="appBody" style="display:none" class="p-4 max-w-lg mx-auto pb-36">
-    <header class="flex justify-between items-center py-6">
+<header>
+    <div style="display:flex; justify-content: space-between; align-items:center;">
+        <button onclick="toggleMode()" class="btn"><i class="fas fa-moon"></i></button>
         <div>
-            <div class="flex items-center gap-2">
-                <h1 class="text-2xl font-black text-indigo-500 italic uppercase">Nexa ERP</h1>
-                <button onclick="loadHugeData(1000000)" class="text-amber-500 text-xl animate-pulse" title="Load 1 Million Data"><i class="fas fa-bolt"></i></button>
-            </div>
-            <p class="text-[9px] text-slate-500 font-extrabold uppercase mt-1 tracking-wider">Powered by Khagesh ai-nexa</p>
+            <h3 style="margin:0;">MALHOTRA CLASSES</h3>
+            <small>Sant Nagar Burari, Delhi-84</small>
         </div>
-        <div class="flex gap-3">
-            <button onclick="downloadBackup()" class="text-emerald-400 text-lg"><i class="fas fa-database"></i></button>
-            <button onclick="hardResetSystem()" class="text-red-500 text-lg"><i class="fas fa-trash-alt"></i></button>
-        </div>
-    </header>
-
-    <div id="tab-dash" class="tab-content active-tab space-y-4">
-        <div class="grid grid-cols-2 gap-3 text-center">
-            <div class="nexa-glass p-5 border-b-2 border-indigo-500"><h2 id="dashCount" class="text-3xl font-black text-indigo-500 italic">0</h2><p class="text-[8px] text-slate-500 font-black uppercase tracking-widest">Students Registered</p></div>
-            <div class="nexa-glass p-5 revenue-card shadow-lg shadow-indigo-500/20"><h2 id="dashRev" class="text-2xl font-black text-white italic">₹0</h2><p class="text-[8px] text-white/80 font-black uppercase tracking-widest">Total Revenue</p></div>
-        </div>
-        <div class="relative">
-            <i class="fas fa-search absolute left-4 top-4 text-slate-500 text-xs"></i>
-            <input type="text" id="dashSearch" onkeyup="renderDash()" placeholder="Instant search 1 Million records..." class="pl-10 text-xs italic">
-        </div>
-        <div id="quickList" class="space-y-2 max-h-96 overflow-y-auto pr-1"></div>
-    </div>
-
-    <div id="tab-attendance" class="tab-content space-y-4">
-        <div class="nexa-glass p-5">
-            <h3 class="text-xs font-black text-indigo-400 uppercase italic mb-3">Attendance Tracker</h3>
-            <input type="date" id="attDate" class="mb-3">
-            <input type="text" id="attSearch" onkeyup="renderAttendance()" placeholder="Search Student..." class="mb-3 text-xs italic">
-            <div id="attList" class="space-y-2 max-h-80 overflow-y-auto"></div>
-            <button onclick="saveAttendance()" class="w-full mt-4 bg-indigo-600 py-4 rounded-xl font-black uppercase text-xs italic tracking-widest shadow-lg shadow-indigo-500/20">Lock Attendance</button>
+        <div style="display:flex; gap:10px;">
+            <label class="btn" style="background:#22c55e; color:white;">
+                <i class="fas fa-file-excel"></i>
+                <input type="file" hidden onchange="importExcel(this)" accept=".xlsx, .xls, .json">
+            </label>
+            <button onclick="exportData()" class="btn" style="background:var(--primary); color:white;"><i class="fas fa-download"></i></button>
+            <button onclick="masterReset()" class="btn btn-del"><i class="fas fa-power-off"></i></button>
         </div>
     </div>
+    <div class="branding">Powered by Khagesh ai-nexa</div>
+</header>
 
-    <div id="tab-fees" class="tab-content space-y-4">
-        <div class="nexa-glass p-5">
-            <h3 class="text-xs font-black text-indigo-400 uppercase italic mb-4">Billing & Reminders</h3>
-            <input type="text" id="feeSearch" onkeyup="renderFees()" placeholder="Search to generate bill..." class="mb-3 text-xs italic">
-            <div id="feeList" class="space-y-2 max-h-80 overflow-y-auto"></div>
-        </div>
+<div class="container">
+    <input type="text" id="globalSearch" class="search-box" placeholder="Search by Name, Batch, or Subject..." oninput="sync()">
+
+    <div id="home-tab" class="tab-content">
+        <h4><i class="fas fa-users"></i> Students List</h4>
+        <div id="student-list"></div>
     </div>
 
-    <div id="tab-students" class="tab-content space-y-4">
-        <div class="nexa-glass p-6">
-            <h3 class="text-xs font-black text-indigo-400 uppercase italic mb-4">New Admission Form</h3>
-            <form id="studentForm" onsubmit="event.preventDefault(); addStudent();" class="space-y-3">
-                <input type="text" id="sName" placeholder="Full Name" required>
-                <div class="grid grid-cols-2 gap-2"><input type="text" id="sBatch" placeholder="Batch Name" required><input type="text" id="sClass" placeholder="Class/Subject" required></div>
-                <div class="grid grid-cols-2 gap-2"><input type="number" id="sFee" placeholder="Fee Amount" required><input type="number" id="sPhone" placeholder="WhatsApp Number" required></div>
-                <button type="submit" class="w-full bg-indigo-600 py-4 rounded-xl font-black text-xs uppercase italic tracking-tighter">Save Student Data</button>
-            </form>
-        </div>
     </div>
 
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[90%] nexa-glass p-2 flex justify-around shadow-2xl z-50">
-        <button onclick="switchTab('dash', this)" class="nav-btn p-4 active"><i class="fas fa-home"></i></button>
-        <button onclick="switchTab('students', this)" class="nav-btn p-4"><i class="fas fa-user-plus"></i></button>
-        <button onclick="switchTab('attendance', this)" class="nav-btn p-4"><i class="fas fa-check-double"></i></button>
-        <button onclick="switchTab('fees', this)" class="nav-btn p-4"><i class="fas fa-receipt"></i></button>
-    </nav>
-</div>
+<nav class="nav-bar">
+    <div class="nav-item active" onclick="showTab('home')"><i class="fas fa-home"></i>Home</div>
+    <div class="nav-item" onclick="showTab('admission')"><i class="fas fa-user-plus"></i>Admission</div>
+    <div class="nav-item" onclick="showTab('attendance')"><i class="fas fa-calendar-check"></i>Attendance</div>
+    <div class="nav-item" onclick="showTab('fees')"><i class="fas fa-file-invoice-dollar"></i>Fees</div>
+</nav>
 
 <script>
-    const P_KEY = "Permanentkey63793119";
-    let db, students = [], attState = {};
+    const CLIENT_NAME = "MALHOTRA CLASSES (ACCOUNTS VILLA)"; [cite: 2026-02-01]
+    const MASTER_KEY = "Permanentkey63793119"; [cite: 2026-01-22]
+    let db;
 
-    const request = indexedDB.open("NexaERPV86_Million", 1);
-    request.onupgradeneeded = e => {
+    // Database Init with Persistence [cite: 2026-01-31]
+    const request = indexedDB.open("NexaEduDB_Malhotra", 1);
+    request.onupgradeneeded = (e) => {
         db = e.target.result;
-        db.createObjectStore("students", { keyPath: "id" });
-        db.createObjectStore("attendance", { keyPath: "date" });
+        db.createObjectStore("st", { keyPath: "id" });
+        db.createObjectStore("config", { keyPath: "key" });
     };
-    request.onsuccess = e => { db = e.target.result; loadData(); initSecurity(); };
+    request.onsuccess = (e) => {
+        db = e.target.result;
+        checkTrial();
+        sync();
+    };
 
-    function loadData() {
-        const tx = db.transaction("students", "readonly");
-        tx.objectStore("students").getAll().onsuccess = e => { 
-            students = e.target.result; 
-            renderAll(); 
-        };
+    // 7-Day Trial & Clock Protection [cite: 2026-02-01]
+    async function checkTrial() {
+        const now = new Date().getTime();
+        const tx = db.transaction("config", "readwrite");
+        const store = tx.objectStore("config");
+        
+        let startDate = await new Promise(r => store.get("start_date").onsuccess = e => r(e.target.result));
+        let lastVisit = await new Promise(r => store.get("last_visit").onsuccess = e => r(e.target.result));
+
+        if (!startDate) {
+            store.put({ key: "start_date", val: now });
+            store.put({ key: "last_visit", val: now });
+            return;
+        }
+
+        // Anti-Tamper: If system time is behind last visit
+        if (now < lastVisit.val) {
+            document.getElementById('lock-screen').style.display = 'flex';
+        }
+        
+        // 7 Day Trial check
+        if (now - startDate.val > 7 * 24 * 60 * 60 * 1000) {
+            let isUnlocked = await new Promise(r => store.get("unlocked").onsuccess = e => r(e.target.result));
+            if (!isUnlocked) document.getElementById('lock-screen').style.display = 'flex';
+        }
+        
+        store.put({ key: "last_visit", val: now });
     }
 
-    // ⚡ THE MILLIONAIRE CHUNKING LOGIC
-    async function loadHugeData(totalRecords) {
-        if(!confirm(`Load ${totalRecords.toLocaleString()} students? Process will run in background (5,000 students/sec).`)) return;
-        
-        let current = 0;
-        const chunkSize = 5000;
+    function unlockApp() {
+        if (document.getElementById('master-key-input').value === MASTER_KEY) {
+            db.transaction("config", "readwrite").objectStore("config").put({ key: "unlocked", val: true });
+            document.getElementById('lock-screen').style.display = 'none';
+        } else { alert("Wrong Master Key!"); }
+    }
 
-        const processChunk = () => {
-            const tx = db.transaction("students", "readwrite");
-            const store = tx.objectStore("students");
+    // Direct Excel Import [cite: 2026-02-01]
+    async function importExcel(input) {
+        const file = input.files[0];
+        const reader = new FileReader();
+        const ext = file.name.split('.').pop().toLowerCase();
 
-            for (let i = 0; i < chunkSize && current < totalRecords; i++) {
-                current++;
-                store.put({ 
-                    id: Date.now() + current, 
-                    name: "Student " + current, 
-                    batch: "B-" + (current % 100), 
-                    cls: "Sec-" + (current % 12), 
-                    fee: 2000, 
-                    phone: "8882737014" 
-                });
+        reader.onload = async (e) => {
+            let students = [];
+            if (ext === 'xlsx' || ext === 'xls') {
+                const workbook = XLSX.read(e.target.result, { type: 'binary' });
+                students = XLSX.utils.sheet_to_json(workbook.Sheets[workbook.SheetNames[0]]);
+            } else {
+                students = JSON.parse(e.target.result);
             }
 
-            tx.oncomplete = () => {
-                if (current < totalRecords) {
-                    setTimeout(processChunk, 5); 
-                } else {
-                    alert("🏆 1,000,000 Records Loaded Successfully!");
-                    location.reload();
-                }
-            };
+            const tx = db.transaction("st", "readwrite");
+            students.forEach(s => {
+                if(!s.id) s.id = Date.now() + Math.random();
+                if(!s.date) s.date = new Date().toISOString().split('T')[0];
+                tx.objectStore("st").put(s);
+            });
+            tx.oncomplete = () => { alert("Import Successful!"); sync(); };
         };
-        processChunk();
+        reader.readAsBinaryString(file);
     }
 
-    function renderDash() {
-        const term = document.getElementById("dashSearch").value.toLowerCase();
-        const filt = students.filter(x => x.name.toLowerCase().includes(term) || x.batch.toLowerCase().includes(term)).slice(0, 50);
-        document.getElementById("quickList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center mb-2 border-l-2 border-indigo-500">
-                <div><p class="font-bold text-sm text-indigo-400">${s.name}</p><p class="text-[9px] text-slate-500 uppercase tracking-tighter">${s.batch} | ${s.cls}</p></div>
-                <div class="flex gap-3"><a href="tel:${s.phone}" class="text-blue-400 text-xs"><i class="fas fa-phone"></i></a></div>
-            </div>`).join("");
+    // Sync UI with Multi-Filter [cite: 2026-02-01]
+    function sync() {
+        const searchTerm = document.getElementById('globalSearch').value.toLowerCase();
+        const list = document.getElementById('student-list');
+        list.innerHTML = "";
+
+        db.transaction("st").objectStore("st").getAll().onsuccess = (e) => {
+            const students = e.target.result;
+            students.filter(s => 
+                s.name.toLowerCase().includes(searchTerm) || 
+                s.batch.toLowerCase().includes(searchTerm) || 
+                s.cls.toLowerCase().includes(searchTerm)
+            ).forEach(s => {
+                list.innerHTML += `
+                    <div class="card">
+                        <div style="display:flex; justify-content:space-between;">
+                            <b>${s.name} (${s.cls})</b>
+                            <span style="font-size:0.8rem; color:gray;">Joined: ${s.date}</span>
+                        </div>
+                        <p style="margin:5px 0;">Batch: ${s.batch} | Fee: ₹${s.fee}</p>
+                        <div style="display:flex; gap:10px; margin-top:10px;">
+                            <a href="tel:${s.phone}" class="btn btn-call"><i class="fas fa-phone"></i> Call</a>
+                            <button onclick="deleteStudent(${s.id})" class="btn btn-del"><i class="fas fa-trash"></i></button>
+                            <button onclick="sendBulkWA('${s.phone}', '${s.name}')" class="btn btn-wa"><i class="fab fa-whatsapp"></i> Reminder</button>
+                        </div>
+                    </div>
+                `;
+            });
+        };
     }
 
-    function renderFees() {
-        const term = document.getElementById("feeSearch").value.toLowerCase();
-        const filt = students.filter(x => x.name.toLowerCase().includes(term)).slice(0, 50);
-        document.getElementById("feeList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center mb-2">
-                <p class="text-xs font-bold">${s.name}</p>
-                <div class="flex gap-4">
-                    <button onclick="window.open('https://wa.me/91${s.phone}?text=Hello ${s.name}, Fee Reminder ₹${s.fee}')" class="text-green-500"><i class="fab fa-whatsapp"></i></button>
-                    <button onclick="generatePDF('${s.name}', '${s.fee}')" class="text-indigo-400"><i class="fas fa-file-invoice"></i></button>
-                </div>
-            </div>`).join("");
+    function deleteStudent(id) {
+        if(confirm("Are you sure?")) {
+            db.transaction("st", "readwrite").objectStore("st").delete(id).onsuccess = () => sync();
+        }
     }
 
-    function renderAll() {
-        document.getElementById("dashCount").innerText = students.length.toLocaleString();
-        document.getElementById("dashRev").innerText = "₹" + ((students.length * 2000)/100000).toFixed(1) + "L";
-        renderDash(); renderFees();
+    function masterReset() {
+        if(confirm("MASTER RESET: This will delete ALL data. Continue?")) {
+            indexedDB.deleteDatabase("NexaEduDB_Malhotra");
+            location.reload();
+        }
     }
 
-    function generatePDF(name, amt) {
-        const { jsPDF } = window.jspdf;
-        const doc = new jsPDF();
-        doc.setFillColor(99, 102, 241); doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255, 255, 255); doc.setFontSize(22); doc.text("FEE RECEIPT", 105, 25, {align:"center"});
-        doc.setTextColor(0,0,0); doc.setFontSize(12); doc.text(`Student Name: ${name}`, 20, 60);
-        doc.text(`Amount Received: INR ${amt}/-`, 20, 70); doc.text(`Date: ${new Date().toLocaleDateString()}`, 20, 80);
-        doc.text("Status: Verified & Paid", 20, 90);
-        doc.setFontSize(8); doc.text("Official Receipt Generated by Nexa AI - Powered by Khagesh ai-nexa", 105, 285, {align:"center"});
-        doc.save(`${name}_Receipt.pdf`);
-    }
-
-    function switchTab(t, b) {
-        document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab"));
-        document.querySelectorAll(".nav-btn").forEach(btn => btn.classList.remove("active"));
-        document.getElementById("tab-"+t).classList.add("active-tab");
-        b.classList.add("active");
-    }
-
-    function activateApp() { if(document.getElementById("licenseKey").value === P_KEY) { localStorage.setItem("nexa_v86_active", "true"); unlockApp(); } else alert("Access Denied!"); }
-    function unlockApp() { document.getElementById("securityWall").style.display = "none"; document.getElementById("appBody").style.display = "block"; }
-    function initSecurity() { if(localStorage.getItem("nexa_v86_active") === "true") unlockApp(); }
-    function hardResetSystem() { if(confirm("Clear 1 Million database?")) { db.transaction("students","readwrite").objectStore("students").clear(); location.reload(); } }
-    function downloadBackup() { 
-        const blob = new Blob([JSON.stringify(students)], {type: "application/json"});
-        const a = document.createElement("a"); a.href = URL.createObjectURL(blob); a.download = "Nexa_Master_Backup.json"; a.click();
-    }
+    function toggleMode() { document.body.classList.toggle('dark-mode'); }
+    function showTab(tab) { /* Tab switching logic */ }
 </script>
 </body>
-    </html>
-    
+</html>
