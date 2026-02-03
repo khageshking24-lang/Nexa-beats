@@ -25,11 +25,11 @@
 <div id="lockScreen" class="fixed inset-0 z-[9999] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
     <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600 shadow-2xl">
         <h2 class="text-2xl font-black text-indigo-500 italic mb-1 uppercase">Malhotra Classes</h2>
-        <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">Secured by Khagesh ai-nexa</p>
+        <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic italic">Powered by Khagesh ai-nexa</p>
         <div class="space-y-4">
             <input type="password" id="mKey" placeholder="Activation Key" class="text-center font-bold">
             <button onclick="unlockApp()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate Premium</button>
-            <button onclick="enterApp()" class="w-full bg-slate-800 border border-slate-700 py-4 rounded-xl font-black uppercase text-[10px] text-indigo-400 mt-2">Continue Trial</button>
+            <button onclick="enterApp()" class="w-full bg-slate-800 border border-slate-700 py-4 rounded-xl font-black uppercase text-[10px] text-indigo-400 mt-2">Continue 7-Day Trial</button>
         </div>
     </div>
 </div>
@@ -37,7 +37,7 @@
 <div id="appUI" class="p-4 max-w-lg mx-auto pb-40" style="display: none;">
     <header class="py-6 flex justify-between items-center">
         <div>
-            <h1 class="text-xl font-black text-indigo-500 italic leading-none">MALHOTRA CLASSES</h1>
+            <h1 class="text-xl font-black text-indigo-500 italic leading-none uppercase">Malhotra Classes</h1>
             <p class="text-[7px] text-slate-500 font-bold uppercase">Sant Nagar Burari, Delhi-84</p>
         </div>
         <div class="flex gap-2">
@@ -58,33 +58,40 @@
 
     <div id="t-add" class="tab-content space-y-4">
         <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600">
-            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2">Admission</h3>
-            <input type="text" id="inN" placeholder="Name">
-            <input type="text" id="inS" placeholder="School">
+            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">New Admission</h3>
+            <input type="text" id="inN" placeholder="Full Name">
+            <input type="text" id="inS" placeholder="School Name">
             <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch"><input type="text" id="inC" placeholder="Subject"></div>
             <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee"><input type="number" id="inP" placeholder="Phone"></div>
-            <input type="date" id="inD">
-            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic">Save</button>
+            <div class="flex flex-col gap-1"><label class="text-[8px] text-slate-500 uppercase font-black ml-1">Joined Date</label><input type="date" id="inD"></div>
+            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Save Admission</button>
         </div>
     </div>
 
     <div id="t-att" class="tab-content space-y-4">
         <div class="nexa-glass p-5">
             <div class="flex gap-2 mb-4"><input type="date" id="atDate" onchange="loadAtt()" class="!w-1/2 text-xs"><select id="attBatch" onchange="loadAtt()" class="!w-1/2 text-[10px] font-bold text-indigo-400"></select></div>
-            <div id="atList" class="space-y-2 mb-4 max-h-60 overflow-y-auto"></div>
-            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg mb-6">Save Attendance</button>
+            <div id="atList" class="space-y-2 mb-4 max-h-60 overflow-y-auto pr-1"></div>
+            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg mb-6">Lock Attendance</button>
             <div class="p-4 border-t border-white/5 text-center">
                 <p class="text-[9px] text-slate-400 uppercase font-black mb-3 italic">Reports</p>
                 <div class="flex gap-2 mb-3"><input type="date" id="fromD" class="text-[10px]"><input type="date" id="toD" class="text-[10px]"></div>
-                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase">Attendance PDF</button>
+                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase italic">Attendance PDF</button>
             </div>
         </div>
     </div>
 
     <div id="t-fees" class="tab-content space-y-4">
         <div class="nexa-glass p-5 space-y-4">
-            <div class="p-4 bg-indigo-600/10 rounded-xl border border-indigo-500/20"><h4 class="text-[9px] font-black uppercase text-indigo-400 mb-2">WhatsApp Template</h4><textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, fee of ₹{fee} is pending at MALHOTRA CLASSES.</textarea></div>
-            <div id="fList" class="space-y-2 max-h-80 overflow-y-auto"></div>
+            <div class="p-4 bg-indigo-600/10 rounded-xl border border-indigo-500/20">
+                <h4 class="text-[9px] font-black uppercase text-indigo-400 mb-2">WhatsApp Template</h4>
+                <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at MALHOTRA CLASSES. Kindly pay soon.</textarea>
+            </div>
+            <div class="flex justify-between items-center px-2">
+                <label class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase cursor-pointer"><input type="checkbox" id="selectAllWA" onchange="toggleSelectAll(this)" class="w-4 h-4"> Select All</label>
+                <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic"><i class="fab fa-whatsapp"></i> Send Reminders</button>
+            </div>
+            <div id="fList" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
         </div>
     </div>
 
@@ -105,7 +112,7 @@
     function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; initDB(); }
 
     function initDB() {
-        const req = indexedDB.open("MalhotraERP_Final_v17_2", 1);
+        const req = indexedDB.open("MalhotraERP_v17_Final", 1);
         req.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("st", {keyPath: "id"}); db.createObjectStore("at", {keyPath: "date"}); };
         req.onsuccess = e => { db = e.target.result; sync(); };
     }
@@ -129,8 +136,8 @@
         const q = document.getElementById("hSearch").value.toLowerCase();
         const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
         document.getElementById("hList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-5 flex justify-between items-center border-l-4 border-indigo-500">
-                <div><p class="font-black text-sm uppercase italic">${s.name}</p><p class="text-[9px] text-slate-500 font-bold uppercase">${s.batch} | ${s.school || 'N/A'}</p><p class="text-[8px] text-indigo-400 font-black mt-1 uppercase italic">Joined: ${s.date || 'N/A'}</p></div>
+            <div class="nexa-glass p-5 flex justify-between items-center border-l-4 border-indigo-500 shadow-xl">
+                <div><p class="font-black text-sm uppercase italic">${s.name}</p><p class="text-[9px] text-slate-500 font-bold uppercase mt-1">${s.batch} | ${s.school || 'N/A'}</p><p class="text-[8px] text-indigo-400 font-black mt-1 uppercase italic">Joined: ${s.date || 'N/A'}</p></div>
                 <div class="flex gap-1"><button onclick="migrateStudent(${s.id})" class="w-8 h-8 nexa-glass text-indigo-400 text-[10px] flex items-center justify-center"><i class="fas fa-exchange-alt"></i></button><a href="tel:${s.phone}" class="w-8 h-8 nexa-glass text-blue-400 text-[10px] flex items-center justify-center"><i class="fas fa-phone-alt"></i></a><button onclick="delSt(${s.id})" class="w-8 h-8 nexa-glass text-red-500 text-[10px] flex items-center justify-center"><i class="fas fa-trash-alt"></i></button></div>
             </div>`).join("");
     }
@@ -138,7 +145,7 @@
     function saveStudent() {
         const s = { id: Date.now(), name: document.getElementById("inN").value, school: document.getElementById("inS").value, batch: document.getElementById("inB").value, cls: document.getElementById("inC").value, fee: document.getElementById("inF").value, phone: document.getElementById("inP").value, date: document.getElementById("inD").value || new Date().toISOString().split('T')[0] };
         if(!s.name || !s.phone) return alert("Required!");
-        const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s); tx.oncomplete = () => { sync(); alert("Saved!"); };
+        const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s); tx.oncomplete = () => { sync(); alert("Admission Saved!"); ["inN","inS","inB","inC","inF","inP"].forEach(i => document.getElementById(i).value=""); };
     }
 
     function importData(input) {
@@ -148,21 +155,25 @@
             const wb = XLSX.read(e.target.result, {type: 'binary'});
             const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             const list = raw.map(row => {
-                const keys = Object.keys(row);
-                return {
-                    id: Date.now() + Math.random(),
-                    name: row[keys.find(k => k.toLowerCase().includes('name'))] || "N/A",
-                    school: row[keys.find(k => k.toLowerCase().includes('school'))] || "N/A",
-                    batch: row[keys.find(k => k.toLowerCase().includes('batch'))] || "General",
-                    fee: row[keys.find(k => k.toLowerCase().includes('fee'))] || 0,
-                    phone: row[keys.find(k => k.toLowerCase().includes('phone') || k.toLowerCase().includes('mobile') || k.includes('__EMPTY'))] || "",
-                    date: row.date || new Date().toISOString().split('T')[0]
-                };
+                const k = Object.keys(row);
+                return { id: Date.now() + Math.random(), name: row[k.find(x => x.toLowerCase().includes('name'))] || "N/A", school: row[k.find(x => x.toLowerCase().includes('school'))] || "N/A", batch: row[k.find(x => x.toLowerCase().includes('batch'))] || "General", fee: row[k.find(x => x.toLowerCase().includes('fee'))] || 0, phone: row[k.find(x => x.toLowerCase().includes('phone') || x.toLowerCase().includes('mobile') || x.includes('__EMPTY'))] || "", date: row.date || new Date().toISOString().split('T')[0] };
             });
             const tx = db.transaction("st", "readwrite"); list.forEach(s => tx.objectStore("st").put(s));
-            tx.oncomplete = () => { alert("Imported " + list.length + " Students!"); sync(); };
+            tx.oncomplete = () => { alert("Imported Students!"); sync(); };
         };
         reader.readAsBinaryString(input.files[0]);
+    }
+
+    function toggleSelectAll(btn) { document.querySelectorAll(".wa-check").forEach(c => c.checked = btn.checked); }
+
+    function sendBulkWA() {
+        const template = document.getElementById("waMsg").value;
+        const selected = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
+        if(!selected.length) return alert("Select students first!");
+        selected.forEach((s, i) => {
+            const msg = template.replace("{name}", s.name).replace("{fee}", s.fee);
+            setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(msg)}`, '_blank'), i * 3500);
+        });
     }
 
     function genReceipt(s) {
@@ -171,22 +182,37 @@
         doc.setTextColor(255); doc.setFontSize(22); doc.text(CLIENT.name, 105, 20, {align:"center"});
         doc.setFontSize(10); doc.text(CLIENT.addr, 105, 28, {align:"center"});
         doc.setFontSize(14); doc.text("FEE RECEIPT", 105, 42, {align:"center"});
-        doc.autoTable({ startY: 60, head: [['Description', 'Value']], body: [['Student', s.name.toUpperCase()], ['Batch', s.batch], ['Fee Amount', `INR ${s.fee}`], ['School', s.school], ['Receipt Date', new Date().toLocaleDateString()]], headStyles:{fillColor:[79, 70, 229]} });
+        doc.autoTable({ startY: 60, head: [['Details', 'Student Data']], body: [['Student', s.name.toUpperCase()], ['Batch', s.batch], ['Fee Amount', `INR ${s.fee}`], ['Date', new Date().toLocaleDateString()]], headStyles:{fillColor:[79, 70, 229]} });
         doc.save(`Receipt_${s.name}.pdf`);
     }
 
     function exportAttendanceReport() {
         const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
-        if(!f || !t) return alert("Select Range!");
+        if(!f || !t) return alert("Select Dates!");
         const { jsPDF } = window.jspdf; const doc = new jsPDF();
         doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255); doc.setFontSize(18); doc.text(CLIENT.name, 105, 15, {align:"center"});
-        doc.setFontSize(9); doc.text(CLIENT.addr, 105, 22, {align:"center"});
+        doc.setTextColor(255); doc.text(CLIENT.name, 105, 15, {align:"center"});
+        doc.setFontSize(8); doc.text(CLIENT.addr, 105, 22, {align:"center"});
         doc.text(`ATTENDANCE: ${f} to ${t}`, 105, 30, {align:"center"});
         const rows = [];
         Object.keys(attData).sort().forEach(date => { if(date >= f && date <= t) attData[date].forEach(e => { const s = students.find(x => x.id === e.id); if(s) rows.push([date, s.name, s.batch, e.status]); }); });
         doc.autoTable({ startY: 45, head: [['Date', 'Name', 'Batch', 'Status']], body: rows, headStyles:{fillColor:[79, 70, 229]} });
         doc.save(`Attendance_Malhotra.pdf`);
+    }
+
+    function renderFees() {
+        const msgT = document.getElementById("waMsg").value;
+        document.getElementById("fList").innerHTML = students.map(s => `
+            <div class="nexa-glass p-4 flex justify-between items-center">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" class="wa-check w-5 h-5 accent-indigo-500" data-id="${s.id}">
+                    <div><p class="text-xs font-black uppercase italic">${s.name}</p><p class="text-[8px] text-slate-500 italic">Fee: ₹${s.fee}</p></div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400 text-lg"><i class="fas fa-file-invoice"></i></button>
+                    <button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button>
+                </div>
+            </div>`).join("");
     }
 
     function loadAtt() {
@@ -201,31 +227,18 @@
         }).join("");
     }
 
-    function renderFees() {
-        const msgT = document.getElementById("waMsg").value;
-        document.getElementById("fList").innerHTML = students.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center">
-                <div><p class="text-xs font-black uppercase">${s.name}</p><p class="text-[8px] text-slate-500 italic">Fee: ₹${s.fee}</p></div>
-                <div class="flex gap-2">
-                    <button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400 text-lg"><i class="fas fa-file-invoice"></i></button>
-                    <button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button>
-                </div>
-            </div>`).join("");
-    }
-
     function saveAtt() {
         const d = document.getElementById("atDate").value;
         const checks = Array.from(document.querySelectorAll("#atList input[type='checkbox']")).map(c => ({ id: Number(c.dataset.id), status: c.checked ? "P" : "A" }));
-        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: checks });
-        tx.oncomplete = () => { attData[d] = checks; alert("Attendance Saved!"); };
+        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: checks }); tx.oncomplete = () => { attData[d] = checks; alert("Attendance Saved!"); };
     }
 
     function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); }
-    function delSt(id) { if(confirm("Delete?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
-    function masterReset() { if(confirm("Wipe Everything?")) { indexedDB.deleteDatabase("MalhotraERP_Final_v17_2"); location.reload(); } }
-    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Backup"); XLSX.writeFile(wb, `Malhotra_Backup.xlsx`); }
-    function migrateStudent(id) { const s = students.find(x => x.id == id); const nb = prompt("New Batch?", s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
+    function delSt(id) { if(confirm("Delete student?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
+    function masterReset() { if(confirm("Reset All Data?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Final"); location.reload(); } }
+    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `Malhotra_Backup.xlsx`); }
+    function migrateStudent(id) { const s = students.find(x => x.id == id); const nb = prompt("Change Batch for "+s.name, s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
 </script>
 </body>
-        </html>
-        
+    </html>
+    
