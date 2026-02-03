@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>MALHOTRA CLASSES | Pro v17.2</title>
+    <title>MALHOTRA CLASSES | Ultimate ERP v17.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -15,7 +15,7 @@
         .nexa-glass { background: #151921; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
         .tab-content { display: none; }
         .active-tab { display: block; animation: slideUp 0.3s ease; }
-        input, select, textarea { background: #1e232d !important; border: 1px solid #2d3545 !important; color: #fff !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; transition: 0.3s; }
+        input, select, textarea { background: #1e232d !important; border: 1px solid #2d3545 !important; color: #fff !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .btn-gradient { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
     </style>
@@ -25,7 +25,7 @@
 <div id="lockScreen" class="fixed inset-0 z-[9999] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
     <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600 shadow-2xl">
         <h2 class="text-2xl font-black text-indigo-500 italic mb-1 uppercase">Malhotra Classes</h2>
-        <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">v17.2 Pro ERP | Khagesh ai-nexa</p>
+        <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic tracking-widest">Secured by Khagesh ai-nexa</p>
         <div class="space-y-4">
             <input type="password" id="mKey" placeholder="Activation Key" class="text-center font-bold">
             <button onclick="unlockApp()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate Premium</button>
@@ -38,53 +38,61 @@
     <header class="py-6 flex justify-between items-center">
         <div>
             <h1 class="text-xl font-black text-indigo-500 italic leading-none">MALHOTRA CLASSES</h1>
-            <p class="text-[7px] text-slate-500 font-bold uppercase tracking-widest">Sant Nagar Burari, Delhi-84</p>
+            <p class="text-[7px] text-slate-500 font-bold uppercase">Sant Nagar Burari, Delhi-84</p>
             <p class="text-[8px] text-indigo-400/50 font-bold uppercase mt-1 italic">Powered by Khagesh ai-nexa</p>
         </div>
         <div class="flex gap-2">
-            <label title="Import Data" class="w-9 h-9 nexa-glass text-emerald-400 flex items-center justify-center text-xs cursor-pointer"><i class="fas fa-file-import"></i><input type="file" class="hidden" onchange="importData(this)"></label>
-            <button onclick="masterReset()" title="Reset System" class="w-9 h-9 nexa-glass text-red-500 flex items-center justify-center text-xs"><i class="fas fa-sync-alt"></i></button>
+            <label title="Import Excel" class="w-9 h-9 nexa-glass text-emerald-400 flex items-center justify-center text-xs cursor-pointer"><i class="fas fa-file-import"></i><input type="file" class="hidden" onchange="importData(this)"></label>
+            <button onclick="exportExcel()" title="Export Backup" class="w-9 h-9 nexa-glass text-blue-400 flex items-center justify-center text-xs"><i class="fas fa-file-excel"></i></button>
+            <button onclick="masterReset()" title="Full Reset" class="w-9 h-9 nexa-glass text-red-500 flex items-center justify-center text-xs"><i class="fas fa-sync-alt"></i></button>
         </div>
     </header>
 
     <div id="t-home" class="tab-content active-tab space-y-4">
+        <div class="grid grid-cols-2 gap-3">
+            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/20"><h2 id="stCount" class="text-4xl font-black">0</h2><p class="text-[9px] text-slate-500 uppercase font-black">Total Students</p></div>
+            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-2xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black">Monthly Rev.</p></div>
+        </div>
         <div class="relative"><input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Name, Batch, School..." class="pl-11 text-xs"><i class="fas fa-search absolute left-4 top-4 text-slate-600 text-xs"></i></div>
         <div id="hList" class="space-y-3"></div>
     </div>
 
     <div id="t-add" class="tab-content space-y-4">
         <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600 shadow-2xl">
-            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2">Student Admission</h3>
+            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic">New Student Form</h3>
             <input type="text" id="inN" placeholder="Full Name">
-            <input type="text" id="inS" placeholder="School Name (New Feature)">
+            <input type="text" id="inS" placeholder="School Name">
             <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch (e.g. 4-5 PM)"><input type="text" id="inC" placeholder="Subject"></div>
             <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee Amount"><input type="number" id="inP" placeholder="Phone Number"></div>
-            <div class="flex flex-col gap-1"><label class="text-[8px] text-slate-500 uppercase font-black ml-1">Joined Date</label><input type="date" id="inD"></div>
-            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Confirm Admission</button>
+            <div class="flex flex-col gap-1"><label class="text-[8px] text-slate-500 uppercase font-black ml-1">Joining Date</label><input type="date" id="inD"></div>
+            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Save Record</button>
         </div>
     </div>
 
     <div id="t-att" class="tab-content space-y-4">
         <div class="nexa-glass p-5">
-            <select id="attBatch" onchange="loadAtt()" class="mb-4 text-xs font-bold text-indigo-400"></select>
-            <div id="atList" class="space-y-2 mb-4 max-h-80 overflow-y-auto"></div>
-            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs">Lock Daily Attendance</button>
+            <div class="flex gap-2 mb-4">
+                <input type="date" id="atDate" onchange="loadAtt()" class="!w-1/2 text-xs">
+                <select id="attBatch" onchange="loadAtt()" class="!w-1/2 text-[10px] font-bold text-indigo-400"></select>
+            </div>
+            <div id="atList" class="space-y-2 mb-4 max-h-60 overflow-y-auto pr-1"></div>
+            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg mb-6">Lock Attendance</button>
+            
+            <div class="p-4 border-t border-white/5 text-center">
+                <p class="text-[9px] text-slate-400 uppercase font-black mb-3 italic">Download Reports (Weekly/Monthly)</p>
+                <div class="flex gap-2 mb-3"><input type="date" id="fromD" class="text-[10px]"><input type="date" id="toD" class="text-[10px]"></div>
+                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase">Generate Attendance PDF</button>
+            </div>
         </div>
     </div>
 
     <div id="t-fees" class="tab-content space-y-4">
         <div class="nexa-glass p-5 space-y-4">
             <div class="p-4 bg-indigo-600/10 rounded-xl border border-indigo-500/20">
-                <h4 class="text-[9px] font-black uppercase text-indigo-400 mb-2">Edit Fee Message Template</h4>
-                <textarea id="waMsg" rows="3" class="text-[11px] leading-relaxed">Dear {name}, your monthly fee of ₹{fee} is pending at MALHOTRA CLASSES. Kindly clear it at the earliest. - Khagesh ai-nexa</textarea>
+                <h4 class="text-[9px] font-black uppercase text-indigo-400 mb-2">Message Template</h4>
+                <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at MALHOTRA CLASSES. - Khagesh ai-nexa</textarea>
             </div>
-            <div class="flex justify-between items-center bg-white/5 p-3 rounded-lg">
-                <label class="text-emerald-400 text-[9px] font-black uppercase cursor-pointer flex items-center gap-2">
-                    <i class="fas fa-file-excel"></i> Upload Bulk Excel <input type="file" class="hidden" onchange="bulkWAExcel(this)">
-                </label>
-                <button onclick="waBulkSelected()" class="text-indigo-400 text-[9px] font-black uppercase">Send Selected</button>
-            </div>
-            <div id="fList" class="space-y-2"></div>
+            <div id="fList" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
         </div>
     </div>
 
@@ -97,6 +105,7 @@
 </div>
 
 <script>
+    const CLIENT = { name: "MALHOTRA CLASSES (ACCOUNTS VILLA)", addr: "Sant Nagar Burari, Delhi-84" };
     const MASTER_KEY = "Permanentkey63793119";
     let db, students = [], attData = {};
 
@@ -104,7 +113,7 @@
     function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; initDB(); }
 
     function initDB() {
-        const req = indexedDB.open("MalhotraERP_v17_Pro", 1);
+        const req = indexedDB.open("MalhotraERP_v17_Ultimate", 1);
         req.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("st", {keyPath: "id"}); db.createObjectStore("at", {keyPath: "date"}); };
         req.onsuccess = e => { db = e.target.result; sync(); if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); };
     }
@@ -116,8 +125,11 @@
     }
 
     function updateUI() {
+        let rev = 0; students.forEach(s => rev += Number(s.fee || 0));
+        document.getElementById("stCount").innerText = students.length;
+        document.getElementById("revCount").innerText = `₹${rev}`;
         const batches = [...new Set(students.map(s => s.batch))];
-        document.getElementById("attBatch").innerHTML = '<option value="">Filter by Batch (All)</option>' + batches.map(b => `<option value="${b}">${b}</option>`).join("");
+        document.getElementById("attBatch").innerHTML = '<option value="">All Batches</option>' + batches.map(b => `<option value="${b}">${b}</option>`).join("");
         renderHome(); renderFees();
     }
 
@@ -125,14 +137,14 @@
         const q = document.getElementById("hSearch").value.toLowerCase();
         const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
         document.getElementById("hList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-5 flex justify-between items-center border-l-4 border-indigo-500 shadow-lg">
+            <div class="nexa-glass p-5 flex justify-between items-center border-l-4 border-indigo-500 shadow-xl">
                 <div>
                     <p class="font-black text-sm uppercase italic leading-none">${s.name}</p>
-                    <p class="text-[9px] text-slate-500 font-bold uppercase mt-1">${s.batch} | ${s.school || 'Private'}</p>
+                    <p class="text-[9px] text-slate-500 font-bold uppercase mt-1">${s.batch} | ${s.school || 'N/A'}</p>
                     <p class="text-[8px] text-indigo-400 font-black mt-1 italic uppercase">Joined: ${s.date || 'N/A'}</p>
                 </div>
                 <div class="flex gap-1">
-                    <button onclick="migrateStudent(${s.id})" title="Change Batch" class="w-8 h-8 nexa-glass flex items-center justify-center text-indigo-400 text-[10px]"><i class="fas fa-exchange-alt"></i></button>
+                    <button onclick="migrateStudent(${s.id})" class="w-8 h-8 nexa-glass flex items-center justify-center text-indigo-400 text-[10px]"><i class="fas fa-exchange-alt"></i></button>
                     <a href="tel:${s.phone}" class="w-8 h-8 nexa-glass flex items-center justify-center text-blue-400 text-[10px]"><i class="fas fa-phone-alt"></i></a>
                     <button onclick="delSt(${s.id})" class="w-8 h-8 nexa-glass flex items-center justify-center text-red-500 text-[10px]"><i class="fas fa-trash-alt"></i></button>
                 </div>
@@ -141,15 +153,9 @@
 
     function saveStudent() {
         const s = { id: Date.now(), name: document.getElementById("inN").value, school: document.getElementById("inS").value, batch: document.getElementById("inB").value, cls: document.getElementById("inC").value, fee: document.getElementById("inF").value, phone: document.getElementById("inP").value, date: document.getElementById("inD").value || new Date().toISOString().split('T')[0] };
-        if(!s.name || !s.phone) return alert("Name and Phone required!");
+        if(!s.name || !s.phone) return alert("Required: Name & Phone");
         const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s);
-        tx.oncomplete = () => { sync(); alert("Admission Saved!"); ["inN","inS","inB","inC","inF","inP","inD"].forEach(i => document.getElementById(i).value=""); };
-    }
-
-    function migrateStudent(id) {
-        const s = students.find(x => x.id == id);
-        const newBatch = prompt("Transfer student to which batch?", s.batch);
-        if(newBatch) { s.batch = newBatch; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); }
+        tx.oncomplete = () => { sync(); alert("Admission Done!"); ["inN","inS","inB","inC","inF","inP","inD"].forEach(i => document.getElementById(i).value=""); };
     }
 
     function importData(input) {
@@ -159,50 +165,71 @@
             const wb = XLSX.read(e.target.result, {type: 'binary'});
             const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
             const list = raw.map(row => ({
-                id: row.id || Date.now() + Math.random(),
-                name: row.name || "N/A",
-                school: row.school || "Private",
-                batch: row.batch || "General",
-                fee: row.fee || 0,
-                phone: row.phone || row['__EMPTY'] || row.mobile || "",
+                id: Date.now() + Math.random(),
+                name: row.name || row.Name || "N/A",
+                school: row.school || row.School || "N/A",
+                batch: row.batch || row.Batch || "General",
+                fee: row.fee || row.Fee || 0,
+                phone: row.phone || row.Phone || row.mobile || row['__EMPTY'] || "",
                 date: row.date || new Date().toISOString().split('T')[0]
             }));
             const tx = db.transaction("st", "readwrite");
             list.forEach(s => tx.objectStore("st").put(s));
-            tx.oncomplete = () => { alert(list.length + " Students Imported Successfully!"); sync(); };
+            tx.oncomplete = () => { alert("Import Success: " + list.length + " Students"); sync(); };
         };
         reader.readAsBinaryString(input.files[0]);
     }
 
-    function bulkWAExcel(input) {
-        const reader = new FileReader();
-        reader.onload = e => {
-            const wb = XLSX.read(e.target.result, {type: 'binary'});
-            const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-            const template = document.getElementById("waMsg").value;
-            raw.forEach((row, i) => {
-                const phone = row.phone || row.mobile || row['__EMPTY'];
-                const msg = template.replace("{name}", row.name).replace("{fee}", row.fee);
-                setTimeout(() => window.open(`https://wa.me/91${phone}?text=${encodeURIComponent(msg)}`, '_blank'), i * 3000);
-            });
-        };
-        reader.readAsBinaryString(input.files[0]);
+    function exportAttendanceReport() {
+        const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
+        if(!f || !t) return alert("Select Date Range!");
+        const { jsPDF } = window.jspdf; const doc = new jsPDF();
+        doc.setFillColor(21, 25, 33); doc.rect(0, 0, 210, 40, 'F');
+        doc.setTextColor(255); doc.setFontSize(18); doc.text(CLIENT.name, 105, 15, {align:"center"});
+        doc.setFontSize(8); doc.text(CLIENT.addr, 105, 22, {align:"center"});
+        doc.text(`ATTENDANCE REPORT: ${f} to ${t}`, 105, 30, {align:"center"});
+        const rows = [];
+        Object.keys(attData).sort().forEach(date => { if(date >= f && date <= t) attData[date].forEach(e => { const s = students.find(x => x.id === e.id); if(s) rows.push([date, s.name, s.batch, e.status]); }); });
+        doc.autoTable({ startY: 45, head: [['Date', 'Name', 'Batch', 'Status']], body: rows, headStyles:{fillColor:[79, 70, 229]} });
+        doc.save(`Attendance_MalhotraClasses.pdf`);
     }
 
     function loadAtt() {
+        const d = document.getElementById("atDate").value || new Date().toISOString().split('T')[0];
+        document.getElementById("atDate").value = d;
         const b = document.getElementById("attBatch").value;
+        const saved = attData[d] || [];
         const filt = b ? students.filter(s => s.batch === b) : students;
-        document.getElementById("atList").innerHTML = filt.map(s => `
-            <div class="flex justify-between items-center p-4 bg-white/5 rounded-xl border-l-2 border-indigo-500">
-                <span class="text-xs font-black uppercase text-white">${s.name}</span>
-                <input type="checkbox" class="w-6 h-6 accent-indigo-500" data-id="${s.id}" checked>
+        document.getElementById("atList").innerHTML = filt.map(s => {
+            const isP = saved.length === 0 ? true : (saved.find(x => x.id === s.id)?.status === "P");
+            return `<div class="flex justify-between items-center p-4 bg-white/5 rounded-xl border-l-2 ${isP ? 'border-emerald-500' : 'border-red-500'}">
+                <span class="text-xs font-black uppercase">${s.name}</span>
+                <input type="checkbox" class="w-6 h-6 accent-indigo-500" data-id="${s.id}" ${isP ? 'checked' : ''}>
+            </div>`;
+        }).join("");
+    }
+
+    function saveAtt() {
+        const d = document.getElementById("atDate").value;
+        const checks = Array.from(document.querySelectorAll("#atList input[type='checkbox']")).map(c => ({ id: Number(c.dataset.id), status: c.checked ? "P" : "A" }));
+        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: checks });
+        tx.oncomplete = () => { attData[d] = checks; alert("Attendance Locked!"); };
+    }
+
+    function renderFees() {
+        const msgT = document.getElementById("waMsg").value;
+        document.getElementById("fList").innerHTML = students.map(s => `
+            <div class="nexa-glass p-4 flex justify-between items-center">
+                <div><p class="text-xs font-black uppercase">${s.name}</p><p class="text-[8px] text-slate-500 italic">Fee: ₹${s.fee}</p></div>
+                <button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button>
             </div>`).join("");
     }
 
-    function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); }
-    function delSt(id) { if(confirm("Confirm deletion of student record?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
-    function masterReset() { if(confirm("⚠️ WIPE ALL DATA?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Pro"); location.reload(); } }
+    function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); document.querySelectorAll("nav button").forEach(btn => btn.classList.replace("text-indigo-500", "text-slate-500")); b.classList.replace("text-slate-500", "text-indigo-500"); }
+    function delSt(id) { if(confirm("Delete Student?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
+    function masterReset() { if(confirm("Wipe Everything?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Ultimate"); location.reload(); } }
+    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Backup"); XLSX.writeFile(wb, `Malhotra_Backup.xlsx`); }
+    function migrateStudent(id) { const s = students.find(x => x.id == id); const nb = prompt("New Batch?", s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
 </script>
 </body>
-                </html>
-    
+</html>
