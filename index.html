@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>MALHOTRA CLASSES | Pro v17.2</title>
+    <title>MALHOTRA CLASSES | Ultimate Pro v17.2</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -11,11 +11,12 @@
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
     <style>
         @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; }
+        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; overflow-x: hidden; }
         .nexa-glass { background: #151921; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
         .tab-content { display: none; }
         .active-tab { display: block; animation: slideUp 0.3s ease; }
-        input, select, textarea { background: #1e232d !important; border: 1px solid #2d3545 !important; color: #fff !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; }
+        input, select, textarea { background: #1e232d !important; border: 1px solid #2d3545 !important; color: #fff !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; transition: 0.3s; }
+        input:focus { border-color: #6366f1 !important; box-shadow: 0 0 10px rgba(99, 102, 241, 0.2); }
         @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
         .btn-gradient { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
     </style>
@@ -25,7 +26,7 @@
 <div id="lockScreen" class="fixed inset-0 z-[9999] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
     <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600 shadow-2xl">
         <h2 class="text-2xl font-black text-indigo-500 italic mb-1 uppercase">Malhotra Classes</h2>
-        <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic italic">Powered by Khagesh ai-nexa</p>
+        <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">Secured by Khagesh ai-nexa</p>
         <div class="space-y-4">
             <input type="password" id="mKey" placeholder="Activation Key" class="text-center font-bold">
             <button onclick="unlockApp()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate Premium</button>
@@ -35,36 +36,37 @@
 </div>
 
 <div id="appUI" class="p-4 max-w-lg mx-auto pb-40" style="display: none;">
-    <header class="py-6 flex justify-between items-center">
-        <div>
-            <h1 class="text-xl font-black text-indigo-500 italic leading-none uppercase">Malhotra Classes</h1>
-            <p class="text-[7px] text-slate-500 font-bold uppercase">Sant Nagar Burari, Delhi-84</p>
+    <header class="py-6 flex justify-between items-start">
+        <div onclick="editProfile()" class="cursor-pointer group">
+            <h1 id="disName" class="text-xl font-black text-indigo-500 italic leading-none uppercase group-hover:text-indigo-400">MALHOTRA CLASSES</h1>
+            <p id="disAddr" class="text-[7px] text-slate-500 font-bold uppercase mt-1 group-hover:text-slate-400">Sant Nagar Burari, Delhi-84</p>
+            <p class="text-[6px] text-indigo-500/40 font-black mt-2">CLICK TO EDIT ADDRESS</p>
         </div>
         <div class="flex gap-2">
-            <label class="w-9 h-9 nexa-glass text-emerald-400 flex items-center justify-center text-xs cursor-pointer"><i class="fas fa-file-import"></i><input type="file" class="hidden" onchange="importData(this)"></label>
-            <button onclick="exportExcel()" class="w-9 h-9 nexa-glass text-blue-400 flex items-center justify-center text-xs"><i class="fas fa-file-excel"></i></button>
-            <button onclick="masterReset()" class="w-9 h-9 nexa-glass text-red-500 flex items-center justify-center text-xs"><i class="fas fa-sync-alt"></i></button>
+            <label class="w-9 h-9 nexa-glass text-emerald-400 flex items-center justify-center text-xs cursor-pointer shadow-lg"><i class="fas fa-file-import"></i><input type="file" class="hidden" onchange="importData(this)"></label>
+            <button onclick="exportExcel()" class="w-9 h-9 nexa-glass text-blue-400 flex items-center justify-center text-xs shadow-lg"><i class="fas fa-file-excel"></i></button>
+            <button onclick="masterReset()" class="w-9 h-9 nexa-glass text-red-500 flex items-center justify-center text-xs shadow-lg"><i class="fas fa-sync-alt"></i></button>
         </div>
     </header>
 
     <div id="t-home" class="tab-content active-tab space-y-4">
         <div class="grid grid-cols-2 gap-3">
             <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/20"><h2 id="stCount" class="text-4xl font-black">0</h2><p class="text-[9px] text-slate-500 uppercase font-black">Students</p></div>
-            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-2xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black">Revenue</p></div>
+            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-2xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black">Total Revenue</p></div>
         </div>
-        <input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Name, Batch, School..." class="text-xs">
+        <div class="relative"><input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Name, Batch, or School..." class="pl-11 text-xs"><i class="fas fa-search absolute left-4 top-4 text-slate-600 text-xs"></i></div>
         <div id="hList" class="space-y-3"></div>
     </div>
 
     <div id="t-add" class="tab-content space-y-4">
-        <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600">
-            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">New Admission</h3>
-            <input type="text" id="inN" placeholder="Full Name">
+        <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600 shadow-2xl">
+            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">Enrollment Form</h3>
+            <input type="text" id="inN" placeholder="Student Full Name">
             <input type="text" id="inS" placeholder="School Name">
-            <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch"><input type="text" id="inC" placeholder="Subject"></div>
-            <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee"><input type="number" id="inP" placeholder="Phone"></div>
+            <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch Name"><input type="text" id="inC" placeholder="Subject"></div>
+            <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee Amount"><input type="number" id="inP" placeholder="WhatsApp Number"></div>
             <div class="flex flex-col gap-1"><label class="text-[8px] text-slate-500 uppercase font-black ml-1">Joined Date</label><input type="date" id="inD"></div>
-            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Save Admission</button>
+            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2 shadow-xl">Confirm Admission</button>
         </div>
     </div>
 
@@ -72,11 +74,11 @@
         <div class="nexa-glass p-5">
             <div class="flex gap-2 mb-4"><input type="date" id="atDate" onchange="loadAtt()" class="!w-1/2 text-xs"><select id="attBatch" onchange="loadAtt()" class="!w-1/2 text-[10px] font-bold text-indigo-400"></select></div>
             <div id="atList" class="space-y-2 mb-4 max-h-60 overflow-y-auto pr-1"></div>
-            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg mb-6">Lock Attendance</button>
+            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg mb-6">Save Attendance</button>
             <div class="p-4 border-t border-white/5 text-center">
                 <p class="text-[9px] text-slate-400 uppercase font-black mb-3 italic">Reports</p>
                 <div class="flex gap-2 mb-3"><input type="date" id="fromD" class="text-[10px]"><input type="date" id="toD" class="text-[10px]"></div>
-                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase italic">Attendance PDF</button>
+                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase italic">Download PDF Report</button>
             </div>
         </div>
     </div>
@@ -84,12 +86,13 @@
     <div id="t-fees" class="tab-content space-y-4">
         <div class="nexa-glass p-5 space-y-4">
             <div class="p-4 bg-indigo-600/10 rounded-xl border border-indigo-500/20">
-                <h4 class="text-[9px] font-black uppercase text-indigo-400 mb-2">WhatsApp Template</h4>
-                <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at MALHOTRA CLASSES. Kindly pay soon.</textarea>
+                <h4 class="text-[9px] font-black uppercase text-indigo-400 mb-2 italic">Reminder Template</h4>
+                <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at MALHOTRA CLASSES. - Khagesh ai-nexa</textarea>
             </div>
+            <div class="relative"><input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Filter by Name, Batch, or School..." class="pl-11 text-xs"><i class="fas fa-filter absolute left-4 top-4 text-slate-600 text-xs"></i></div>
             <div class="flex justify-between items-center px-2">
-                <label class="flex items-center gap-2 text-[10px] font-bold text-slate-400 uppercase cursor-pointer"><input type="checkbox" id="selectAllWA" onchange="toggleSelectAll(this)" class="w-4 h-4"> Select All</label>
-                <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic"><i class="fab fa-whatsapp"></i> Send Reminders</button>
+                <label class="flex items-center gap-2 text-[9px] font-black text-slate-500 uppercase cursor-pointer"><input type="checkbox" id="selectAllWA" onchange="toggleSelectAll(this)" class="w-4 h-4 accent-indigo-500"> Select All</label>
+                <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic"><i class="fab fa-whatsapp"></i> Send Selected</button>
             </div>
             <div id="fList" class="space-y-2 max-h-80 overflow-y-auto pr-1"></div>
         </div>
@@ -104,15 +107,26 @@
 </div>
 
 <script>
-    const CLIENT = { name: "MALHOTRA CLASSES (ACCOUNTS VILLA)", addr: "Sant Nagar Burari, Delhi-84" };
     const MASTER_KEY = "Permanentkey63793119";
-    let db, students = [], attData = {};
+    let db, students = [], attData = {}, 
+    config = JSON.parse(localStorage.getItem("mal_config")) || { name: "MALHOTRA CLASSES", addr: "Sant Nagar Burari, Delhi-84" };
 
     function unlockApp() { if(document.getElementById("mKey").value === MASTER_KEY) { localStorage.setItem("mal_premium", "true"); enterApp(); } else alert("Invalid Key!"); }
-    function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; initDB(); }
+    function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; refreshConfig(); initDB(); }
+
+    function refreshConfig() {
+        document.getElementById("disName").innerText = config.name;
+        document.getElementById("disAddr").innerText = config.addr;
+    }
+
+    function editProfile() {
+        const n = prompt("Change Institute Name:", config.name);
+        const a = prompt("Change Address:", config.addr);
+        if(n && a) { config = {name: n, addr: a}; localStorage.setItem("mal_config", JSON.stringify(config)); refreshConfig(); }
+    }
 
     function initDB() {
-        const req = indexedDB.open("MalhotraERP_v17_Final", 1);
+        const req = indexedDB.open("MalhotraERP_Ultimate_v17", 1);
         req.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("st", {keyPath: "id"}); db.createObjectStore("at", {keyPath: "date"}); };
         req.onsuccess = e => { db = e.target.result; sync(); };
     }
@@ -144,7 +158,7 @@
 
     function saveStudent() {
         const s = { id: Date.now(), name: document.getElementById("inN").value, school: document.getElementById("inS").value, batch: document.getElementById("inB").value, cls: document.getElementById("inC").value, fee: document.getElementById("inF").value, phone: document.getElementById("inP").value, date: document.getElementById("inD").value || new Date().toISOString().split('T')[0] };
-        if(!s.name || !s.phone) return alert("Required!");
+        if(!s.name || !s.phone) return alert("Required: Name & Phone");
         const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s); tx.oncomplete = () => { sync(); alert("Admission Saved!"); ["inN","inS","inB","inC","inF","inP"].forEach(i => document.getElementById(i).value=""); };
     }
 
@@ -159,60 +173,62 @@
                 return { id: Date.now() + Math.random(), name: row[k.find(x => x.toLowerCase().includes('name'))] || "N/A", school: row[k.find(x => x.toLowerCase().includes('school'))] || "N/A", batch: row[k.find(x => x.toLowerCase().includes('batch'))] || "General", fee: row[k.find(x => x.toLowerCase().includes('fee'))] || 0, phone: row[k.find(x => x.toLowerCase().includes('phone') || x.toLowerCase().includes('mobile') || x.includes('__EMPTY'))] || "", date: row.date || new Date().toISOString().split('T')[0] };
             });
             const tx = db.transaction("st", "readwrite"); list.forEach(s => tx.objectStore("st").put(s));
-            tx.oncomplete = () => { alert("Imported Students!"); sync(); };
+            tx.oncomplete = () => { alert("Import Successful!"); sync(); };
         };
         reader.readAsBinaryString(input.files[0]);
     }
 
     function toggleSelectAll(btn) { document.querySelectorAll(".wa-check").forEach(c => c.checked = btn.checked); }
 
-    function sendBulkWA() {
-        const template = document.getElementById("waMsg").value;
-        const selected = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
-        if(!selected.length) return alert("Select students first!");
-        selected.forEach((s, i) => {
-            const msg = template.replace("{name}", s.name).replace("{fee}", s.fee);
-            setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(msg)}`, '_blank'), i * 3500);
-        });
+    function renderFees() {
+        const q = document.getElementById("fSearch").value.toLowerCase();
+        const msgT = document.getElementById("waMsg").value;
+        const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
+        document.getElementById("fList").innerHTML = filt.map(s => `
+            <div class="nexa-glass p-4 flex justify-between items-center shadow-lg">
+                <div class="flex items-center gap-3">
+                    <input type="checkbox" class="wa-check w-5 h-5 accent-indigo-500" data-id="${s.id}">
+                    <div><p class="text-xs font-black uppercase italic">${s.name}</p><p class="text-[8px] text-slate-500 font-bold uppercase">${s.batch} | ${s.school || 'N/A'}</p><p class="text-[8px] text-indigo-400 font-black">Fee: ₹${s.fee}</p></div>
+                </div>
+                <div class="flex gap-2">
+                    <button onclick='genReceipt(${JSON.stringify(s)})' title="Download Receipt" class="w-8 h-8 nexa-glass text-indigo-400 text-xs flex items-center justify-center"><i class="fas fa-file-invoice"></i></button>
+                    <button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="w-8 h-8 nexa-glass text-emerald-500 text-xs flex items-center justify-center"><i class="fab fa-whatsapp"></i></button>
+                </div>
+            </div>`).join("");
     }
 
     function genReceipt(s) {
         const { jsPDF } = window.jspdf; const doc = new jsPDF();
         doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 50, 'F');
-        doc.setTextColor(255); doc.setFontSize(22); doc.text(CLIENT.name, 105, 20, {align:"center"});
-        doc.setFontSize(10); doc.text(CLIENT.addr, 105, 28, {align:"center"});
+        doc.setTextColor(255); doc.setFontSize(22); doc.text(config.name, 105, 20, {align:"center"});
+        doc.setFontSize(10); doc.text(config.addr, 105, 28, {align:"center"});
         doc.setFontSize(14); doc.text("FEE RECEIPT", 105, 42, {align:"center"});
-        doc.autoTable({ startY: 60, head: [['Details', 'Student Data']], body: [['Student', s.name.toUpperCase()], ['Batch', s.batch], ['Fee Amount', `INR ${s.fee}`], ['Date', new Date().toLocaleDateString()]], headStyles:{fillColor:[79, 70, 229]} });
-        doc.save(`Receipt_${s.name}.pdf`);
+        doc.autoTable({ startY: 60, head: [['Particulars', 'Student Info']], body: [['Student Name', s.name.toUpperCase()], ['Batch Name', s.batch], ['Amount Paid', `INR ${s.fee}`], ['School Name', s.school], ['Date Issued', new Date().toLocaleDateString()]], headStyles:{fillColor:[79, 70, 229]} });
+        doc.save(`${s.name}_Receipt.pdf`);
     }
 
     function exportAttendanceReport() {
         const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
-        if(!f || !t) return alert("Select Dates!");
+        if(!f || !t) return alert("Select Date Range!");
         const { jsPDF } = window.jspdf; const doc = new jsPDF();
         doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255); doc.text(CLIENT.name, 105, 15, {align:"center"});
-        doc.setFontSize(8); doc.text(CLIENT.addr, 105, 22, {align:"center"});
+        doc.setTextColor(255); doc.setFontSize(18); doc.text(config.name, 105, 15, {align:"center"});
+        doc.setFontSize(8); doc.text(config.addr, 105, 22, {align:"center"});
         doc.text(`ATTENDANCE: ${f} to ${t}`, 105, 30, {align:"center"});
         const rows = [];
         Object.keys(attData).sort().forEach(date => { if(date >= f && date <= t) attData[date].forEach(e => { const s = students.find(x => x.id === e.id); if(s) rows.push([date, s.name, s.batch, e.status]); }); });
         doc.autoTable({ startY: 45, head: [['Date', 'Name', 'Batch', 'Status']], body: rows, headStyles:{fillColor:[79, 70, 229]} });
-        doc.save(`Attendance_Malhotra.pdf`);
+        doc.save(`Attendance_Report.pdf`);
     }
 
-    function renderFees() {
-        const msgT = document.getElementById("waMsg").value;
-        document.getElementById("fList").innerHTML = students.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center">
-                <div class="flex items-center gap-3">
-                    <input type="checkbox" class="wa-check w-5 h-5 accent-indigo-500" data-id="${s.id}">
-                    <div><p class="text-xs font-black uppercase italic">${s.name}</p><p class="text-[8px] text-slate-500 italic">Fee: ₹${s.fee}</p></div>
-                </div>
-                <div class="flex gap-2">
-                    <button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400 text-lg"><i class="fas fa-file-invoice"></i></button>
-                    <button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button>
-                </div>
-            </div>`).join("");
+    function sendBulkWA() {
+        const template = document.getElementById("waMsg").value;
+        const selected = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
+        if(!selected.length) return alert("Select at least one student!");
+        selected.forEach((s, i) => {
+            const msg = template.replace("{name}", s.name).replace("{fee}", s.fee);
+            setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(msg)}`, '_blank'), i * 3500);
+        });
     }
 
     function loadAtt() {
@@ -223,22 +239,15 @@
         const filt = b ? students.filter(s => s.batch === b) : students;
         document.getElementById("atList").innerHTML = filt.map(s => {
             const isP = saved.length === 0 ? true : (saved.find(x => x.id === s.id)?.status === "P");
-            return `<div class="flex justify-between items-center p-4 bg-white/5 rounded-xl border-l-2 ${isP ? 'border-emerald-500' : 'border-red-500'}"><span class="text-xs font-black uppercase">${s.name}</span><input type="checkbox" class="w-6 h-6 accent-indigo-500" data-id="${s.id}" ${isP ? 'checked' : ''}></div>`;
+            return `<div class="flex justify-between items-center p-4 bg-white/5 rounded-xl border-l-2 ${isP ? 'border-emerald-500' : 'border-red-500'}"><span class="text-xs font-black uppercase text-white">${s.name}</span><input type="checkbox" class="w-6 h-6 accent-indigo-500" data-id="${s.id}" ${isP ? 'checked' : ''}></div>`;
         }).join("");
     }
 
     function saveAtt() {
         const d = document.getElementById("atDate").value;
         const checks = Array.from(document.querySelectorAll("#atList input[type='checkbox']")).map(c => ({ id: Number(c.dataset.id), status: c.checked ? "P" : "A" }));
-        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: checks }); tx.oncomplete = () => { attData[d] = checks; alert("Attendance Saved!"); };
+        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: checks }); tx.oncomplete = () => { attData[d] = checks; alert("Attendance Recorded!"); };
     }
 
     function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); }
-    function delSt(id) { if(confirm("Delete student?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
-    function masterReset() { if(confirm("Reset All Data?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Final"); location.reload(); } }
-    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students); const wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `Malhotra_Backup.xlsx`); }
-    function migrateStudent(id) { const s = students.find(x => x.id == id); const nb = prompt("Change Batch for "+s.name, s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
-</script>
-</body>
-    </html>
-    
+    function delSt(id) { if(confirm("Permanently delete this student?")) { const tx = db.tra
