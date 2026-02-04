@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>MALHOTRA CLASSES | Final v17.6</title>
+    <title>EDUMASTER ERP | Professional Edition</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
     <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
@@ -24,7 +24,7 @@
 
 <div id="lockScreen" class="fixed inset-0 z-[9999] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
     <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600 shadow-2xl">
-        <h2 class="text-2xl font-black text-indigo-500 italic mb-1 uppercase">Malhotra Classes</h2>
+        <h2 class="text-2xl font-black text-indigo-500 italic mb-1 uppercase">EDUMASTER ERP</h2>
         <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">Powered by Khagesh ai-nexa</p>
         <div class="space-y-4">
             <div id="trialBox">
@@ -42,8 +42,8 @@
 <div id="appUI" class="p-4 max-w-lg mx-auto pb-40" style="display: none;">
     <header class="py-6 flex justify-between items-start">
         <div onclick="editProfile()" class="cursor-pointer">
-            <h1 id="disName" class="text-xl font-black text-indigo-500 italic leading-none uppercase">MALHOTRA CLASSES</h1>
-            <p id="disAddr" class="text-[7px] text-slate-500 font-bold uppercase mt-1">Sant Nagar Burari, Delhi-84</p>
+            <h1 id="disName" class="text-xl font-black text-indigo-500 italic leading-none uppercase">EDUMASTER ERP</h1>
+            <p id="disAddr" class="text-[7px] text-slate-500 font-bold uppercase mt-1">Type your address</p>
         </div>
         <div class="flex gap-2">
             <label class="w-9 h-9 nexa-glass text-emerald-400 flex items-center justify-center text-xs cursor-pointer"><i class="fas fa-file-import"></i><input type="file" class="hidden" onchange="importData(this)"></label>
@@ -87,8 +87,8 @@
 
     <div id="t-fees" class="tab-content space-y-4">
         <div class="nexa-glass p-5 space-y-4">
-            <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at MALHOTRA CLASSES.</textarea>
-            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Filter Students..." class="text-xs">
+            <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at {brand}.</textarea>
+            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Search Name, Batch or School..." class="text-xs">
             <div class="flex justify-between items-center px-2">
                 <label class="text-[9px] font-black text-slate-500 uppercase flex items-center gap-2"><input type="checkbox" id="selectAllWA" onchange="toggleSelectAll(this)"> Select All</label>
                 <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic">Send Reminders</button>
@@ -107,7 +107,7 @@
 
 <script>
     const MK_ENC = "UGVybWFuZW50a2V5NjM3OTMxMTk="; 
-    let db, students = [], attData = {}, config = JSON.parse(localStorage.getItem("mal_config")) || { name: "MALHOTRA CLASSES", addr: "Sant Nagar Burari, Delhi-84" };
+    let db, students = [], attData = {}, config = JSON.parse(localStorage.getItem("mal_config")) || { name: "EDUMASTER ERP", addr: "Type your address" };
 
     function checkBoot() {
         if(localStorage.getItem("mal_premium") === "true") { enterApp(); return; }
@@ -178,7 +178,7 @@
             <div class="nexa-glass p-4 flex justify-between items-center shadow-lg">
                 <div class="flex items-center gap-3"><input type="checkbox" class="wa-check w-4 h-4 accent-indigo-500" data-id="${s.id}">
                 <div><p class="text-xs font-black uppercase">${s.name}</p><p class="text-[8px] text-indigo-400 font-bold">Fee: ₹${s.fee}</p></div></div>
-                <div class="flex gap-2"><button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400 text-lg"><i class="fas fa-file-invoice"></i></button><button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button></div>
+                <div class="flex gap-2"><button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400 text-lg"><i class="fas fa-file-invoice"></i></button><button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee).replace('{brand}', config.name))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button></div>
             </div>`).join("");
     }
 
@@ -189,7 +189,6 @@
         tx.oncomplete = () => { 
             sync(); 
             alert("Admission Success!");
-            // RESET FORM FIELDS
             ['inN', 'inS', 'inB', 'inC', 'inF', 'inP', 'inD'].forEach(id => document.getElementById(id).value = "");
         };
     }
@@ -223,7 +222,7 @@
         const filt = b ? students.filter(s => s.batch === b) : students;
         document.getElementById("atList").innerHTML = filt.map(s => {
             const isP = saved.length === 0 ? true : (saved.find(x => x.id === s.id)?.status === "P");
-            return `<div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border-l-2 ${isP ? 'border-emerald-500' : 'border-red-500'} mb-2"><span class="text-xs uppercase">${s.name}</span><input type="checkbox" class="w-5 h-5 accent-indigo-500" data-id="${s.id}" ${isP ? 'checked' : ''}></div>`;
+            return `<div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border-l-2 ${isP ? 'border-emerald-500' : 'border-red-500'} mb-2"><span class="text-xs uppercase font-bold">${s.name}</span><input type="checkbox" class="w-5 h-5 accent-indigo-500" data-id="${s.id}" ${isP ? 'checked' : ''}></div>`;
         }).join("");
     }
 
@@ -233,9 +232,18 @@
     }
 
     function sendBulkWA() {
-        const t = document.getElementById("waMsg").value, sel = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
-        if(!sel.length) return alert("Select Students!");
-        sel.forEach((s, i) => setTimeout(() => window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(t.replace("{name}", s.name).replace("{fee}", s.fee))}`, '_blank'), i * 3500));
+        const t = document.getElementById("waMsg").value;
+        const sel = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
+        if(!sel.length) return alert("Select Students First!");
+        
+        alert("Sending Bulk Messages. Please allow 'Pop-ups' in your browser and don't close the tabs until finished.");
+        
+        sel.forEach((s, i) => {
+            setTimeout(() => {
+                const msg = t.replace("{name}", s.name).replace("{fee}", s.fee).replace("{brand}", config.name);
+                window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(msg)}`, '_blank');
+            }, i * 3500); // Glitch fix: Using 3.5 sec delay to avoid browser blocking
+        });
     }
 
     function importData(input) {
@@ -254,12 +262,8 @@
     }
 
     function toggleSelectAll(btn) { document.querySelectorAll(".wa-check").forEach(c => c.checked = btn.checked); }
-    function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); }
+    function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); document.querySelectorAll('nav button').forEach(btn => btn.classList.replace('text-indigo-500', 'text-slate-500')); b.classList.replace('text-slate-500', 'text-indigo-500'); }
     function delSt(id) { if(confirm("Delete Student?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
     function masterReset() { if(confirm("Wipe All Data?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Stable_Final"); localStorage.clear(); location.reload(); } }
-    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `Malhotra_Backup.xlsx`); }
-    function migrateStudent(id) { const s = students.find(x => x.id == id), nb = prompt("New Batch:", s.batch); if(nb) { s.batch = nb; const tx = db.transaction("st", "readwrite"); tx.objectStore("st").put(s); tx.oncomplete = () => sync(); } }
-</script>
-</body>
-    </html>
-    
+    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `EduMaster_Backup.xlsx`); }
+    function migrateStudent(id) { 
