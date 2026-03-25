@@ -1,269 +1,221 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width,initial-scale=1.0">
-    <title>EDUMASTER ERP | Professional Edition</title>
-    <script src="https://cdn.tailwindcss.com"></script>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css" rel="stylesheet">
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Nexa LibMaster Pro v2.3.1 - Khagesh Nexa-System</title>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.23/jspdf.plugin.autotable.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.5.25/jspdf.plugin.autotable.min.js"></script>
     <style>
-        @import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;700;800&display=swap');
-        body { font-family: 'Plus Jakarta Sans', sans-serif; background: #0b0e14; color: #fff; margin: 0; }
-        .nexa-glass { background: #151921; border: 1px solid rgba(255,255,255,0.05); border-radius: 20px; }
-        .tab-content { display: none; }
-        .active-tab { display: block; animation: slideUp 0.3s ease; }
-        input, select, textarea { background: #1e232d !important; border: 1px solid #2d3545 !important; color: #fff !important; padding: 12px !important; border-radius: 12px !important; width: 100%; outline: none; }
-        @keyframes slideUp { from { opacity: 0; transform: translateY(15px); } to { opacity: 1; transform: translateY(0); } }
-        .btn-gradient { background: linear-gradient(135deg, #6366f1 0%, #4f46e5 100%); }
+        :root { --p: #6366f1; --bg: #0f172a; --card: rgba(30, 41, 59, 0.7); --t: #f8fafc; }
+        * { margin: 0; padding: 0; box-sizing: border-box; font-family: 'Segoe UI', sans-serif; -webkit-tap-highlight-color: transparent; }
+        body { background: var(--bg); color: var(--t); transition: 0.3s; overflow: hidden; height: 100vh; }
+        .glass { background: var(--card); backdrop-filter: blur(12px); border: 1px solid rgba(255,255,255,0.1); border-radius: 16px; }
+        .container { max-width: 500px; margin: auto; height: 100vh; display: flex; flex-direction: column; padding: 10px; }
+        header { display: flex; justify-content: space-between; align-items: center; padding: 5px 0; }
+        .btn { padding: 12px; border: none; border-radius: 10px; cursor: pointer; font-weight: 600; width: 100%; font-size: 14px; }
+        .btn-p { background: var(--p); color: #fff; }
+        .btn-s { background: #64748b; color: #fff; }
+        .btn-wa { background: #25d366; color: #fff; }
+        input, select { width: 100%; padding: 10px; margin: 5px 0; border-radius: 8px; border: 1px solid #334155; background: rgba(0,0,0,0.2); color: inherit; outline: none; }
+        #scrollArea { flex: 1; overflow-y: auto; padding-bottom: 90px; scrollbar-width: none; }
+        #scrollArea::-webkit-scrollbar { display: none; }
+        .seat-grid { display: grid; grid-template-columns: repeat(5, 1fr); gap: 8px; padding: 10px 0; }
+        .seat { aspect-ratio: 1; border-radius: 8px; display: flex; align-items: center; justify-content: center; font-size: 10px; font-weight: bold; cursor: pointer; border: 1px solid rgba(255,255,255,0.1); flex-direction: column; }
+        .seat.free { background: rgba(34, 197, 94, 0.1); color: #22c55e; }
+        .seat.taken { background: rgba(239, 68, 68, 0.2); color: #ef4444; border-color: #ef4444; }
+        .nav { position: fixed; bottom: 0; left: 0; right: 0; background: var(--card); backdrop-filter: blur(10px); display: flex; justify-content: space-around; padding: 10px; z-index: 10; border-top: 1px solid rgba(255,255,255,0.1); }
+        .nav-item { cursor: pointer; font-size: 10px; text-align: center; opacity: 0.6; }
+        .nav-item.active { opacity: 1; color: var(--p); }
+        .modal { position: fixed; inset: 0; background: rgba(0,0,0,0.85); display: none; align-items: center; justify-content: center; z-index: 100; padding: 15px; overflow-y: auto; }
+        .trial-screen { position: fixed; inset: 0; background: var(--bg); z-index: 2000; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 30px; text-align: center; }
+        .item-card { padding: 12px; margin-bottom: 8px; display: flex; justify-content: space-between; align-items: center; }
+        .hidden { display: none; }
     </style>
 </head>
-<body onload="checkBoot()">
+<body>
 
-<div id="lockScreen" class="fixed inset-0 z-[9999] bg-[#0b0e14] flex items-center justify-center p-6 text-center">
-    <div class="nexa-glass p-8 w-full max-w-sm border-t-4 border-indigo-600 shadow-2xl">
-        <h2 class="text-2xl font-black text-indigo-500 italic mb-1 uppercase">EDUMASTER ERP</h2>
-        <p class="text-[9px] text-slate-500 mb-8 uppercase font-bold tracking-widest italic">Powered by Khagesh ai-nexa</p>
-        <div class="space-y-4">
-            <div id="trialBox">
-               <button onclick="enterApp()" class="w-full bg-slate-800 border border-slate-700 py-4 rounded-xl font-black uppercase text-[10px] text-indigo-400">Continue 7-Day Trial</button>
-            </div>
-            <div id="lockBox" class="hidden space-y-4">
-                <p class="text-[10px] text-red-500 font-bold uppercase tracking-tight">Trial expired can be unlocked only with perma key</p>
-            </div>
-            <input type="password" id="mKey" placeholder="Enter Permanent Key" class="text-center font-bold tracking-widest mt-4">
-            <button onclick="verifyKey()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs shadow-lg">Activate Lifetime Access</button>
-        </div>
-    </div>
+<div id="trialBox" class="trial-screen hidden glass">
+    <h2>Nexa LibMaster Pro</h2>
+    <p style="margin:20px 0">Trial Expired. Enter key to activate.</p>
+    <input type="text" id="mKey" placeholder="Enter Master Key">
+    <button class="btn btn-p" onclick="activate()">Activate Lifetime</button>
 </div>
 
-<div id="appUI" class="p-4 max-w-lg mx-auto pb-40" style="display: none;">
-    <header class="py-6 flex justify-between items-start">
-        <div onclick="editProfile()" class="cursor-pointer">
-            <h1 id="disName" class="text-xl font-black text-indigo-500 italic leading-none uppercase">EDUMASTER ERP</h1>
-            <p id="disAddr" class="text-[7px] text-slate-500 font-bold uppercase mt-1">Type your address</p>
-        </div>
-        <div class="flex gap-2">
-            <label class="w-9 h-9 nexa-glass text-emerald-400 flex items-center justify-center text-xs cursor-pointer"><i class="fas fa-file-import"></i><input type="file" class="hidden" onchange="importData(this)"></label>
-            <button onclick="exportExcel()" class="w-9 h-9 nexa-glass text-blue-400 flex items-center justify-center text-xs"><i class="fas fa-file-excel"></i></button>
-            <button onclick="masterReset()" class="w-9 h-9 nexa-glass text-red-500 flex items-center justify-center text-xs"><i class="fas fa-sync-alt"></i></button>
-        </div>
+<div class="container">
+    <header>
+        <div><h2 id="dispLib">LibMaster</h2><small id="liveClock" style="opacity:0.5"></small></div>
+        <span onclick="openModal('setsModal')" style="cursor:pointer; font-size:24px">⚙️</span>
     </header>
-
-    <div id="t-home" class="tab-content active-tab space-y-4">
-        <div class="grid grid-cols-2 gap-3">
-            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/20"><h2 id="stCount" class="text-4xl font-black">0</h2><p class="text-[9px] text-slate-500 uppercase font-black">Students</p></div>
-            <div class="nexa-glass p-5 text-center border-b-2 border-indigo-500/40"><h2 id="revCount" class="text-2xl font-black text-indigo-400">₹0</h2><p class="text-[9px] text-indigo-300/50 uppercase font-black">Revenue</p></div>
-        </div>
-        <input type="text" id="hSearch" onkeyup="renderHome()" placeholder="Search Name, Batch or School..." class="text-xs">
-        <div id="hList" class="space-y-3"></div>
+    <input type="text" id="search" placeholder="Search..." oninput="resetPage()" style="margin-bottom:10px">
+    
+    <div id="scrollArea" onscroll="trackScroll()">
+        <div id="list"></div>
     </div>
 
-    <div id="t-add" class="tab-content space-y-4">
-        <div class="nexa-glass p-6 space-y-3 border-t-2 border-indigo-600">
-            <h3 class="text-[10px] font-black text-indigo-400 uppercase italic mb-2 tracking-widest">Student Admission</h3>
-            <input type="text" id="inN" placeholder="Full Name">
-            <input type="text" id="inS" placeholder="School Name">
-            <div class="grid grid-cols-2 gap-2"><input type="text" id="inB" placeholder="Batch"><input type="text" id="inC" placeholder="Subject"></div>
-            <div class="grid grid-cols-2 gap-2"><input type="number" id="inF" placeholder="Fee Amount"><input type="number" id="inP" placeholder="WhatsApp Number"></div>
-            <input type="date" id="inD">
-            <button onclick="saveStudent()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase italic mt-2">Confirm Admission</button>
-        </div>
-    </div>
+    <div id="sModal" class="modal"><div class="glass" style="padding:20px; width:100%; max-width:400px;">
+        <h3>Admission</h3>
+        <form id="sForm" onsubmit="event.preventDefault(); saveS();">
+            <input type="hidden" id="sId"><input type="text" id="sName" placeholder="Name" required><input type="text" id="sPhone" placeholder="WhatsApp No" required><input type="text" id="sSeat" placeholder="Seat No" required><input type="text" id="sShift" placeholder="Shift"><input type="text" id="sAddr" placeholder="Address"><input type="number" id="sFee" placeholder="Fee Amount (₹)"><select id="sStat"><option>Paid</option><option>Due</option></select>
+            <div style="display:flex; gap:10px; margin-top:10px;"><button type="button" class="btn btn-s" onclick="closeModal('sModal')">Back</button><button type="submit" class="btn btn-p">Save</button></div>
+            <button type="button" id="sDel" class="btn btn-s hidden" style="margin-top:10px; background:#ef4444" onclick="delS()">Delete</button>
+        </form>
+    </div></div>
 
-    <div id="t-att" class="tab-content space-y-4">
-        <div class="nexa-glass p-5">
-            <div class="flex gap-2 mb-4"><input type="date" id="atDate" onchange="loadAtt()" class="!w-1/2 text-xs"><select id="attBatch" onchange="loadAtt()" class="!w-1/2 text-[10px] font-bold text-indigo-400"></select></div>
-            <div id="atList" class="space-y-2 mb-4 max-h-60 overflow-y-auto"></div>
-            <button onclick="saveAtt()" class="w-full btn-gradient py-4 rounded-xl font-black uppercase text-xs mb-6">Save Attendance</button>
-            <div class="p-4 border-t border-white/5 text-center">
-                <div class="flex gap-2 mb-3"><input type="date" id="fromD" class="text-[10px]"><input type="date" id="toD" class="text-[10px]"></div>
-                <button onclick="exportAttendanceReport()" class="w-full bg-emerald-600/20 text-emerald-400 border border-emerald-500/30 py-3 rounded-lg font-black text-[9px] uppercase italic">Download PDF Report</button>
-            </div>
-        </div>
-    </div>
+    <div id="bModal" class="modal"><div class="glass" style="padding:20px; width:100%; max-width:400px;">
+        <h3>Issue Book</h3>
+        <form id="bForm" onsubmit="event.preventDefault(); saveB();">
+            <input type="hidden" id="bId"><input type="text" id="bTitle" placeholder="Book Title" required><input type="text" id="bTo" placeholder="Student Name" required>
+            <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px"><div><small>Issue</small><input type="date" id="bDateI"></div><div><small>Return</small><input type="date" id="bDateR"></div></div>
+            <div style="display:flex; gap:10px; margin-top:10px;"><button type="button" class="btn btn-s" onclick="closeModal('bModal')">Back</button><button type="submit" class="btn btn-p">Allot</button></div>
+            <button type="button" id="bDel" class="btn btn-s hidden" style="margin-top:10px; background:#ef4444" onclick="delB()">Mark Return</button>
+        </form>
+    </div></div>
 
-    <div id="t-fees" class="tab-content space-y-4">
-        <div class="nexa-glass p-5 space-y-4">
-            <textarea id="waMsg" rows="2" class="text-[11px]">Hi {name}, your fee of ₹{fee} is pending at {brand}.</textarea>
-            <input type="text" id="fSearch" onkeyup="renderFees()" placeholder="Search Name, Batch or School..." class="text-xs">
-            <div class="flex justify-between items-center px-2">
-                <label class="text-[9px] font-black text-slate-500 uppercase flex items-center gap-2"><input type="checkbox" id="selectAllWA" onchange="toggleSelectAll(this)"> Select All</label>
-                <button onclick="sendBulkWA()" class="bg-green-600/20 text-green-500 border border-green-500/30 px-4 py-2 rounded-lg font-black text-[9px] uppercase italic">Send Reminders</button>
-            </div>
-            <div id="fList" class="space-y-2 max-h-80 overflow-y-auto"></div>
-        </div>
-    </div>
+    <div id="setsModal" class="modal"><div class="glass" style="padding:20px; width:100%; max-width:400px;">
+        <h3>Settings</h3>
+        <input type="text" id="libName" placeholder="Library Name"><input type="text" id="libAddr" placeholder="Address"><input type="number" id="maxSeats" placeholder="Total Seats">
+        <button class="btn btn-p" onclick="saveCfg()">Update Profile</button>
+        <div style="display:grid; grid-template-columns:1fr 1fr; gap:10px; margin:15px 0;"><button class="btn btn-s" onclick="exportData()" style="background:#0ea5e9">📤 Export</button><button class="btn btn-s" onclick="document.getElementById('importFile').click()" style="background:#8b5cf6">📥 Import</button></div>
+        <input type="file" id="importFile" class="hidden" accept=".json" onchange="importData(event)"><button class="btn btn-s" onclick="genPDF()" style="background:#22c55e; margin-bottom:10px">📄 PDF Report</button><button class="btn btn-s" onclick="resetAll()" style="background:#ef4444">⚠️ Reset All</button><button class="btn btn-s" onclick="closeModal('setsModal')" style="margin-top:15px">Close</button>
+        <p style="text-align:center; font-size:10px; margin-top:10px; opacity:0.5">Powered by Khagesh ai-nexa</p>
+    </div></div>
 
-    <nav class="fixed bottom-6 left-1/2 -translate-x-1/2 w-[92%] nexa-glass p-2 flex justify-around shadow-2xl backdrop-blur-xl border-white/10 z-50">
-        <button onclick="nav('home', this)" class="p-4 text-indigo-500"><i class="fas fa-home"></i></button>
-        <button onclick="nav('add', this)" class="p-4 text-slate-500"><i class="fas fa-user-plus"></i></button>
-        <button onclick="nav('att', this)" class="p-4 text-slate-500"><i class="fas fa-calendar-check"></i></button>
-        <button onclick="nav('fees', this)" class="p-4 text-slate-500"><i class="fas fa-receipt"></i></button>
+    <nav class="nav">
+        <div class="nav-item active" id="nHome" onclick="switchV('home')">🪑<br>Seats</div>
+        <div class="nav-item" id="nStud" onclick="switchV('studs')">👤<br>Students</div>
+        <div class="nav-item" id="nBook" onclick="switchV('books')">📖<br>Books</div>
+        <div class="nav-item" id="nStat" onclick="switchV('stats')">📈<br>Stats</div>
     </nav>
 </div>
 
 <script>
-    const MK_ENC = "UGVybWFuZW50a2V5NjM3OTMxMTk="; 
-    let db, students = [], attData = {}, config = JSON.parse(localStorage.getItem("mal_config")) || { name: "EDUMASTER ERP", addr: "Type your address" };
+    let db, studs=[], books=[], cfg={name:"Nexa LibMaster", addr:"", seats:30}, view='home';
+    let limit = 20; 
+    const MASTER = "Permanentkey63793119";
 
-    function checkBoot() {
-        if(localStorage.getItem("mal_premium") === "true") { enterApp(); return; }
-        const start = localStorage.getItem("mal_start") || Date.now();
-        if(!localStorage.getItem("mal_start")) localStorage.setItem("mal_start", start);
-        const last = parseInt(localStorage.getItem("mal_last") || 0);
-        const now = Date.now();
-        const diff = (now - start) / (1000 * 60 * 60 * 24);
-        if(now < last || diff > 7) {
-            document.getElementById("trialBox").style.display = "none";
-            document.getElementById("lockBox").classList.remove("hidden");
-        }
-        localStorage.setItem("mal_last", now);
-    }
+    const req = indexedDB.open("NexaLib_v2.3", 1);
+    req.onupgradeneeded = e => {
+        let d = e.target.result;
+        d.createObjectStore("studs", {keyPath:"id", autoIncrement:true});
+        d.createObjectStore("books", {keyPath:"id", autoIncrement:true});
+        d.createObjectStore("meta", {keyPath:"k"});
+    };
+    req.onsuccess = e => { db = e.target.result; load().then(() => render()); checkTrial(); if(navigator.storage && navigator.storage.persist) navigator.storage.persist(); };
 
-    function verifyKey() {
-        if(document.getElementById("mKey").value === atob(MK_ENC)) {
-            localStorage.setItem("mal_premium", "true");
-            alert("Lifetime Activation Successful!");
-            location.reload(); 
-        } else alert("Invalid Key!");
-    }
-
-    function enterApp() { document.getElementById("lockScreen").style.display = "none"; document.getElementById("appUI").style.display = "block"; refreshConfig(); initDB(); }
-    function refreshConfig() { document.getElementById("disName").innerText = config.name; document.getElementById("disAddr").innerText = config.addr; }
-    function editProfile() { const n = prompt("Name:", config.name), a = prompt("Address:", config.addr); if(n && a) { config = {name: n, addr: a}; localStorage.setItem("mal_config", JSON.stringify(config)); refreshConfig(); } }
-
-    function initDB() {
-        const req = indexedDB.open("MalhotraERP_v17_Stable_Final", 1);
-        req.onupgradeneeded = e => { db = e.target.result; db.createObjectStore("st", {keyPath: "id"}); db.createObjectStore("at", {keyPath: "date"}); };
-        req.onsuccess = e => { db = e.target.result; sync(); };
-    }
-
-    function sync() {
-        const tx = db.transaction(["st", "at"], "readonly");
-        tx.objectStore("st").getAll().onsuccess = e => { students = e.target.result; updateUI(); };
-        tx.objectStore("at").getAll().onsuccess = e => { e.target.result.forEach(r => attData[r.date] = r.data); loadAtt(); };
-    }
-
-    function updateUI() {
-        let rev = 0; students.forEach(s => rev += Number(s.fee || 0));
-        document.getElementById("stCount").innerText = students.length;
-        document.getElementById("revCount").innerText = `₹${rev}`;
-        const b = [...new Set(students.map(s => s.batch))];
-        document.getElementById("attBatch").innerHTML = '<option value="">All Batches</option>' + b.map(x => `<option value="${x}">${x}</option>`).join("");
-        renderHome(); renderFees();
-    }
-
-    function renderHome() {
-        const q = document.getElementById("hSearch").value.toLowerCase();
-        const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
-        document.getElementById("hList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center border-l-4 border-indigo-500">
-                <div>
-                    <p class="font-black text-sm uppercase italic">${s.name}</p>
-                    <p class="text-[8px] text-slate-500 uppercase font-bold">${s.batch} | ${s.school || 'N/A'}</p>
-                    <p class="text-[7px] text-indigo-400 font-bold mt-1"><i class="fas fa-calendar-alt mr-1"></i>Joined: ${s.date || 'N/A'}</p>
-                </div>
-                <div class="flex gap-1"><button onclick="migrateStudent(${s.id})" class="text-indigo-400 p-2"><i class="fas fa-exchange-alt"></i></button><a href="tel:${s.phone}" class="text-blue-400 p-2"><i class="fas fa-phone-alt"></i></a><button onclick="delSt(${s.id})" class="text-red-500 p-2"><i class="fas fa-trash-alt"></i></button></div>
-            </div>`).join("");
-    }
-
-    function renderFees() {
-        const q = document.getElementById("fSearch").value.toLowerCase();
-        const msgT = document.getElementById("waMsg").value;
-        const filt = students.filter(s => s.name.toLowerCase().includes(q) || s.batch.toLowerCase().includes(q) || (s.school && s.school.toLowerCase().includes(q)));
-        document.getElementById("fList").innerHTML = filt.map(s => `
-            <div class="nexa-glass p-4 flex justify-between items-center shadow-lg">
-                <div class="flex items-center gap-3"><input type="checkbox" class="wa-check w-4 h-4 accent-indigo-500" data-id="${s.id}">
-                <div><p class="text-xs font-black uppercase">${s.name}</p><p class="text-[8px] text-indigo-400 font-bold">Fee: ₹${s.fee}</p></div></div>
-                <div class="flex gap-2"><button onclick='genReceipt(${JSON.stringify(s)})' class="text-indigo-400 text-lg"><i class="fas fa-file-invoice"></i></button><button onclick="window.open('https://wa.me/91${s.phone}?text=${encodeURIComponent(msgT.replace('{name}', s.name).replace('{fee}', s.fee).replace('{brand}', config.name))}', '_blank')" class="text-emerald-500 text-lg"><i class="fab fa-whatsapp"></i></button></div>
-            </div>`).join("");
-    }
-
-    function saveStudent() {
-        const s = { id: Date.now(), name: document.getElementById("inN").value, school: document.getElementById("inS").value, batch: document.getElementById("inB").value, cls: document.getElementById("inC").value, fee: document.getElementById("inF").value, phone: document.getElementById("inP").value, date: document.getElementById("inD").value || new Date().toISOString().split('T')[0] };
-        if(!s.name || !s.phone) return alert("Required!");
-        const tx = db.transaction("st", "readwrite"); tx.objectStore("st").add(s);
-        tx.oncomplete = () => { 
-            sync(); 
-            alert("Admission Success!");
-            ['inN', 'inS', 'inB', 'inC', 'inF', 'inP', 'inD'].forEach(id => document.getElementById(id).value = "");
-        };
-    }
-
-    function genReceipt(s) {
-        const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 50, 'F');
-        doc.setTextColor(255); doc.setFontSize(22); doc.text(config.name, 105, 20, {align:"center"});
-        doc.setFontSize(10); doc.text(config.addr, 105, 28, {align:"center"});
-        doc.autoTable({ startY: 60, head: [['Details', 'Info']], body: [['Name', s.name.toUpperCase()], ['Batch', s.batch], ['Fee', `₹${s.fee}`], ['Date', new Date().toLocaleDateString()]], headStyles:{fillColor:[79, 70, 229]} });
-        doc.save(`${s.name}_Receipt.pdf`);
-    }
-
-    function exportAttendanceReport() {
-        const f = document.getElementById("fromD").value, t = document.getElementById("toD").value;
-        if(!f || !t) return alert("Dates Required!");
-        const { jsPDF } = window.jspdf; const doc = new jsPDF();
-        doc.setFillColor(31, 41, 55); doc.rect(0, 0, 210, 40, 'F');
-        doc.setTextColor(255); doc.setFontSize(18); doc.text(config.name, 105, 15, {align:"center"});
-        doc.setFontSize(8); doc.text(config.addr, 105, 22, {align:"center"});
-        const rows = []; Object.keys(attData).sort().forEach(d => { if(d>=f && d<=t) attData[d].forEach(e => { const s = students.find(x=>x.id===e.id); if(s) rows.push([d, s.name, s.batch, e.status]); }); });
-        doc.autoTable({ startY: 45, head: [['Date', 'Name', 'Batch', 'Status']], body: rows, headStyles:{fillColor:[79, 70, 229]} });
-        doc.save("Attendance_Sheet.pdf");
-    }
-
-    function loadAtt() {
-        const d = document.getElementById("atDate").value || new Date().toISOString().split('T')[0];
-        document.getElementById("atDate").value = d;
-        const b = document.getElementById("attBatch").value;
-        const saved = attData[d] || [];
-        const filt = b ? students.filter(s => s.batch === b) : students;
-        document.getElementById("atList").innerHTML = filt.map(s => {
-            const isP = saved.length === 0 ? true : (saved.find(x => x.id === s.id)?.status === "P");
-            return `<div class="flex justify-between items-center p-3 bg-white/5 rounded-xl border-l-2 ${isP ? 'border-emerald-500' : 'border-red-500'} mb-2"><span class="text-xs uppercase font-bold">${s.name}</span><input type="checkbox" class="w-5 h-5 accent-indigo-500" data-id="${s.id}" ${isP ? 'checked' : ''}></div>`;
-        }).join("");
-    }
-
-    function saveAtt() {
-        const d = document.getElementById("atDate").value, c = Array.from(document.querySelectorAll("#atList input[type='checkbox']")).map(x => ({ id: Number(x.dataset.id), status: x.checked ? "P" : "A" }));
-        const tx = db.transaction("at", "readwrite"); tx.objectStore("at").put({ date: d, data: c }); tx.oncomplete = () => { attData[d] = c; alert("Attendance Saved!"); };
-    }
-
-    function sendBulkWA() {
-        const t = document.getElementById("waMsg").value;
-        const sel = Array.from(document.querySelectorAll(".wa-check:checked")).map(c => students.find(s => s.id == c.dataset.id));
-        if(!sel.length) return alert("Select Students First!");
-        
-        alert("Sending Bulk Messages. Please allow 'Pop-ups' in your browser and don't close the tabs until finished.");
-        
-        sel.forEach((s, i) => {
-            setTimeout(() => {
-                const msg = t.replace("{name}", s.name).replace("{fee}", s.fee).replace("{brand}", config.name);
-                window.open(`https://wa.me/91${s.phone}?text=${encodeURIComponent(msg)}`, '_blank');
-            }, i * 3500); // Glitch fix: Using 3.5 sec delay to avoid browser blocking
+    async function load() {
+        return new Promise((resolve) => {
+            const tx = db.transaction(["studs", "books", "meta"], "readonly");
+            tx.objectStore("studs").getAll().onsuccess = e => studs = e.target.result;
+            tx.objectStore("books").getAll().onsuccess = e => books = e.target.result;
+            tx.objectStore("meta").get("cfg").onsuccess = e => {
+                if(e.target.result) {
+                    cfg = e.target.result;
+                    document.getElementById('dispLib').innerText = cfg.name;
+                    document.getElementById('libName').value = cfg.name;
+                    document.getElementById('libAddr').value = cfg.addr;
+                    document.getElementById('maxSeats').value = cfg.seats;
+                }
+            };
+            tx.oncomplete = () => resolve();
         });
     }
 
-    function importData(input) {
-        if (!input.files[0]) return;
-        const r = new FileReader();
-        r.onload = e => {
-            const wb = XLSX.read(e.target.result, {type: 'binary'});
-            const raw = XLSX.utils.sheet_to_json(wb.Sheets[wb.SheetNames[0]]);
-            const list = raw.map(row => {
-                const k = Object.keys(row);
-                return { id: Date.now()+Math.random(), name: row[k.find(x=>x.toLowerCase().includes('name'))]||"N/A", school: row[k.find(x=>x.toLowerCase().includes('school'))]||"N/A", batch: row[k.find(x=>x.toLowerCase().includes('batch'))]||"General", fee: row[k.find(x=>x.toLowerCase().includes('fee'))]||0, phone: row[k.find(x=>x.toLowerCase().includes('phone')||x.toLowerCase().includes('mobile'))]||"", date: new Date().toISOString().split('T')[0] };
-            });
-            const tx = db.transaction("st", "readwrite"); list.forEach(s=>tx.objectStore("st").put(s)); tx.oncomplete = () => { alert("Data Imported!"); sync(); };
+    function checkTrial() {
+        const os = db.transaction("meta").objectStore("meta");
+        os.get("perm").onsuccess = ev => {
+            if(ev.target.result) return;
+            os.get("start").onsuccess = e => {
+                let s = e.target.result ? e.target.result.v : null;
+                if(!s) { s = Date.now(); db.transaction("meta","readwrite").objectStore("meta").put({k:"start", v:s}); }
+                if(7 - Math.floor((Date.now() - s) / 86400000) <= 0) document.getElementById('trialBox').classList.remove('hidden');
+            };
         };
-        r.readAsBinaryString(input.files[0]);
     }
 
-    function toggleSelectAll(btn) { document.querySelectorAll(".wa-check").forEach(c => c.checked = btn.checked); }
-    function nav(t, b) { document.querySelectorAll(".tab-content").forEach(c => c.classList.remove("active-tab")); document.getElementById("t-"+t).classList.add("active-tab"); document.querySelectorAll('nav button').forEach(btn => btn.classList.replace('text-indigo-500', 'text-slate-500')); b.classList.replace('text-slate-500', 'text-indigo-500'); }
-    function delSt(id) { if(confirm("Delete Student?")) { const tx = db.transaction("st", "readwrite"); tx.objectStore("st").delete(id); tx.oncomplete = () => sync(); } }
-    function masterReset() { if(confirm("Wipe All Data?")) { indexedDB.deleteDatabase("MalhotraERP_v17_Stable_Final"); localStorage.clear(); location.reload(); } }
-    function exportExcel() { const ws = XLSX.utils.json_to_sheet(students), wb = XLSX.utils.book_new(); XLSX.utils.book_append_sheet(wb, ws, "Data"); XLSX.writeFile(wb, `EduMaster_Backup.xlsx`); }
-    function migrateStudent(id) { 
+    function activate() { if(document.getElementById('mKey').value === MASTER) { db.transaction("meta","readwrite").objectStore("meta").put({k:"perm",v:true}).onsuccess=()=>location.reload(); } else alert("Wrong Key!"); }
+
+    function trackScroll() {
+        if(view !== 'studs' && view !== 'books') return;
+        const area = document.getElementById('scrollArea');
+        if (area.scrollTop + area.clientHeight >= area.scrollHeight - 50) { limit += 20; render(); }
+    }
+
+    function resetPage() { limit = 20; render(); }
+
+    function render() {
+        const list = document.getElementById('list'); const q = document.getElementById('search').value.toLowerCase();
+        document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
+        let html = '';
+        if(view==='home') {
+            document.getElementById('nHome').classList.add('active'); html = '<div class="seat-grid">';
+            for(let i=1; i<=cfg.seats; i++){
+                let s = studs.find(x => parseInt(x.seat) === i);
+                html += `<div class="seat ${s?'taken':'free'}" onclick="${s?`openSEdit(${s.id})`:`openSAdd(${i})`}">${i}${s?`<small>${s.name.split(' ')[0]}</small>`:''}</div>`;
+            }
+            html += '</div>';
+        } else if(view==='studs') {
+            document.getElementById('nStud').classList.add('active');
+            let filtered = studs.filter(s => s.name.toLowerCase().includes(q) || s.phone.includes(q));
+            filtered.slice(0, limit).forEach(s => {
+                let msg = `*📢 Fee Reminder: ${cfg.name}*%0A%0AHello *${s.name}*,%0AYour library fee for *Seat No: ${s.seat}* is *${s.status}*.%0A*Amount:* ₹${s.fee}`;
+                html += `<div class="item-card glass" onclick="openSEdit(${s.id})"><div><b>S-${s.seat}: ${s.name}</b><br><small>${s.phone} | ₹${s.fee}</small></div><button class="btn btn-wa" style="width:auto; padding:5px 12px; font-size:10px" onclick="event.stopPropagation(); window.open('https://wa.me/91${s.phone}?text=${msg}')">WhatsApp</button></div>`;
+            });
+        } else if(view==='books') {
+            document.getElementById('nBook').classList.add('active'); html = `<button class="btn btn-p" onclick="openBAdd()" style="margin-bottom:10px">+ Issue Book</button>`;
+            books.slice(0, limit).forEach(b => html += `<div class="item-card glass" onclick="openBEdit(${b.id})"><div><b>${b.title}</b><br><small>To: ${b.to}</small></div></div>`);
+        } else {
+            document.getElementById('nStat').classList.add('active');
+            let rev = studs.reduce((a,s)=>a+(s.status==='Paid'?Number(s.fee):0),0);
+            html = `<div class="glass" style="padding:20px; text-align:center"><p>Total Students</p><h1>${studs.length}</h1><br><p>Books Issued</p><h1>${books.length}</h1><br><p>Paid Revenue</p><h1 style="color:#22c55e">₹${rev}</h1></div>`;
+        }
+        list.innerHTML = html || '<p style="text-align:center; opacity:0.3; margin-top:30px">No Records</p>';
+    }
+
+    function switchV(v) { view = v; limit = 20; document.getElementById('scrollArea').scrollTop = 0; render(); }
+    
+    async function saveS() {
+        const data = { name: document.getElementById('sName').value, phone: document.getElementById('sPhone').value, seat: document.getElementById('sSeat').value, shift: document.getElementById('sShift').value, addr: document.getElementById('sAddr').value, fee: document.getElementById('sFee').value, status: document.getElementById('sStat').value };
+        const tx = db.transaction("studs", "readwrite");
+        const id = document.getElementById('sId').value;
+        if(id) { data.id = Number(id); tx.objectStore("studs").put(data); } 
+        else tx.objectStore("studs").add(data);
+        
+        tx.oncomplete = async () => {
+            closeModal('sModal');
+            await load();
+            render();
+        };
+    }
+
+    async function saveB() {
+        const data = { title: document.getElementById('bTitle').value, to: document.getElementById('bTo').value, dateI: document.getElementById('bDateI').value, dateR: document.getElementById('bDateR').value };
+        const tx = db.transaction("books", "readwrite");
+        const id = document.getElementById('bId').value;
+        if(id) { data.id = Number(id); tx.objectStore("books").put(data); } 
+        else tx.objectStore("books").add(data);
+        
+        tx.oncomplete = async () => {
+            closeModal('bModal');
+            await load();
+            render();
+        };
+    }
+
+    function saveCfg() { cfg={k:"cfg", name:document.getElementById('libName').value, addr:document.getElementById('libAddr').value, seats:Number(document.getElementById('maxSeats').value)}; db.transaction("meta","readwrite").objectStore("meta").put(cfg).onsuccess=()=>location.reload(); }
+    function exportData() { const blob = new Blob([JSON.stringify({ studs, books, cfg })], {type: "application/json"}); const a = document.createElement('a'); a.href = URL.createObjectURL(blob); a.download = `LibMaster_Backup.json`; a.click(); }
+    function importData(e) { const reader = new FileReader(); reader.onload = ev => { try { const data = JSON.parse(ev.target.result); const tx = db.transaction(["studs", "books", "meta"], "readwrite"); tx.objectStore("studs").clear(); tx.objectStore("books").clear(); if(data.studs) data.studs.forEach(s => { delete s.id; tx.objectStore("studs").add(s); }); if(data.books) data.books.forEach(b => { delete b.id; tx.objectStore("books").add(b); }); if(data.cfg) tx.objectStore("meta").put({k:"cfg", ...data.cfg}); tx.oncomplete = () => { alert("Import Done!"); location.reload(); }; } catch (err) { alert("Invalid File!"); } }; reader.readAsText(e.target.files[0]); }
+    function genPDF() { const { jsPDF } = window.jspdf; const doc = new jsPDF(); doc.text(cfg.name, 105, 15, {align:'center'}); doc.autoTable({ startY: 25, head: [['Seat', 'Name', 'Phone', 'Status', 'Amount']], body: studs.map(s => [s.seat, s.name, s.phone, s.status, s.fee]) }); doc.save("Report.pdf"); }
+    function openSAdd(n) { document.getElementById('sForm').reset(); document.getElementById('sSeat').value=n; document.getElementById('sId').value=''; document.getElementById('sDel').classList.add('hidden'); openModal('sModal'); }
+    function openSEdit(id) { const s = studs.find(x => x.id === id); document.getElementById('sId').value = s.id; document.getElementById('sName').value = s.name; document.getElementById('sPhone').value = s.phone; document.getElementById('sSeat').value = s.seat; document.getElementById('sShift').value = s.shift; document.getElementById('sAddr').value = s.addr; document.getElementById('sFee').value = s.fee; document.getElementById('sStat').value = s.status; document.getElementById('sDel').classList.remove('hidden'); openModal('sModal'); }
+    function openBAdd() { document.getElementById('bForm').reset(); document.getElementById('bId').value=''; document.getElementById('bDel').classList.add('hidden'); openModal('bModal'); }
+    function openBEdit(id) { const b = books.find(x => x.id === id); document.getElementById('bId').value = b.id; document.getElementById('bTitle').value = b.title; document.getElementById('bTo').value = b.to; document.getElementById('bDateI').value = b.dateI; document.getElementById('bDateR').value = b.dateR; document.getElementById('bDel').classList.remove('hidden'); openModal('bModal'); }
+    function delS() { if(confirm("Delete Student?")) db.transaction("studs","readwrite").objectStore("studs").delete(Number(document.getElementById('sId').value)).onsuccess=async()=>{closeModal('sModal'); await load(); render();}; }
+    function delB() { if(confirm("Mark Return?")) db.transaction("books","readwrite").objectStore("books").delete(Number(document.getElementById('bId').value)).onsuccess=async()=>{closeModal('bModal'); await load(); render();}; }
+    function openModal(id) { document.getElementById(id).style.display = 'flex'; }
+    function closeModal(id) { document.getElementById(id).style.display = 'none'; }
+    function resetAll() { if(confirm("Wipe Everything?")) { indexedDB.deleteDatabase("NexaLib_v2.3"); location.reload(); } }
+    setInterval(() => { document.getElementById('liveClock').innerText = new Date().toLocaleString(); }, 1000);
+</script>
+</body>
+</html>
